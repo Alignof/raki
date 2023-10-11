@@ -13,6 +13,8 @@ pub struct Instruction {
     pub imm: Option<i32>,
     /// Instruction extension
     pub extension: Extensions,
+    /// Instruction format
+    pub inst_format: InstFormat,
 }
 
 /// RISC-V extensions
@@ -30,6 +32,28 @@ pub enum Extensions {
     Zicsr,
     /// Privileged Instructions
     Priv,
+}
+
+/// Instruction format
+#[derive(Debug)]
+pub enum InstFormat {
+    /// Regular format
+    Rtype,
+    /// Immediate format
+    Itype,
+    /// Store format
+    Stype,
+    /// Branch format
+    Btype,
+    /// Upper immediate format
+    Utype,
+    /// Jump format
+    Jtype,
+    /// Compressed instruction
+    /// C-type may possibly be further divided (Q0, Q1, Q2...).
+    Ctype,
+    /// Uncategorized format
+    Uncategorized,
 }
 
 #[derive(Debug)]

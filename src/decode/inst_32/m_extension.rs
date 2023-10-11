@@ -7,7 +7,7 @@ pub fn parse_opcode(inst: u32, isa: Isa) -> Result<OpcodeKind, DecodingError> {
     let funct3: u8 = inst.slice(14, 12) as u8;
 
     match opmap {
-        0b0110011 => match funct3 {
+        0b011_0011 => match funct3 {
             0b000 => Ok(OpcodeKind::MUL),
             0b001 => Ok(OpcodeKind::MULH),
             0b010 => Ok(OpcodeKind::MULHSU),
@@ -18,7 +18,7 @@ pub fn parse_opcode(inst: u32, isa: Isa) -> Result<OpcodeKind, DecodingError> {
             0b111 => Ok(OpcodeKind::REMU),
             _ => Err(DecodingError::IllegalFunct3),
         },
-        0b0111011 => match funct3 {
+        0b011_1011 => match funct3 {
             0b000 => only_rv64(OpcodeKind::MULW, isa),
             0b100 => only_rv64(OpcodeKind::DIVW, isa),
             0b101 => only_rv64(OpcodeKind::DIVUW, isa),

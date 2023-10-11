@@ -10,11 +10,11 @@ pub fn parse_opcode(inst: u32, isa: Isa) -> Result<OpcodeKind, DecodingError> {
     let funct7: u8 = inst.slice(31, 25) as u8;
 
     match opmap {
-        0b0110111 => Ok(OpcodeKind::LUI),
-        0b0010111 => Ok(OpcodeKind::AUIPC),
-        0b1101111 => Ok(OpcodeKind::JAL),
-        0b1100111 => Ok(OpcodeKind::JALR),
-        0b1100011 => match funct3 {
+        0b011_0111 => Ok(OpcodeKind::LUI),
+        0b001_0111 => Ok(OpcodeKind::AUIPC),
+        0b110_1111 => Ok(OpcodeKind::JAL),
+        0b110_0111 => Ok(OpcodeKind::JALR),
+        0b110_0011 => match funct3 {
             0b000 => Ok(OpcodeKind::BEQ),
             0b001 => Ok(OpcodeKind::BNE),
             0b100 => Ok(OpcodeKind::BLT),
@@ -23,7 +23,7 @@ pub fn parse_opcode(inst: u32, isa: Isa) -> Result<OpcodeKind, DecodingError> {
             0b111 => Ok(OpcodeKind::BGEU),
             _ => Err(DecodingError::IllegalFunct3),
         },
-        0b0000011 => match funct3 {
+        0b000_0011 => match funct3 {
             0b000 => Ok(OpcodeKind::LB),
             0b001 => Ok(OpcodeKind::LH),
             0b010 => Ok(OpcodeKind::LW),
@@ -33,22 +33,22 @@ pub fn parse_opcode(inst: u32, isa: Isa) -> Result<OpcodeKind, DecodingError> {
             0b110 => only_rv64(OpcodeKind::LWU, isa),
             _ => Err(DecodingError::IllegalFunct3),
         },
-        0b0100011 => match funct3 {
+        0b010_0011 => match funct3 {
             0b000 => Ok(OpcodeKind::SB),
             0b001 => Ok(OpcodeKind::SH),
             0b010 => Ok(OpcodeKind::SW),
             0b011 => only_rv64(OpcodeKind::SD, isa),
             _ => Err(DecodingError::IllegalFunct3),
         },
-        0b0010011 => match funct3 {
+        0b001_0011 => match funct3 {
             0b000 => Ok(OpcodeKind::ADDI),
             0b001 => match isa {
                 Isa::Rv32 => match funct7 {
-                    0b0000000 => Ok(OpcodeKind::SLLI),
+                    0b000_0000 => Ok(OpcodeKind::SLLI),
                     _ => Err(DecodingError::IllegalFunct7),
                 },
                 Isa::Rv64 => match funct6 {
-                    0b000000 => Ok(OpcodeKind::SLLI),
+                    0b00_0000 => Ok(OpcodeKind::SLLI),
                     _ => Err(DecodingError::IllegalFunct6),
                 },
             },
@@ -57,13 +57,13 @@ pub fn parse_opcode(inst: u32, isa: Isa) -> Result<OpcodeKind, DecodingError> {
             0b100 => Ok(OpcodeKind::XORI),
             0b101 => match isa {
                 Isa::Rv32 => match funct7 {
-                    0b0000000 => Ok(OpcodeKind::SRLI),
-                    0b0100000 => Ok(OpcodeKind::SRAI),
+                    0b000_0000 => Ok(OpcodeKind::SRLI),
+                    0b010_0000 => Ok(OpcodeKind::SRAI),
                     _ => Err(DecodingError::IllegalFunct7),
                 },
                 Isa::Rv64 => match funct6 {
-                    0b000000 => Ok(OpcodeKind::SRLI),
-                    0b010000 => Ok(OpcodeKind::SRAI),
+                    0b00_0000 => Ok(OpcodeKind::SRLI),
+                    0b01_0000 => Ok(OpcodeKind::SRAI),
                     _ => Err(DecodingError::IllegalFunct6),
                 },
             },
@@ -71,10 +71,10 @@ pub fn parse_opcode(inst: u32, isa: Isa) -> Result<OpcodeKind, DecodingError> {
             0b111 => Ok(OpcodeKind::ANDI),
             _ => Err(DecodingError::IllegalFunct3),
         },
-        0b0110011 => match funct3 {
+        0b011_0011 => match funct3 {
             0b000 => match funct7 {
-                0b0000000 => Ok(OpcodeKind::ADD),
-                0b0100000 => Ok(OpcodeKind::SUB),
+                0b000_0000 => Ok(OpcodeKind::ADD),
+                0b010_0000 => Ok(OpcodeKind::SUB),
                 _ => Err(DecodingError::IllegalFunct7),
             },
             0b001 => Ok(OpcodeKind::SLL),
@@ -82,18 +82,18 @@ pub fn parse_opcode(inst: u32, isa: Isa) -> Result<OpcodeKind, DecodingError> {
             0b011 => Ok(OpcodeKind::SLTU),
             0b100 => Ok(OpcodeKind::XOR),
             0b101 => match funct7 {
-                0b0000000 => Ok(OpcodeKind::SRL),
-                0b0100000 => Ok(OpcodeKind::SRA),
+                0b000_0000 => Ok(OpcodeKind::SRL),
+                0b010_0000 => Ok(OpcodeKind::SRA),
                 _ => Err(DecodingError::IllegalFunct7),
             },
             0b110 => Ok(OpcodeKind::OR),
             0b111 => Ok(OpcodeKind::AND),
             _ => Err(DecodingError::IllegalFunct3),
         },
-        0b0001111 => Ok(OpcodeKind::FENCE),
-        0b1110011 => match funct3 {
+        0b000_1111 => Ok(OpcodeKind::FENCE),
+        0b111_0011 => match funct3 {
             0b000 => match funct7 {
-                0b0000000 => match funct5 {
+                0b000_0000 => match funct5 {
                     0b00000 => Ok(OpcodeKind::ECALL),
                     0b00001 => Ok(OpcodeKind::EBREAK),
                     _ => Err(DecodingError::IllegalFunct5),
@@ -102,26 +102,26 @@ pub fn parse_opcode(inst: u32, isa: Isa) -> Result<OpcodeKind, DecodingError> {
             },
             _ => Err(DecodingError::IllegalFunct3),
         },
-        0b0011011 => match funct3 {
+        0b001_1011 => match funct3 {
             0b000 => only_rv64(OpcodeKind::ADDIW, isa),
             0b001 => only_rv64(OpcodeKind::SLLIW, isa),
             0b101 => match funct7 {
-                0b0000000 => only_rv64(OpcodeKind::SRLIW, isa),
-                0b0100000 => only_rv64(OpcodeKind::SRAIW, isa),
+                0b000_0000 => only_rv64(OpcodeKind::SRLIW, isa),
+                0b010_0000 => only_rv64(OpcodeKind::SRAIW, isa),
                 _ => Err(DecodingError::IllegalFunct7),
             },
             _ => Err(DecodingError::IllegalFunct3),
         },
-        0b0111011 => match funct3 {
+        0b011_1011 => match funct3 {
             0b000 => match funct7 {
-                0b0000000 => only_rv64(OpcodeKind::ADDW, isa),
-                0b0100000 => only_rv64(OpcodeKind::SUBW, isa),
+                0b000_0000 => only_rv64(OpcodeKind::ADDW, isa),
+                0b010_0000 => only_rv64(OpcodeKind::SUBW, isa),
                 _ => Err(DecodingError::IllegalFunct7),
             },
             0b001 => only_rv64(OpcodeKind::SLLW, isa),
             0b101 => match funct7 {
-                0b0000000 => only_rv64(OpcodeKind::SRLW, isa),
-                0b0100000 => only_rv64(OpcodeKind::SRAW, isa),
+                0b000_0000 => only_rv64(OpcodeKind::SRLW, isa),
+                0b010_0000 => only_rv64(OpcodeKind::SRAW, isa),
                 _ => Err(DecodingError::IllegalFunct7),
             },
             _ => Err(DecodingError::IllegalFunct3),

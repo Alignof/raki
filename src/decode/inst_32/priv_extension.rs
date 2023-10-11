@@ -7,11 +7,11 @@ pub fn parse_opcode(inst: u32) -> Result<OpcodeKind, DecodingError> {
     let funct7: u8 = inst.slice(31, 25) as u8;
 
     match inst {
-        0b00010000001000000000000001110011 => Ok(OpcodeKind::SRET),
-        0b00110000001000000000000001110011 => Ok(OpcodeKind::MRET),
-        0b00010000010100000000000001110011 => Ok(OpcodeKind::WFI),
+        0b0001_0000_0010_0000_0000_0000_0111_0011 => Ok(OpcodeKind::SRET),
+        0b0011_0000_0010_0000_0000_0000_0111_0011 => Ok(OpcodeKind::MRET),
+        0b0001_0000_0101_0000_0000_0000_0111_0011 => Ok(OpcodeKind::WFI),
         _ => match funct7 {
-            0b0001001 => Ok(OpcodeKind::SFENCE_VMA),
+            0b000_1001 => Ok(OpcodeKind::SFENCE_VMA),
             _ => Err(DecodingError::IllegalFunct7),
         },
     }

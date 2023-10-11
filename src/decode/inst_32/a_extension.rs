@@ -8,7 +8,7 @@ pub fn parse_opcode(inst: u32, isa: Isa) -> Result<OpcodeKind, DecodingError> {
     let funct7: u8 = inst.slice(31, 27) as u8;
 
     match opmap {
-        0b0101111 => match funct3 {
+        0b010_1111 => match funct3 {
             0b010 => match funct7 {
                 0b00010 => Ok(OpcodeKind::LR_W),
                 0b00011 => Ok(OpcodeKind::SC_W),

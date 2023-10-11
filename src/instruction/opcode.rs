@@ -1,7 +1,7 @@
 use super::{Extensions, InstFormat, OpcodeKind};
 
 impl OpcodeKind {
-    /// Get instruction format from OpcodeKind
+    /// Get instruction format from `OpcodeKind`
     pub fn get_format(&self) -> InstFormat {
         match self {
             // Base Integer
@@ -143,7 +143,7 @@ impl OpcodeKind {
         }
     }
 
-    /// Get instruction extension from OpcodeKind
+    /// Get instruction extension from `OpcodeKind`
     pub fn get_extension(&self) -> Extensions {
         match self {
             // Base Integer
@@ -285,7 +285,7 @@ impl OpcodeKind {
         }
     }
 
-    /// OpcodeKind to string
+    /// `OpcodeKind` to string
     pub fn to_string(&self) -> &'static str {
         match self {
             OpcodeKind::LUI => "lui",

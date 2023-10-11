@@ -106,20 +106,20 @@ impl DecodeUtil for u32 {
         let funct7: u8 = self.slice(31, 25) as u8;
 
         match opmap {
-            0b0101111 => Extensions::A,
-            0b0110011 => match funct7 {
-                0b0000001 => Extensions::M,
+            0b010_1111 => Extensions::A,
+            0b011_0011 => match funct7 {
+                0b000_0001 => Extensions::M,
                 _ => Extensions::BaseI,
             },
-            0b0111011 => match funct7 {
-                0b0000000 | 0b0100000 => Extensions::BaseI,
-                0b0000001 => Extensions::M,
+            0b011_1011 => match funct7 {
+                0b000_0000 | 0b010_0000 => Extensions::BaseI,
+                0b000_0001 => Extensions::M,
                 //_ => unreachable!(),
                 _ => Extensions::BaseI,
             },
-            0b1110011 => match funct3 {
+            0b111_0011 => match funct3 {
                 0b000 => match funct7 {
-                    0b0000000 => Extensions::BaseI,
+                    0b000_0000 => Extensions::BaseI,
                     _ => Extensions::Priv,
                 },
                 _ => Extensions::Zicsr,
@@ -153,15 +153,15 @@ mod decode_32 {
         };
 
         test_32(
-            0b10000000000000000000000010110111,
+            0b1000_0000_0000_0000_0000_0000_1011_0111,
             LUI,
             Some(1),
             None,
             None,
-            Some(0x80000000),
+            Some(0x8000_0000),
         );
         test_32(
-            0b00000000000000000000001010010111,
+            0b0000_0000_0000_0000_0000_0010_1001_0111,
             AUIPC,
             Some(5),
             None,
@@ -169,7 +169,7 @@ mod decode_32 {
             Some(0),
         );
         test_32(
-            0b11111111100111111111000001101111,
+            0b1111_1111_1001_1111_1111_0000_0110_1111,
             JAL,
             Some(0),
             None,
@@ -177,7 +177,7 @@ mod decode_32 {
             Some(-8),
         );
         test_32(
-            0b11111110001000001000111010100011,
+            0b1111_1110_0010_0000_1000_1110_1010_0011,
             SB,
             None,
             Some(1),
@@ -185,7 +185,7 @@ mod decode_32 {
             Some(-3),
         );
         test_32(
-            0b11101110110000101000001010010011,
+            0b1110_1110_1100_0010_1000_0010_1001_0011,
             ADDI,
             Some(5),
             Some(5),
@@ -193,7 +193,7 @@ mod decode_32 {
             Some(-276),
         );
         test_32(
-            0b00000000000000000000000001110011,
+            0b0000_0000_0000_0000_0000_0000_0111_0011,
             ECALL,
             None,
             None,
@@ -201,13 +201,13 @@ mod decode_32 {
             None,
         );
         test_32(
-            0b00000000000001010100110001100011,
+            0b0000_0000_0000_0101_0100_1100_0110_0011,
             BLT,
             None,
             Some(10),
             Some(0),
             Some(24),
         );
-        test_32(0x00100513, ADDI, Some(10), Some(0), None, Some(1))
+        test_32(0x0010_0513, ADDI, Some(10), Some(0), None, Some(1));
     }
 }

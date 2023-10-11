@@ -2,7 +2,7 @@ use super::super::{only_rv64, DecodeUtil, DecodingError};
 use crate::instruction::OpcodeKind;
 use crate::Isa;
 
-fn quadrant0(inst: u16, opmap: &u8, isa: Isa) -> Result<OpcodeKind, DecodingError> {
+fn quadrant0(_inst: u16, opmap: &u8, isa: Isa) -> Result<OpcodeKind, DecodingError> {
     match opmap {
         0b000 => Ok(OpcodeKind::C_ADDI4SPN),
         0b010 => Ok(OpcodeKind::C_LW),
@@ -94,7 +94,7 @@ pub fn parse_opcode(inst: u16, isa: Isa) -> Result<OpcodeKind, DecodingError> {
     let opmap: u8 = inst.slice(15, 13) as u8;
     let quadrant: u8 = inst.slice(1, 0) as u8;
 
-    if inst == 0b0000000000000000 {
+    if inst == 0b0000_0000_0000_0000 {
         return Err(DecodingError::IllegalOpcode);
     }
 

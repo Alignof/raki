@@ -9,7 +9,6 @@ pub enum Isa {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
 
     #[test]
     fn it_works() {

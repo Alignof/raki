@@ -70,7 +70,7 @@ impl DecodeUtil for u16 {
     fn set(self, mask: &[u32]) -> u32 {
         let mut inst: u32 = 0;
         for (i, m) in mask.iter().rev().enumerate() {
-            inst |= ((self as u32 >> i) & 0x1) << m;
+            inst |= ((u32::from(self) >> i) & 0x1) << m;
         }
 
         inst
@@ -95,11 +95,11 @@ mod decode_16 {
             assert!(matches!(inst_16.parse_rd(&op_16), _rd));
         };
 
-        test_16(0b0000000000000001, C_NOP, None);
-        test_16(0b0000000010000001, C_ADDI, Some(0));
-        test_16(0b0110000100000001, C_ADDI16SP, None);
-        test_16(0b0110001110000001, C_LUI, None);
-        test_16(0b1000001011000001, C_SRAI, Some(0));
-        test_16(0b1000010011000001, C_ANDI, None);
+        test_16(0b0000_0000_0000_0001, C_NOP, None);
+        test_16(0b0000_0000_1000_0001, C_ADDI, Some(0));
+        test_16(0b0110_0001_0000_0001, C_ADDI16SP, None);
+        test_16(0b0110_0011_1000_0001, C_LUI, None);
+        test_16(0b1000_0010_1100_0001, C_SRAI, Some(0));
+        test_16(0b1000_0100_1100_0001, C_ANDI, None);
     }
 }

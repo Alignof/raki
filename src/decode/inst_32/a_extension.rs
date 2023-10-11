@@ -69,7 +69,7 @@ pub fn parse_rd(inst: u32, opkind: &OpcodeKind) -> Result<Option<usize>, Decodin
         | OpcodeKind::AMOMAX_D
         | OpcodeKind::AMOMINU_D
         | OpcodeKind::AMOMAXU_D => Ok(Some(rd)),
-        _ => panic!("rd decoding failed in A extension"),
+        _ => panic!("This instruction does not have rd"),
     }
 }
 
@@ -99,7 +99,7 @@ pub fn parse_rs1(inst: u32, opkind: &OpcodeKind) -> Result<Option<usize>, Decodi
         | OpcodeKind::AMOMAX_D
         | OpcodeKind::AMOMINU_D
         | OpcodeKind::AMOMAXU_D => Ok(Some(rs1)),
-        _ => panic!("rs1 decoding failed in A extension"),
+        _ => panic!("This instruction does not have rs1"),
     }
 }
 
@@ -158,6 +158,6 @@ pub fn parse_imm(inst: u32, opkind: &OpcodeKind) -> Result<Option<i32>, Decoding
         | OpcodeKind::AMOMAX_D
         | OpcodeKind::AMOMINU_D
         | OpcodeKind::AMOMAXU_D => Ok(Some(aq_and_rl())),
-        _ => panic!("imm decoding failed in A extension"),
+        _ => panic!("This instruction does not have imm"),
     }
 }

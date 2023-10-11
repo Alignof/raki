@@ -4,9 +4,9 @@ impl OpcodeKind {
     /// Get instruction format from `OpcodeKind`
     pub fn get_format(&self) -> InstFormat {
         match self {
+            /*
             // Base Integer
             OpcodeKind::LUI => InstFormat::Uncategorized,
-            /*
             OpcodeKind::AUIPC => InstFormat::Uncategorized,
             OpcodeKind::JAL => InstFormat::Uncategorized,
             OpcodeKind::JALR => InstFormat::Uncategorized,

@@ -29,7 +29,7 @@ pub fn parse_rd(inst: u32, opkind: &OpcodeKind) -> Result<Option<usize>, Decodin
         | OpcodeKind::CSRRWI
         | OpcodeKind::CSRRSI
         | OpcodeKind::CSRRCI => Ok(Some(rd)),
-        _ => panic!("rd not found in csr instruction"),
+        _ => panic!("This instruction does not have rd"),
     }
 }
 
@@ -44,7 +44,7 @@ pub fn parse_rs1(inst: u32, opkind: &OpcodeKind) -> Result<Option<usize>, Decodi
         | OpcodeKind::CSRRWI
         | OpcodeKind::CSRRSI
         | OpcodeKind::CSRRCI => Ok(Some(rs1)),
-        _ => panic!("rs1 not found in csr instruction"),
+        _ => panic!("This instruction does not have rs1"),
     }
 }
 
@@ -58,7 +58,7 @@ pub fn parse_rs2(inst: u32, opkind: &OpcodeKind) -> Result<Option<usize>, Decodi
         | OpcodeKind::CSRRWI
         | OpcodeKind::CSRRSI
         | OpcodeKind::CSRRCI => Ok(Some(csr)),
-        _ => panic!("rs2 not found in csr instruction"),
+        _ => panic!("This instruction does not have rs2"),
     }
 }
 

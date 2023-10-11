@@ -14,8 +14,10 @@ pub fn only_rv64(opcode: OpcodeKind, isa: Isa) -> Result<OpcodeKind, DecodingErr
 /// Error kind
 #[derive(Debug)]
 pub enum DecodingError {
-    /// It is not compressed instruction.
-    NotCompressedInst,
+    /// 32bit instructions are expected, but it is compressed instruction.
+    Not16BitInst,
+    /// Compressed instructions are expected, but it is 32bit length.
+    Not32BitInst,
     /// It has opcode that cannot decode.
     IllegalOpcode,
     /// This instruction is only for Rv64 but appeared at Rv32.

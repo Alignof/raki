@@ -29,35 +29,35 @@ impl Decode for u16 {
     fn parse_opcode(self, isa: Isa) -> Result<OpcodeKind, DecodingError> {
         match self.extension() {
             Extensions::C => c_extension::parse_opcode(self, isa),
-            _ => panic!("It isn't compressed instruction"),
+            _ => Err(DecodingError::Not16BitInst),
         }
     }
 
     fn parse_rd(self, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError> {
         match self.extension() {
             Extensions::C => c_extension::parse_rd(self, opkind),
-            _ => panic!("It isn't compressed instruction"),
+            _ => Err(DecodingError::Not16BitInst),
         }
     }
 
     fn parse_rs1(self, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError> {
         match self.extension() {
             Extensions::C => c_extension::parse_rs1(self, opkind),
-            _ => panic!("It isn't compressed instruction"),
+            _ => Err(DecodingError::Not16BitInst),
         }
     }
 
     fn parse_rs2(self, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError> {
         match self.extension() {
             Extensions::C => c_extension::parse_rs2(self, opkind),
-            _ => panic!("It isn't compressed instruction"),
+            _ => Err(DecodingError::Not16BitInst),
         }
     }
 
     fn parse_imm(self, opkind: &OpcodeKind, _isa: Isa) -> Result<Option<i32>, DecodingError> {
         match self.extension() {
             Extensions::C => c_extension::parse_imm(self, opkind),
-            _ => panic!("It isn't compressed instruction"),
+            _ => Err(DecodingError::Not16BitInst),
         }
     }
 }

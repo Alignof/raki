@@ -37,7 +37,7 @@ impl Decode for u32 {
             Extensions::A => a_extension::parse_opcode(self, isa),
             Extensions::Zicsr => zicsr_extension::parse_opcode(self),
             Extensions::Priv => priv_extension::parse_opcode(self),
-            _ => panic!("This instruction does not matched any extensions."),
+            Extensions::C => Err(DecodingError::Not32BitInst),
         }
     }
 
@@ -48,7 +48,7 @@ impl Decode for u32 {
             Extensions::A => a_extension::parse_rd(self, opkind),
             Extensions::Zicsr => zicsr_extension::parse_rd(self, opkind),
             Extensions::Priv => priv_extension::parse_rd(self, opkind),
-            _ => panic!("This instruction does not matched any extensions."),
+            Extensions::C => Err(DecodingError::Not32BitInst),
         }
     }
 
@@ -59,7 +59,7 @@ impl Decode for u32 {
             Extensions::A => a_extension::parse_rs1(self, opkind),
             Extensions::Zicsr => zicsr_extension::parse_rs1(self, opkind),
             Extensions::Priv => priv_extension::parse_rs1(self, opkind),
-            _ => panic!("This instruction does not matched any extensions."),
+            Extensions::C => Err(DecodingError::Not32BitInst),
         }
     }
 
@@ -70,7 +70,7 @@ impl Decode for u32 {
             Extensions::A => a_extension::parse_rs2(self, opkind),
             Extensions::Zicsr => zicsr_extension::parse_rs2(self, opkind),
             Extensions::Priv => priv_extension::parse_rs2(self, opkind),
-            _ => panic!("This instruction does not matched any extensions."),
+            Extensions::C => Err(DecodingError::Not32BitInst),
         }
     }
 
@@ -81,7 +81,7 @@ impl Decode for u32 {
             Extensions::A => a_extension::parse_imm(self, opkind),
             Extensions::Zicsr => zicsr_extension::parse_imm(self, opkind),
             Extensions::Priv => priv_extension::parse_imm(self, opkind),
-            _ => panic!("This instruction does not matched any extensions."),
+            Extensions::C => Err(DecodingError::Not32BitInst),
         }
     }
 }

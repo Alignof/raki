@@ -1,5 +1,9 @@
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
+mod instruction;
+
+#[derive(Copy, Clone)]
+pub enum Isa {
+    Rv32,
+    Rv64,
 }
 
 #[cfg(test)]
@@ -8,7 +12,6 @@ mod tests {
 
     #[test]
     fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
+        assert_eq!(true, true);
     }
 }

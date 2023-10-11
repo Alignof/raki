@@ -208,29 +208,21 @@ pub enum OpecodeKind {
 
 impl Instruction {
     pub fn print_myself(&self) {
-        print!("{:<12}{:>4}", self.opc_to_string(), self.reg_to_string());
-        if let Some(v) = self.rs1 {
-            print!("{v:>10},")
-        } else {
-            print!("          ,")
-        }
-        if let Some(v) = self.rs2 {
-            print!("{v:>10},")
-        } else {
-            print!("          ,")
-        }
-        if let Some(v) = self.imm {
-            print!("{v:>10},")
-        } else {
-            print!("          ,")
-        }
+        println!(
+            "{:<8} {:>4},  {:?},  {:?},  {:?}",
+            self.opc_to_string(),
+            self.rd_to_str(),
+            self.rs1,
+            self.rs2,
+            self.imm
+        );
     }
 
-    pub fn reg_to_string(&self) -> &'static str {
+    fn rd_to_str(&self) -> &'static str {
         if let Some(rd_val) = self.rd {
             reg2str(rd_val)
         } else {
-            "  "
+            "--"
         }
     }
 

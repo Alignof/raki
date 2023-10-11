@@ -16,7 +16,7 @@ pub fn parse_opcode(inst: u32, isa: Isa) -> Result<OpcodeKind, DecodingError> {
             0b101 => Ok(OpcodeKind::DIVU),
             0b110 => Ok(OpcodeKind::REM),
             0b111 => Ok(OpcodeKind::REMU),
-            _ => Err(DecodingError::IllegalOpcode),
+            _ => Err(DecodingError::IllegalFunct3),
         },
         0b0111011 => match funct3 {
             0b000 => only_rv64(OpcodeKind::MULW, isa),
@@ -24,7 +24,7 @@ pub fn parse_opcode(inst: u32, isa: Isa) -> Result<OpcodeKind, DecodingError> {
             0b101 => only_rv64(OpcodeKind::DIVUW, isa),
             0b110 => only_rv64(OpcodeKind::REMW, isa),
             0b111 => only_rv64(OpcodeKind::REMUW, isa),
-            _ => Err(DecodingError::IllegalOpcode),
+            _ => Err(DecodingError::IllegalFunct3),
         },
         _ => Err(DecodingError::IllegalOpcode),
     }

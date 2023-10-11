@@ -18,7 +18,15 @@ pub enum DecodingError {
     Not16BitInst,
     /// Compressed instructions are expected, but it is 32bit length.
     Not32BitInst,
-    /// It has opcode that cannot decode.
+    /// It has unexpected Funct3 value.
+    IllegalFunct3,
+    /// It has unexpected Funct5 value.
+    IllegalFunct5,
+    /// It has unexpected Funct6 value.
+    IllegalFunct6,
+    /// It has unexpected Funct7 value.
+    IllegalFunct7,
+    /// Has an opcode that cannot be decoded.
     IllegalOpcode,
     /// This instruction is only for Rv64 but appeared at Rv32.
     OnlyRv64Inst,

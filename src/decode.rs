@@ -14,6 +14,17 @@ pub fn only_rv64(opcode: OpcodeKind, isa: Isa) -> Result<OpcodeKind, (Option<u64
     }
 }
 
+/// Error kind
+#[derive(Debug)]
+pub enum DecodingError {
+    /// It is not compressed instruction.
+    NotCompressedInst,
+    /// It has opcode that cannot decode.
+    IllegalOpcode,
+    /// This instruction is only for Rv64 but appeared at Rv32.
+    OnlyRv64Inst,
+}
+
 pub trait Decode {
     fn decode(&self, isa: Isa) -> Result<Instruction, (Option<u64>, String)>;
     fn parse_opcode(self, isa: Isa) -> Result<OpcodeKind, (Option<u64>, String)>;

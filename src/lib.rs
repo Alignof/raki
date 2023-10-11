@@ -1,5 +1,5 @@
-mod decode;
-mod instruction;
+pub mod decode;
+pub mod instruction;
 
 #[derive(Copy, Clone)]
 pub enum Isa {

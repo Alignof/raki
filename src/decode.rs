@@ -4,7 +4,7 @@ mod inst_32;
 use crate::instruction::{Extensions, Instruction, OpcodeKind};
 use crate::Isa;
 
-pub fn only_rv64(opcode: OpcodeKind, isa: Isa) -> Result<OpcodeKind, DecodingError> {
+fn only_rv64(opcode: OpcodeKind, isa: Isa) -> Result<OpcodeKind, DecodingError> {
     match isa {
         Isa::Rv32 => Err(DecodingError::OnlyRv64Inst),
         Isa::Rv64 => Ok(opcode),
@@ -41,7 +41,7 @@ pub trait Decode {
     fn parse_imm(self, opkind: &OpcodeKind, isa: Isa) -> Result<Option<i32>, DecodingError>;
 }
 
-pub trait DecodeUtil {
+trait DecodeUtil {
     fn slice(self, end: u32, start: u32) -> Self;
     fn set(self, mask: &[u32]) -> u32;
     fn extension(self) -> Extensions;

@@ -1,3 +1,4 @@
+mod decode;
 mod instruction;
 
 #[derive(Copy, Clone)]

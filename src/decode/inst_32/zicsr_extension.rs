@@ -7,12 +7,12 @@ pub fn parse_opecode(inst: u32) -> Result<OpecodeKind, (Option<u64>, String)> {
 
     match opmap {
         0b1110011 => match funct3 {
-            0b001 => Ok(OpecodeKind::OP_CSRRW),
-            0b010 => Ok(OpecodeKind::OP_CSRRS),
-            0b011 => Ok(OpecodeKind::OP_CSRRC),
-            0b101 => Ok(OpecodeKind::OP_CSRRWI),
-            0b110 => Ok(OpecodeKind::OP_CSRRSI),
-            0b111 => Ok(OpecodeKind::OP_CSRRCI),
+            0b001 => Ok(OpecodeKind::CSRRW),
+            0b010 => Ok(OpecodeKind::CSRRS),
+            0b011 => Ok(OpecodeKind::CSRRC),
+            0b101 => Ok(OpecodeKind::CSRRWI),
+            0b110 => Ok(OpecodeKind::CSRRSI),
+            0b111 => Ok(OpecodeKind::CSRRCI),
             _ => Err((
                 Some(u64::from(inst)),
                 format!("opecode decoding failed in zicsr extension, {inst:b}"),
@@ -29,12 +29,12 @@ pub fn parse_rd(inst: u32, opkind: &OpecodeKind) -> Result<Option<usize>, (Optio
     let rd: usize = inst.slice(11, 7) as usize;
 
     match opkind {
-        OpecodeKind::OP_CSRRW => Ok(Some(rd)),
-        OpecodeKind::OP_CSRRS => Ok(Some(rd)),
-        OpecodeKind::OP_CSRRC => Ok(Some(rd)),
-        OpecodeKind::OP_CSRRWI => Ok(Some(rd)),
-        OpecodeKind::OP_CSRRSI => Ok(Some(rd)),
-        OpecodeKind::OP_CSRRCI => Ok(Some(rd)),
+        OpecodeKind::CSRRW => Ok(Some(rd)),
+        OpecodeKind::CSRRS => Ok(Some(rd)),
+        OpecodeKind::CSRRC => Ok(Some(rd)),
+        OpecodeKind::CSRRWI => Ok(Some(rd)),
+        OpecodeKind::CSRRSI => Ok(Some(rd)),
+        OpecodeKind::CSRRCI => Ok(Some(rd)),
         _ => panic!("rd not found in csr instruction"),
     }
 }
@@ -44,12 +44,12 @@ pub fn parse_rs1(inst: u32, opkind: &OpecodeKind) -> Result<Option<usize>, (Opti
 
     // LUI, AUIPC, JAL, FENCE, ECALL, EBREAK
     match opkind {
-        OpecodeKind::OP_CSRRW => Ok(Some(rs1)),
-        OpecodeKind::OP_CSRRS => Ok(Some(rs1)),
-        OpecodeKind::OP_CSRRC => Ok(Some(rs1)),
-        OpecodeKind::OP_CSRRWI => Ok(Some(rs1)),
-        OpecodeKind::OP_CSRRSI => Ok(Some(rs1)),
-        OpecodeKind::OP_CSRRCI => Ok(Some(rs1)),
+        OpecodeKind::CSRRW => Ok(Some(rs1)),
+        OpecodeKind::CSRRS => Ok(Some(rs1)),
+        OpecodeKind::CSRRC => Ok(Some(rs1)),
+        OpecodeKind::CSRRWI => Ok(Some(rs1)),
+        OpecodeKind::CSRRSI => Ok(Some(rs1)),
+        OpecodeKind::CSRRCI => Ok(Some(rs1)),
         _ => panic!("rs1 not found in csr instruction"),
     }
 }
@@ -58,12 +58,12 @@ pub fn parse_rs2(inst: u32, opkind: &OpecodeKind) -> Result<Option<usize>, (Opti
     let csr: usize = inst.slice(31, 20) as usize;
 
     match opkind {
-        OpecodeKind::OP_CSRRW => Ok(Some(csr)),
-        OpecodeKind::OP_CSRRS => Ok(Some(csr)),
-        OpecodeKind::OP_CSRRC => Ok(Some(csr)),
-        OpecodeKind::OP_CSRRWI => Ok(Some(csr)),
-        OpecodeKind::OP_CSRRSI => Ok(Some(csr)),
-        OpecodeKind::OP_CSRRCI => Ok(Some(csr)),
+        OpecodeKind::CSRRW => Ok(Some(csr)),
+        OpecodeKind::CSRRS => Ok(Some(csr)),
+        OpecodeKind::CSRRC => Ok(Some(csr)),
+        OpecodeKind::CSRRWI => Ok(Some(csr)),
+        OpecodeKind::CSRRSI => Ok(Some(csr)),
+        OpecodeKind::CSRRCI => Ok(Some(csr)),
         _ => panic!("rs2 not found in csr instruction"),
     }
 }

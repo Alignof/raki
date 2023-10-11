@@ -7,11 +7,11 @@ pub fn parse_opecode(inst: u32) -> Result<OpecodeKind, (Option<u64>, String)> {
     let funct7: u8 = inst.slice(31, 25) as u8;
 
     match inst {
-        0b00010000001000000000000001110011 => Ok(OpecodeKind::OP_SRET),
-        0b00110000001000000000000001110011 => Ok(OpecodeKind::OP_MRET),
-        0b00010000010100000000000001110011 => Ok(OpecodeKind::OP_WFI),
+        0b00010000001000000000000001110011 => Ok(OpecodeKind::SRET),
+        0b00110000001000000000000001110011 => Ok(OpecodeKind::MRET),
+        0b00010000010100000000000001110011 => Ok(OpecodeKind::WFI),
         _ => match funct7 {
-            0b0001001 => Ok(OpecodeKind::OP_SFENCE_VMA),
+            0b0001001 => Ok(OpecodeKind::SFENCE_VMA),
             _ => Err((
                 Some(u64::from(inst)),
                 format!("opecode decoding failed in priv extension, {inst:b}"),
@@ -28,7 +28,7 @@ pub fn parse_rs1(inst: u32, opkind: &OpecodeKind) -> Result<Option<usize>, (Opti
     let rs1: usize = inst.slice(19, 15) as usize;
 
     match opkind {
-        OpecodeKind::OP_SFENCE_VMA => Ok(Some(rs1)),
+        OpecodeKind::SFENCE_VMA => Ok(Some(rs1)),
         _ => Ok(None),
     }
 }
@@ -37,7 +37,7 @@ pub fn parse_rs2(inst: u32, opkind: &OpecodeKind) -> Result<Option<usize>, (Opti
     let rs2: usize = inst.slice(24, 20) as usize;
 
     match opkind {
-        OpecodeKind::OP_SFENCE_VMA => Ok(Some(rs2)),
+        OpecodeKind::SFENCE_VMA => Ok(Some(rs2)),
         _ => Ok(None),
     }
 }

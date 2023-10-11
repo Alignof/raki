@@ -154,7 +154,7 @@ mod decode_32 {
 
         test_32(
             0b10000000000000000000000010110111,
-            OP_LUI,
+            LUI,
             Some(1),
             None,
             None,
@@ -162,7 +162,7 @@ mod decode_32 {
         );
         test_32(
             0b00000000000000000000001010010111,
-            OP_AUIPC,
+            AUIPC,
             Some(5),
             None,
             None,
@@ -170,7 +170,7 @@ mod decode_32 {
         );
         test_32(
             0b11111111100111111111000001101111,
-            OP_JAL,
+            JAL,
             Some(0),
             None,
             None,
@@ -178,7 +178,7 @@ mod decode_32 {
         );
         test_32(
             0b11111110001000001000111010100011,
-            OP_SB,
+            SB,
             None,
             Some(1),
             Some(2),
@@ -186,7 +186,7 @@ mod decode_32 {
         );
         test_32(
             0b11101110110000101000001010010011,
-            OP_ADDI,
+            ADDI,
             Some(5),
             Some(5),
             None,
@@ -194,7 +194,7 @@ mod decode_32 {
         );
         test_32(
             0b00000000000000000000000001110011,
-            OP_ECALL,
+            ECALL,
             None,
             None,
             None,
@@ -202,12 +202,12 @@ mod decode_32 {
         );
         test_32(
             0b00000000000001010100110001100011,
-            OP_BLT,
+            BLT,
             None,
             Some(10),
             Some(0),
             Some(24),
         );
-        test_32(0x00100513, OP_ADDI, Some(10), Some(0), None, Some(1))
+        test_32(0x00100513, ADDI, Some(10), Some(0), None, Some(1))
     }
 }

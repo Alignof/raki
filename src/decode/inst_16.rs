@@ -95,11 +95,11 @@ mod decode_16 {
             assert!(matches!(inst_16.parse_rd(&op_16), _rd));
         };
 
-        test_16(0b0000000000000001, OP_C_NOP, None);
-        test_16(0b0000000010000001, OP_C_ADDI, Some(0));
-        test_16(0b0110000100000001, OP_C_ADDI16SP, None);
-        test_16(0b0110001110000001, OP_C_LUI, None);
-        test_16(0b1000001011000001, OP_C_SRAI, Some(0));
-        test_16(0b1000010011000001, OP_C_ANDI, None);
+        test_16(0b0000000000000001, C_NOP, None);
+        test_16(0b0000000010000001, C_ADDI, Some(0));
+        test_16(0b0110000100000001, C_ADDI16SP, None);
+        test_16(0b0110001110000001, C_LUI, None);
+        test_16(0b1000001011000001, C_SRAI, Some(0));
+        test_16(0b1000010011000001, C_ANDI, None);
     }
 }

@@ -1,10 +1,10 @@
 mod inst_16;
 mod inst_32;
 
-use crate::instruction::{Extensions, Instruction, OpecodeKind};
+use crate::instruction::{Extensions, Instruction, OpcodeKind};
 use crate::Isa;
 
-pub fn only_rv64(opcode: OpecodeKind, isa: Isa) -> Result<OpecodeKind, (Option<u64>, String)> {
+pub fn only_rv64(opcode: OpcodeKind, isa: Isa) -> Result<OpcodeKind, (Option<u64>, String)> {
     match isa {
         Isa::Rv32 => Err((
             None,
@@ -16,13 +16,13 @@ pub fn only_rv64(opcode: OpecodeKind, isa: Isa) -> Result<OpecodeKind, (Option<u
 
 pub trait Decode {
     fn decode(&self, isa: Isa) -> Result<Instruction, (Option<u64>, String)>;
-    fn parse_opecode(self, isa: Isa) -> Result<OpecodeKind, (Option<u64>, String)>;
-    fn parse_rd(self, opkind: &OpecodeKind) -> Result<Option<usize>, (Option<u64>, String)>;
-    fn parse_rs1(self, opkind: &OpecodeKind) -> Result<Option<usize>, (Option<u64>, String)>;
-    fn parse_rs2(self, opkind: &OpecodeKind) -> Result<Option<usize>, (Option<u64>, String)>;
+    fn parse_opcode(self, isa: Isa) -> Result<OpcodeKind, (Option<u64>, String)>;
+    fn parse_rd(self, opkind: &OpcodeKind) -> Result<Option<usize>, (Option<u64>, String)>;
+    fn parse_rs1(self, opkind: &OpcodeKind) -> Result<Option<usize>, (Option<u64>, String)>;
+    fn parse_rs2(self, opkind: &OpcodeKind) -> Result<Option<usize>, (Option<u64>, String)>;
     fn parse_imm(
         self,
-        opkind: &OpecodeKind,
+        opkind: &OpcodeKind,
         isa: Isa,
     ) -> Result<Option<i32>, (Option<u64>, String)>;
 }

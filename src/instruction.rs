@@ -1,10 +1,10 @@
-mod opecode;
+mod opcode;
 
 /// Instruction
 #[derive(Debug)]
 pub struct Instruction {
-    /// Opecode
-    pub opc: OpecodeKind,
+    /// Opcode
+    pub opc: OpcodeKind,
     /// Register Destination
     pub rd: Option<usize>,
     /// Register Source 1
@@ -58,9 +58,10 @@ pub enum InstFormat {
     Uncategorized,
 }
 
+/// Opcode
 #[allow(non_camel_case_types)]
 #[derive(Debug)]
-pub enum OpecodeKind {
+pub enum OpcodeKind {
     //== Base Integer Instruction ==
     LUI,
     AUIPC,

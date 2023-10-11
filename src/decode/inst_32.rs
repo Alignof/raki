@@ -5,13 +5,13 @@ mod priv_extension;
 mod zicsr_extension;
 
 use super::{Decode, DecodeUtil};
-use crate::instruction::{Extensions, Instruction, OpecodeKind};
+use crate::instruction::{Extensions, Instruction, OpcodeKind};
 use crate::Isa;
 
 #[allow(non_snake_case)]
 impl Decode for u32 {
     fn decode(&self, isa: Isa) -> Result<Instruction, (Option<u64>, String)> {
-        let new_opc: OpecodeKind = self.parse_opecode(isa)?;
+        let new_opc: OpcodeKind = self.parse_opcode(isa)?;
         let new_rd: Option<usize> = self.parse_rd(&new_opc)?;
         let new_rs1: Option<usize> = self.parse_rs1(&new_opc)?;
         let new_rs2: Option<usize> = self.parse_rs2(&new_opc)?;
@@ -26,18 +26,18 @@ impl Decode for u32 {
         })
     }
 
-    fn parse_opecode(self, isa: Isa) -> Result<OpecodeKind, (Option<u64>, String)> {
+    fn parse_opcode(self, isa: Isa) -> Result<OpcodeKind, (Option<u64>, String)> {
         match self.extension() {
-            Extensions::BaseI => base_i::parse_opecode(self, isa),
-            Extensions::M => m_extension::parse_opecode(self, isa),
-            Extensions::A => a_extension::parse_opecode(self, isa),
-            Extensions::Zicsr => zicsr_extension::parse_opecode(self),
-            Extensions::Priv => priv_extension::parse_opecode(self),
+            Extensions::BaseI => base_i::parse_opcode(self, isa),
+            Extensions::M => m_extension::parse_opcode(self, isa),
+            Extensions::A => a_extension::parse_opcode(self, isa),
+            Extensions::Zicsr => zicsr_extension::parse_opcode(self),
+            Extensions::Priv => priv_extension::parse_opcode(self),
             _ => panic!("This instruction does not matched any extensions."),
         }
     }
 
-    fn parse_rd(self, opkind: &OpecodeKind) -> Result<Option<usize>, (Option<u64>, String)> {
+    fn parse_rd(self, opkind: &OpcodeKind) -> Result<Option<usize>, (Option<u64>, String)> {
         match self.extension() {
             Extensions::BaseI => base_i::parse_rd(self, opkind),
             Extensions::M => m_extension::parse_rd(self, opkind),
@@ -48,7 +48,7 @@ impl Decode for u32 {
         }
     }
 
-    fn parse_rs1(self, opkind: &OpecodeKind) -> Result<Option<usize>, (Option<u64>, String)> {
+    fn parse_rs1(self, opkind: &OpcodeKind) -> Result<Option<usize>, (Option<u64>, String)> {
         match self.extension() {
             Extensions::BaseI => base_i::parse_rs1(self, opkind),
             Extensions::M => m_extension::parse_rs1(self, opkind),
@@ -59,7 +59,7 @@ impl Decode for u32 {
         }
     }
 
-    fn parse_rs2(self, opkind: &OpecodeKind) -> Result<Option<usize>, (Option<u64>, String)> {
+    fn parse_rs2(self, opkind: &OpcodeKind) -> Result<Option<usize>, (Option<u64>, String)> {
         match self.extension() {
             Extensions::BaseI => base_i::parse_rs2(self, opkind),
             Extensions::M => m_extension::parse_rs2(self, opkind),
@@ -72,7 +72,7 @@ impl Decode for u32 {
 
     fn parse_imm(
         self,
-        opkind: &OpecodeKind,
+        opkind: &OpcodeKind,
         isa: Isa,
     ) -> Result<Option<i32>, (Option<u64>, String)> {
         match self.extension() {
@@ -136,15 +136,15 @@ mod decode_32 {
 
     #[test]
     #[allow(overflowing_literals)]
-    fn parsing_opecode_test() {
-        use OpecodeKind::*;
+    fn parsing_opcode_test() {
+        use OpcodeKind::*;
         let test_32 = |inst_32: u32,
-                       op: OpecodeKind,
+                       op: OpcodeKind,
                        rd: Option<usize>,
                        rs1: Option<usize>,
                        rs2: Option<usize>,
                        imm: Option<i32>| {
-            let op_32 = inst_32.parse_opecode(Isa::Rv64).unwrap();
+            let op_32 = inst_32.parse_opcode(Isa::Rv64).unwrap();
             assert!(matches!(&op_32, op));
             assert_eq!(inst_32.parse_rd(&op_32).unwrap(), rd);
             assert_eq!(inst_32.parse_rs1(&op_32).unwrap(), rs1);

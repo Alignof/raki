@@ -2,12 +2,12 @@
 mod c_extension;
 
 use super::{Decode, DecodeUtil};
-use crate::instruction::{Extensions, Instruction, OpecodeKind};
+use crate::instruction::{Extensions, Instruction, OpcodeKind};
 use crate::Isa;
 
 impl Decode for u16 {
     fn decode(&self, isa: Isa) -> Result<Instruction, (Option<u64>, String)> {
-        let new_opc = self.parse_opecode(isa)?;
+        let new_opc = self.parse_opcode(isa)?;
         let new_rd: Option<usize> = self.parse_rd(&new_opc)?;
         let new_rs1: Option<usize> = self.parse_rs1(&new_opc)?;
         let new_rs2: Option<usize> = self.parse_rs2(&new_opc)?;
@@ -22,28 +22,28 @@ impl Decode for u16 {
         })
     }
 
-    fn parse_opecode(self, isa: Isa) -> Result<OpecodeKind, (Option<u64>, String)> {
+    fn parse_opcode(self, isa: Isa) -> Result<OpcodeKind, (Option<u64>, String)> {
         match self.extension() {
-            Extensions::C => c_extension::parse_opecode(self, isa),
+            Extensions::C => c_extension::parse_opcode(self, isa),
             _ => panic!("It isn't compressed instruction"),
         }
     }
 
-    fn parse_rd(self, opkind: &OpecodeKind) -> Result<Option<usize>, (Option<u64>, String)> {
+    fn parse_rd(self, opkind: &OpcodeKind) -> Result<Option<usize>, (Option<u64>, String)> {
         match self.extension() {
             Extensions::C => c_extension::parse_rd(self, opkind),
             _ => panic!("It isn't compressed instruction"),
         }
     }
 
-    fn parse_rs1(self, opkind: &OpecodeKind) -> Result<Option<usize>, (Option<u64>, String)> {
+    fn parse_rs1(self, opkind: &OpcodeKind) -> Result<Option<usize>, (Option<u64>, String)> {
         match self.extension() {
             Extensions::C => c_extension::parse_rs1(self, opkind),
             _ => panic!("It isn't compressed instruction"),
         }
     }
 
-    fn parse_rs2(self, opkind: &OpecodeKind) -> Result<Option<usize>, (Option<u64>, String)> {
+    fn parse_rs2(self, opkind: &OpcodeKind) -> Result<Option<usize>, (Option<u64>, String)> {
         match self.extension() {
             Extensions::C => c_extension::parse_rs2(self, opkind),
             _ => panic!("It isn't compressed instruction"),
@@ -52,7 +52,7 @@ impl Decode for u16 {
 
     fn parse_imm(
         self,
-        opkind: &OpecodeKind,
+        opkind: &OpcodeKind,
         _isa: Isa,
     ) -> Result<Option<i32>, (Option<u64>, String)> {
         match self.extension() {
@@ -87,10 +87,10 @@ mod decode_16 {
     use super::*;
 
     #[test]
-    fn parsing_compressed_opecode_test() {
-        use OpecodeKind::*;
-        let test_16 = |inst_16: u16, _op: OpecodeKind, _rd: Option<u8>| {
-            let op_16 = inst_16.parse_opecode(Isa::Rv64).unwrap();
+    fn parsing_compressed_opcode_test() {
+        use OpcodeKind::*;
+        let test_16 = |inst_16: u16, _op: OpcodeKind, _rd: Option<u8>| {
+            let op_16 = inst_16.parse_opcode(Isa::Rv64).unwrap();
             assert!(matches!(&op_16, _op));
             assert!(matches!(inst_16.parse_rd(&op_16), _rd));
         };

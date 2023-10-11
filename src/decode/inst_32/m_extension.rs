@@ -34,19 +34,19 @@ pub fn parse_rd(inst: u32, opkind: &OpcodeKind) -> Result<Option<usize>, Decodin
     let rd: usize = inst.slice(11, 7) as usize;
 
     match opkind {
-        OpcodeKind::MUL => Ok(Some(rd)),
-        OpcodeKind::MULH => Ok(Some(rd)),
-        OpcodeKind::MULHSU => Ok(Some(rd)),
-        OpcodeKind::MULHU => Ok(Some(rd)),
-        OpcodeKind::DIV => Ok(Some(rd)),
-        OpcodeKind::DIVU => Ok(Some(rd)),
-        OpcodeKind::REM => Ok(Some(rd)),
-        OpcodeKind::REMU => Ok(Some(rd)),
-        OpcodeKind::MULW => Ok(Some(rd)),
-        OpcodeKind::DIVW => Ok(Some(rd)),
-        OpcodeKind::DIVUW => Ok(Some(rd)),
-        OpcodeKind::REMW => Ok(Some(rd)),
-        OpcodeKind::REMUW => Ok(Some(rd)),
+        OpcodeKind::MUL
+        | OpcodeKind::MULH
+        | OpcodeKind::MULHSU
+        | OpcodeKind::MULHU
+        | OpcodeKind::DIV
+        | OpcodeKind::DIVU
+        | OpcodeKind::REM
+        | OpcodeKind::REMU
+        | OpcodeKind::MULW
+        | OpcodeKind::DIVW
+        | OpcodeKind::DIVUW
+        | OpcodeKind::REMW
+        | OpcodeKind::REMUW => Ok(Some(rd)),
         _ => Ok(None),
     }
 }
@@ -55,19 +55,19 @@ pub fn parse_rs1(inst: u32, opkind: &OpcodeKind) -> Result<Option<usize>, Decodi
     let rs1: usize = inst.slice(19, 15) as usize;
 
     match opkind {
-        OpcodeKind::MUL => Ok(Some(rs1)),
-        OpcodeKind::MULH => Ok(Some(rs1)),
-        OpcodeKind::MULHSU => Ok(Some(rs1)),
-        OpcodeKind::MULHU => Ok(Some(rs1)),
-        OpcodeKind::DIV => Ok(Some(rs1)),
-        OpcodeKind::DIVU => Ok(Some(rs1)),
-        OpcodeKind::REM => Ok(Some(rs1)),
-        OpcodeKind::REMU => Ok(Some(rs1)),
-        OpcodeKind::MULW => Ok(Some(rs1)),
-        OpcodeKind::DIVW => Ok(Some(rs1)),
-        OpcodeKind::DIVUW => Ok(Some(rs1)),
-        OpcodeKind::REMW => Ok(Some(rs1)),
-        OpcodeKind::REMUW => Ok(Some(rs1)),
+        OpcodeKind::MUL
+        | OpcodeKind::MULH
+        | OpcodeKind::MULHSU
+        | OpcodeKind::MULHU
+        | OpcodeKind::DIV
+        | OpcodeKind::DIVU
+        | OpcodeKind::REM
+        | OpcodeKind::REMU
+        | OpcodeKind::MULW
+        | OpcodeKind::DIVW
+        | OpcodeKind::DIVUW
+        | OpcodeKind::REMW
+        | OpcodeKind::REMUW => Ok(Some(rs1)),
         _ => Ok(None),
     }
 }
@@ -76,19 +76,19 @@ pub fn parse_rs2(inst: u32, opkind: &OpcodeKind) -> Result<Option<usize>, Decodi
     let rs2: usize = inst.slice(24, 20) as usize;
 
     match opkind {
-        OpcodeKind::MUL => Ok(Some(rs2)),
-        OpcodeKind::MULH => Ok(Some(rs2)),
-        OpcodeKind::MULHSU => Ok(Some(rs2)),
-        OpcodeKind::MULHU => Ok(Some(rs2)),
-        OpcodeKind::DIV => Ok(Some(rs2)),
-        OpcodeKind::DIVU => Ok(Some(rs2)),
-        OpcodeKind::REM => Ok(Some(rs2)),
-        OpcodeKind::REMU => Ok(Some(rs2)),
-        OpcodeKind::MULW => Ok(Some(rs2)),
-        OpcodeKind::DIVW => Ok(Some(rs2)),
-        OpcodeKind::DIVUW => Ok(Some(rs2)),
-        OpcodeKind::REMW => Ok(Some(rs2)),
-        OpcodeKind::REMUW => Ok(Some(rs2)),
+        OpcodeKind::MUL
+        | OpcodeKind::MULH
+        | OpcodeKind::MULHSU
+        | OpcodeKind::MULHU
+        | OpcodeKind::DIV
+        | OpcodeKind::DIVU
+        | OpcodeKind::REM
+        | OpcodeKind::REMU
+        | OpcodeKind::MULW
+        | OpcodeKind::DIVW
+        | OpcodeKind::DIVUW
+        | OpcodeKind::REMW
+        | OpcodeKind::REMUW => Ok(Some(rs2)),
         _ => Ok(None),
     }
 }

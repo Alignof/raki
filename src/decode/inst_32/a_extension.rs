@@ -47,28 +47,28 @@ pub fn parse_rd(inst: u32, opkind: &OpcodeKind) -> Result<Option<usize>, Decodin
     let rd: usize = inst.slice(11, 7) as usize;
 
     match opkind {
-        OpcodeKind::LR_W => Ok(Some(rd)),
-        OpcodeKind::SC_W => Ok(Some(rd)),
-        OpcodeKind::AMOSWAP_W => Ok(Some(rd)),
-        OpcodeKind::AMOADD_W => Ok(Some(rd)),
-        OpcodeKind::AMOXOR_W => Ok(Some(rd)),
-        OpcodeKind::AMOAND_W => Ok(Some(rd)),
-        OpcodeKind::AMOOR_W => Ok(Some(rd)),
-        OpcodeKind::AMOMIN_W => Ok(Some(rd)),
-        OpcodeKind::AMOMAX_W => Ok(Some(rd)),
-        OpcodeKind::AMOMINU_W => Ok(Some(rd)),
-        OpcodeKind::AMOMAXU_W => Ok(Some(rd)),
-        OpcodeKind::LR_D => Ok(Some(rd)),
-        OpcodeKind::SC_D => Ok(Some(rd)),
-        OpcodeKind::AMOSWAP_D => Ok(Some(rd)),
-        OpcodeKind::AMOADD_D => Ok(Some(rd)),
-        OpcodeKind::AMOXOR_D => Ok(Some(rd)),
-        OpcodeKind::AMOAND_D => Ok(Some(rd)),
-        OpcodeKind::AMOOR_D => Ok(Some(rd)),
-        OpcodeKind::AMOMIN_D => Ok(Some(rd)),
-        OpcodeKind::AMOMAX_D => Ok(Some(rd)),
-        OpcodeKind::AMOMINU_D => Ok(Some(rd)),
-        OpcodeKind::AMOMAXU_D => Ok(Some(rd)),
+        OpcodeKind::LR_W
+        | OpcodeKind::SC_W
+        | OpcodeKind::AMOSWAP_W
+        | OpcodeKind::AMOADD_W
+        | OpcodeKind::AMOXOR_W
+        | OpcodeKind::AMOAND_W
+        | OpcodeKind::AMOOR_W
+        | OpcodeKind::AMOMIN_W
+        | OpcodeKind::AMOMAX_W
+        | OpcodeKind::AMOMINU_W
+        | OpcodeKind::AMOMAXU_W
+        | OpcodeKind::LR_D
+        | OpcodeKind::SC_D
+        | OpcodeKind::AMOSWAP_D
+        | OpcodeKind::AMOADD_D
+        | OpcodeKind::AMOXOR_D
+        | OpcodeKind::AMOAND_D
+        | OpcodeKind::AMOOR_D
+        | OpcodeKind::AMOMIN_D
+        | OpcodeKind::AMOMAX_D
+        | OpcodeKind::AMOMINU_D
+        | OpcodeKind::AMOMAXU_D => Ok(Some(rd)),
         _ => panic!("rd decoding failed in A extension"),
     }
 }
@@ -77,28 +77,28 @@ pub fn parse_rs1(inst: u32, opkind: &OpcodeKind) -> Result<Option<usize>, Decodi
     let rs1: usize = inst.slice(19, 15) as usize;
 
     match opkind {
-        OpcodeKind::LR_W => Ok(Some(rs1)),
-        OpcodeKind::SC_W => Ok(Some(rs1)),
-        OpcodeKind::AMOSWAP_W => Ok(Some(rs1)),
-        OpcodeKind::AMOADD_W => Ok(Some(rs1)),
-        OpcodeKind::AMOXOR_W => Ok(Some(rs1)),
-        OpcodeKind::AMOAND_W => Ok(Some(rs1)),
-        OpcodeKind::AMOOR_W => Ok(Some(rs1)),
-        OpcodeKind::AMOMIN_W => Ok(Some(rs1)),
-        OpcodeKind::AMOMAX_W => Ok(Some(rs1)),
-        OpcodeKind::AMOMINU_W => Ok(Some(rs1)),
-        OpcodeKind::AMOMAXU_W => Ok(Some(rs1)),
-        OpcodeKind::LR_D => Ok(Some(rs1)),
-        OpcodeKind::SC_D => Ok(Some(rs1)),
-        OpcodeKind::AMOSWAP_D => Ok(Some(rs1)),
-        OpcodeKind::AMOADD_D => Ok(Some(rs1)),
-        OpcodeKind::AMOXOR_D => Ok(Some(rs1)),
-        OpcodeKind::AMOAND_D => Ok(Some(rs1)),
-        OpcodeKind::AMOOR_D => Ok(Some(rs1)),
-        OpcodeKind::AMOMIN_D => Ok(Some(rs1)),
-        OpcodeKind::AMOMAX_D => Ok(Some(rs1)),
-        OpcodeKind::AMOMINU_D => Ok(Some(rs1)),
-        OpcodeKind::AMOMAXU_D => Ok(Some(rs1)),
+        OpcodeKind::LR_W
+        | OpcodeKind::SC_W
+        | OpcodeKind::AMOSWAP_W
+        | OpcodeKind::AMOADD_W
+        | OpcodeKind::AMOXOR_W
+        | OpcodeKind::AMOAND_W
+        | OpcodeKind::AMOOR_W
+        | OpcodeKind::AMOMIN_W
+        | OpcodeKind::AMOMAX_W
+        | OpcodeKind::AMOMINU_W
+        | OpcodeKind::AMOMAXU_W
+        | OpcodeKind::LR_D
+        | OpcodeKind::SC_D
+        | OpcodeKind::AMOSWAP_D
+        | OpcodeKind::AMOADD_D
+        | OpcodeKind::AMOXOR_D
+        | OpcodeKind::AMOAND_D
+        | OpcodeKind::AMOOR_D
+        | OpcodeKind::AMOMIN_D
+        | OpcodeKind::AMOMAX_D
+        | OpcodeKind::AMOMINU_D
+        | OpcodeKind::AMOMAXU_D => Ok(Some(rs1)),
         _ => panic!("rs1 decoding failed in A extension"),
     }
 }
@@ -107,26 +107,26 @@ pub fn parse_rs2(inst: u32, opkind: &OpcodeKind) -> Result<Option<usize>, Decodi
     let rs2: usize = inst.slice(24, 20) as usize;
 
     match opkind {
-        OpcodeKind::SC_W => Ok(Some(rs2)),
-        OpcodeKind::AMOSWAP_W => Ok(Some(rs2)),
-        OpcodeKind::AMOADD_W => Ok(Some(rs2)),
-        OpcodeKind::AMOXOR_W => Ok(Some(rs2)),
-        OpcodeKind::AMOAND_W => Ok(Some(rs2)),
-        OpcodeKind::AMOOR_W => Ok(Some(rs2)),
-        OpcodeKind::AMOMIN_W => Ok(Some(rs2)),
-        OpcodeKind::AMOMAX_W => Ok(Some(rs2)),
-        OpcodeKind::AMOMINU_W => Ok(Some(rs2)),
-        OpcodeKind::AMOMAXU_W => Ok(Some(rs2)),
-        OpcodeKind::SC_D => Ok(Some(rs2)),
-        OpcodeKind::AMOSWAP_D => Ok(Some(rs2)),
-        OpcodeKind::AMOADD_D => Ok(Some(rs2)),
-        OpcodeKind::AMOXOR_D => Ok(Some(rs2)),
-        OpcodeKind::AMOAND_D => Ok(Some(rs2)),
-        OpcodeKind::AMOOR_D => Ok(Some(rs2)),
-        OpcodeKind::AMOMIN_D => Ok(Some(rs2)),
-        OpcodeKind::AMOMAX_D => Ok(Some(rs2)),
-        OpcodeKind::AMOMINU_D => Ok(Some(rs2)),
-        OpcodeKind::AMOMAXU_D => Ok(Some(rs2)),
+        OpcodeKind::SC_W
+        | OpcodeKind::AMOSWAP_W
+        | OpcodeKind::AMOADD_W
+        | OpcodeKind::AMOXOR_W
+        | OpcodeKind::AMOAND_W
+        | OpcodeKind::AMOOR_W
+        | OpcodeKind::AMOMIN_W
+        | OpcodeKind::AMOMAX_W
+        | OpcodeKind::AMOMINU_W
+        | OpcodeKind::AMOMAXU_W
+        | OpcodeKind::SC_D
+        | OpcodeKind::AMOSWAP_D
+        | OpcodeKind::AMOADD_D
+        | OpcodeKind::AMOXOR_D
+        | OpcodeKind::AMOAND_D
+        | OpcodeKind::AMOOR_D
+        | OpcodeKind::AMOMIN_D
+        | OpcodeKind::AMOMAX_D
+        | OpcodeKind::AMOMINU_D
+        | OpcodeKind::AMOMAXU_D => Ok(Some(rs2)),
         _ => Ok(None),
     }
 }
@@ -136,28 +136,28 @@ pub fn parse_imm(inst: u32, opkind: &OpcodeKind) -> Result<Option<i32>, Decoding
     let aq_and_rl = || inst.slice(26, 25) as i32;
 
     match opkind {
-        OpcodeKind::LR_W => Ok(Some(aq_and_rl())),
-        OpcodeKind::SC_W => Ok(Some(aq_and_rl())),
-        OpcodeKind::AMOSWAP_W => Ok(Some(aq_and_rl())),
-        OpcodeKind::AMOADD_W => Ok(Some(aq_and_rl())),
-        OpcodeKind::AMOXOR_W => Ok(Some(aq_and_rl())),
-        OpcodeKind::AMOAND_W => Ok(Some(aq_and_rl())),
-        OpcodeKind::AMOOR_W => Ok(Some(aq_and_rl())),
-        OpcodeKind::AMOMIN_W => Ok(Some(aq_and_rl())),
-        OpcodeKind::AMOMAX_W => Ok(Some(aq_and_rl())),
-        OpcodeKind::AMOMINU_W => Ok(Some(aq_and_rl())),
-        OpcodeKind::AMOMAXU_W => Ok(Some(aq_and_rl())),
-        OpcodeKind::LR_D => Ok(Some(aq_and_rl())),
-        OpcodeKind::SC_D => Ok(Some(aq_and_rl())),
-        OpcodeKind::AMOSWAP_D => Ok(Some(aq_and_rl())),
-        OpcodeKind::AMOADD_D => Ok(Some(aq_and_rl())),
-        OpcodeKind::AMOXOR_D => Ok(Some(aq_and_rl())),
-        OpcodeKind::AMOAND_D => Ok(Some(aq_and_rl())),
-        OpcodeKind::AMOOR_D => Ok(Some(aq_and_rl())),
-        OpcodeKind::AMOMIN_D => Ok(Some(aq_and_rl())),
-        OpcodeKind::AMOMAX_D => Ok(Some(aq_and_rl())),
-        OpcodeKind::AMOMINU_D => Ok(Some(aq_and_rl())),
-        OpcodeKind::AMOMAXU_D => Ok(Some(aq_and_rl())),
+        OpcodeKind::LR_W
+        | OpcodeKind::SC_W
+        | OpcodeKind::AMOSWAP_W
+        | OpcodeKind::AMOADD_W
+        | OpcodeKind::AMOXOR_W
+        | OpcodeKind::AMOAND_W
+        | OpcodeKind::AMOOR_W
+        | OpcodeKind::AMOMIN_W
+        | OpcodeKind::AMOMAX_W
+        | OpcodeKind::AMOMINU_W
+        | OpcodeKind::AMOMAXU_W
+        | OpcodeKind::LR_D
+        | OpcodeKind::SC_D
+        | OpcodeKind::AMOSWAP_D
+        | OpcodeKind::AMOADD_D
+        | OpcodeKind::AMOXOR_D
+        | OpcodeKind::AMOAND_D
+        | OpcodeKind::AMOOR_D
+        | OpcodeKind::AMOMIN_D
+        | OpcodeKind::AMOMAX_D
+        | OpcodeKind::AMOMINU_D
+        | OpcodeKind::AMOMAXU_D => Ok(Some(aq_and_rl())),
         _ => panic!("imm decoding failed in A extension"),
     }
 }

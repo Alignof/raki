@@ -6,6 +6,7 @@ impl OpcodeKind {
         match self {
             // Base Integer
             OpcodeKind::LUI => InstFormat::Uncategorized,
+            /*
             OpcodeKind::AUIPC => InstFormat::Uncategorized,
             OpcodeKind::JAL => InstFormat::Uncategorized,
             OpcodeKind::JALR => InstFormat::Uncategorized,
@@ -140,6 +141,8 @@ impl OpcodeKind {
             OpcodeKind::C_ADDW => InstFormat::Uncategorized,
             OpcodeKind::C_LDSP => InstFormat::Uncategorized,
             OpcodeKind::C_SDSP => InstFormat::Uncategorized,
+            */
+            _ => InstFormat::Uncategorized,
         }
     }
 
@@ -147,141 +150,141 @@ impl OpcodeKind {
     pub fn get_extension(&self) -> Extensions {
         match self {
             // Base Integer
-            OpcodeKind::LUI => Extensions::BaseI,
-            OpcodeKind::AUIPC => Extensions::BaseI,
-            OpcodeKind::JAL => Extensions::BaseI,
-            OpcodeKind::JALR => Extensions::BaseI,
-            OpcodeKind::BEQ => Extensions::BaseI,
-            OpcodeKind::BNE => Extensions::BaseI,
-            OpcodeKind::BLT => Extensions::BaseI,
-            OpcodeKind::BGE => Extensions::BaseI,
-            OpcodeKind::BLTU => Extensions::BaseI,
-            OpcodeKind::BGEU => Extensions::BaseI,
-            OpcodeKind::LB => Extensions::BaseI,
-            OpcodeKind::LH => Extensions::BaseI,
-            OpcodeKind::LW => Extensions::BaseI,
-            OpcodeKind::LBU => Extensions::BaseI,
-            OpcodeKind::LHU => Extensions::BaseI,
-            OpcodeKind::SB => Extensions::BaseI,
-            OpcodeKind::SH => Extensions::BaseI,
-            OpcodeKind::SW => Extensions::BaseI,
-            OpcodeKind::ADDI => Extensions::BaseI,
-            OpcodeKind::SLTI => Extensions::BaseI,
-            OpcodeKind::SLTIU => Extensions::BaseI,
-            OpcodeKind::XORI => Extensions::BaseI,
-            OpcodeKind::ORI => Extensions::BaseI,
-            OpcodeKind::ANDI => Extensions::BaseI,
-            OpcodeKind::SLLI => Extensions::BaseI,
-            OpcodeKind::SRLI => Extensions::BaseI,
-            OpcodeKind::SRAI => Extensions::BaseI,
-            OpcodeKind::ADD => Extensions::BaseI,
-            OpcodeKind::SUB => Extensions::BaseI,
-            OpcodeKind::SLL => Extensions::BaseI,
-            OpcodeKind::SLT => Extensions::BaseI,
-            OpcodeKind::SLTU => Extensions::BaseI,
-            OpcodeKind::XOR => Extensions::BaseI,
-            OpcodeKind::SRL => Extensions::BaseI,
-            OpcodeKind::SRA => Extensions::BaseI,
-            OpcodeKind::OR => Extensions::BaseI,
-            OpcodeKind::AND => Extensions::BaseI,
-            OpcodeKind::FENCE => Extensions::BaseI,
-            OpcodeKind::ECALL => Extensions::BaseI,
-            OpcodeKind::EBREAK => Extensions::BaseI,
-            OpcodeKind::LWU => Extensions::BaseI,
-            OpcodeKind::LD => Extensions::BaseI,
-            OpcodeKind::SD => Extensions::BaseI,
-            OpcodeKind::ADDIW => Extensions::BaseI,
-            OpcodeKind::SLLIW => Extensions::BaseI,
-            OpcodeKind::SRLIW => Extensions::BaseI,
-            OpcodeKind::SRAIW => Extensions::BaseI,
-            OpcodeKind::ADDW => Extensions::BaseI,
-            OpcodeKind::SUBW => Extensions::BaseI,
-            OpcodeKind::SLLW => Extensions::BaseI,
-            OpcodeKind::SRLW => Extensions::BaseI,
-            OpcodeKind::SRAW => Extensions::BaseI,
-            OpcodeKind::CSRRW => Extensions::Zicsr,
-            OpcodeKind::CSRRS => Extensions::Zicsr,
-            OpcodeKind::CSRRC => Extensions::Zicsr,
-            OpcodeKind::CSRRWI => Extensions::Zicsr,
-            OpcodeKind::CSRRSI => Extensions::Zicsr,
-            OpcodeKind::CSRRCI => Extensions::Zicsr,
+            OpcodeKind::LUI
+            | OpcodeKind::AUIPC
+            | OpcodeKind::JAL
+            | OpcodeKind::JALR
+            | OpcodeKind::BEQ
+            | OpcodeKind::BNE
+            | OpcodeKind::BLT
+            | OpcodeKind::BGE
+            | OpcodeKind::BLTU
+            | OpcodeKind::BGEU
+            | OpcodeKind::LB
+            | OpcodeKind::LH
+            | OpcodeKind::LW
+            | OpcodeKind::LBU
+            | OpcodeKind::LHU
+            | OpcodeKind::SB
+            | OpcodeKind::SH
+            | OpcodeKind::SW
+            | OpcodeKind::ADDI
+            | OpcodeKind::SLTI
+            | OpcodeKind::SLTIU
+            | OpcodeKind::XORI
+            | OpcodeKind::ORI
+            | OpcodeKind::ANDI
+            | OpcodeKind::SLLI
+            | OpcodeKind::SRLI
+            | OpcodeKind::SRAI
+            | OpcodeKind::ADD
+            | OpcodeKind::SUB
+            | OpcodeKind::SLL
+            | OpcodeKind::SLT
+            | OpcodeKind::SLTU
+            | OpcodeKind::XOR
+            | OpcodeKind::SRL
+            | OpcodeKind::SRA
+            | OpcodeKind::OR
+            | OpcodeKind::AND
+            | OpcodeKind::FENCE
+            | OpcodeKind::ECALL
+            | OpcodeKind::EBREAK
+            | OpcodeKind::LWU
+            | OpcodeKind::LD
+            | OpcodeKind::SD
+            | OpcodeKind::ADDIW
+            | OpcodeKind::SLLIW
+            | OpcodeKind::SRLIW
+            | OpcodeKind::SRAIW
+            | OpcodeKind::ADDW
+            | OpcodeKind::SUBW
+            | OpcodeKind::SLLW
+            | OpcodeKind::SRLW
+            | OpcodeKind::SRAW => Extensions::BaseI,
+            // Control and Status Register Instruction
+            OpcodeKind::CSRRW
+            | OpcodeKind::CSRRS
+            | OpcodeKind::CSRRC
+            | OpcodeKind::CSRRWI
+            | OpcodeKind::CSRRSI
+            | OpcodeKind::CSRRCI => Extensions::Zicsr,
             // Privileged
-            OpcodeKind::SRET => Extensions::Priv,
-            OpcodeKind::MRET => Extensions::Priv,
-            OpcodeKind::WFI => Extensions::Priv,
-            OpcodeKind::SFENCE_VMA => Extensions::Priv,
+            OpcodeKind::SRET | OpcodeKind::MRET | OpcodeKind::WFI | OpcodeKind::SFENCE_VMA => {
+                Extensions::Priv
+            }
             // Multiplication and Division
-            OpcodeKind::MUL => Extensions::M,
-            OpcodeKind::MULH => Extensions::M,
-            OpcodeKind::MULHSU => Extensions::M,
-            OpcodeKind::MULHU => Extensions::M,
-            OpcodeKind::DIV => Extensions::M,
-            OpcodeKind::DIVU => Extensions::M,
-            OpcodeKind::REM => Extensions::M,
-            OpcodeKind::REMU => Extensions::M,
-            OpcodeKind::MULW => Extensions::M,
-            OpcodeKind::DIVW => Extensions::M,
-            OpcodeKind::DIVUW => Extensions::M,
-            OpcodeKind::REMW => Extensions::M,
-            OpcodeKind::REMUW => Extensions::M,
+            OpcodeKind::MUL
+            | OpcodeKind::MULH
+            | OpcodeKind::MULHSU
+            | OpcodeKind::MULHU
+            | OpcodeKind::DIV
+            | OpcodeKind::DIVU
+            | OpcodeKind::REM
+            | OpcodeKind::REMU
+            | OpcodeKind::MULW
+            | OpcodeKind::DIVW
+            | OpcodeKind::DIVUW
+            | OpcodeKind::REMW
+            | OpcodeKind::REMUW => Extensions::M,
             // Atomic
-            OpcodeKind::LR_W => Extensions::A,
-            OpcodeKind::SC_W => Extensions::A,
-            OpcodeKind::AMOSWAP_W => Extensions::A,
-            OpcodeKind::AMOADD_W => Extensions::A,
-            OpcodeKind::AMOXOR_W => Extensions::A,
-            OpcodeKind::AMOAND_W => Extensions::A,
-            OpcodeKind::AMOOR_W => Extensions::A,
-            OpcodeKind::AMOMIN_W => Extensions::A,
-            OpcodeKind::AMOMAX_W => Extensions::A,
-            OpcodeKind::AMOMINU_W => Extensions::A,
-            OpcodeKind::AMOMAXU_W => Extensions::A,
-            OpcodeKind::LR_D => Extensions::A,
-            OpcodeKind::SC_D => Extensions::A,
-            OpcodeKind::AMOSWAP_D => Extensions::A,
-            OpcodeKind::AMOADD_D => Extensions::A,
-            OpcodeKind::AMOXOR_D => Extensions::A,
-            OpcodeKind::AMOAND_D => Extensions::A,
-            OpcodeKind::AMOOR_D => Extensions::A,
-            OpcodeKind::AMOMIN_D => Extensions::A,
-            OpcodeKind::AMOMAX_D => Extensions::A,
-            OpcodeKind::AMOMINU_D => Extensions::A,
-            OpcodeKind::AMOMAXU_D => Extensions::A,
+            OpcodeKind::LR_W
+            | OpcodeKind::SC_W
+            | OpcodeKind::AMOSWAP_W
+            | OpcodeKind::AMOADD_W
+            | OpcodeKind::AMOXOR_W
+            | OpcodeKind::AMOAND_W
+            | OpcodeKind::AMOOR_W
+            | OpcodeKind::AMOMIN_W
+            | OpcodeKind::AMOMAX_W
+            | OpcodeKind::AMOMINU_W
+            | OpcodeKind::AMOMAXU_W
+            | OpcodeKind::LR_D
+            | OpcodeKind::SC_D
+            | OpcodeKind::AMOSWAP_D
+            | OpcodeKind::AMOADD_D
+            | OpcodeKind::AMOXOR_D
+            | OpcodeKind::AMOAND_D
+            | OpcodeKind::AMOOR_D
+            | OpcodeKind::AMOMIN_D
+            | OpcodeKind::AMOMAX_D
+            | OpcodeKind::AMOMINU_D
+            | OpcodeKind::AMOMAXU_D => Extensions::A,
             // Compressed
-            OpcodeKind::C_ADDI4SPN => Extensions::C,
-            OpcodeKind::C_LW => Extensions::C,
-            OpcodeKind::C_SW => Extensions::C,
-            OpcodeKind::C_NOP => Extensions::C,
-            OpcodeKind::C_ADDI => Extensions::C,
-            OpcodeKind::C_JAL => Extensions::C,
-            OpcodeKind::C_LI => Extensions::C,
-            OpcodeKind::C_ADDI16SP => Extensions::C,
-            OpcodeKind::C_LUI => Extensions::C,
-            OpcodeKind::C_SRLI => Extensions::C,
-            OpcodeKind::C_SRAI => Extensions::C,
-            OpcodeKind::C_ANDI => Extensions::C,
-            OpcodeKind::C_SUB => Extensions::C,
-            OpcodeKind::C_XOR => Extensions::C,
-            OpcodeKind::C_OR => Extensions::C,
-            OpcodeKind::C_AND => Extensions::C,
-            OpcodeKind::C_J => Extensions::C,
-            OpcodeKind::C_BEQZ => Extensions::C,
-            OpcodeKind::C_BNEZ => Extensions::C,
-            OpcodeKind::C_SLLI => Extensions::C,
-            OpcodeKind::C_LWSP => Extensions::C,
-            OpcodeKind::C_JR => Extensions::C,
-            OpcodeKind::C_MV => Extensions::C,
-            OpcodeKind::C_EBREAK => Extensions::C,
-            OpcodeKind::C_JALR => Extensions::C,
-            OpcodeKind::C_ADD => Extensions::C,
-            OpcodeKind::C_SWSP => Extensions::C,
-            OpcodeKind::C_LD => Extensions::C,
-            OpcodeKind::C_SD => Extensions::C,
-            OpcodeKind::C_ADDIW => Extensions::C,
-            OpcodeKind::C_SUBW => Extensions::C,
-            OpcodeKind::C_ADDW => Extensions::C,
-            OpcodeKind::C_LDSP => Extensions::C,
-            OpcodeKind::C_SDSP => Extensions::C,
+            OpcodeKind::C_ADDI4SPN
+            | OpcodeKind::C_LW
+            | OpcodeKind::C_SW
+            | OpcodeKind::C_NOP
+            | OpcodeKind::C_ADDI
+            | OpcodeKind::C_JAL
+            | OpcodeKind::C_LI
+            | OpcodeKind::C_ADDI16SP
+            | OpcodeKind::C_LUI
+            | OpcodeKind::C_SRLI
+            | OpcodeKind::C_SRAI
+            | OpcodeKind::C_ANDI
+            | OpcodeKind::C_SUB
+            | OpcodeKind::C_XOR
+            | OpcodeKind::C_OR
+            | OpcodeKind::C_AND
+            | OpcodeKind::C_J
+            | OpcodeKind::C_BEQZ
+            | OpcodeKind::C_BNEZ
+            | OpcodeKind::C_SLLI
+            | OpcodeKind::C_LWSP
+            | OpcodeKind::C_JR
+            | OpcodeKind::C_MV
+            | OpcodeKind::C_EBREAK
+            | OpcodeKind::C_JALR
+            | OpcodeKind::C_ADD
+            | OpcodeKind::C_SWSP
+            | OpcodeKind::C_LD
+            | OpcodeKind::C_SD
+            | OpcodeKind::C_ADDIW
+            | OpcodeKind::C_SUBW
+            | OpcodeKind::C_ADDW
+            | OpcodeKind::C_LDSP
+            | OpcodeKind::C_SDSP => Extensions::C,
         }
     }
 

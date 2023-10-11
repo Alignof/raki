@@ -23,12 +23,12 @@ pub fn parse_rd(inst: u32, opkind: &OpcodeKind) -> Result<Option<usize>, Decodin
     let rd: usize = inst.slice(11, 7) as usize;
 
     match opkind {
-        OpcodeKind::CSRRW => Ok(Some(rd)),
-        OpcodeKind::CSRRS => Ok(Some(rd)),
-        OpcodeKind::CSRRC => Ok(Some(rd)),
-        OpcodeKind::CSRRWI => Ok(Some(rd)),
-        OpcodeKind::CSRRSI => Ok(Some(rd)),
-        OpcodeKind::CSRRCI => Ok(Some(rd)),
+        OpcodeKind::CSRRW
+        | OpcodeKind::CSRRS
+        | OpcodeKind::CSRRC
+        | OpcodeKind::CSRRWI
+        | OpcodeKind::CSRRSI
+        | OpcodeKind::CSRRCI => Ok(Some(rd)),
         _ => panic!("rd not found in csr instruction"),
     }
 }
@@ -38,12 +38,12 @@ pub fn parse_rs1(inst: u32, opkind: &OpcodeKind) -> Result<Option<usize>, Decodi
 
     // LUI, AUIPC, JAL, FENCE, ECALL, EBREAK
     match opkind {
-        OpcodeKind::CSRRW => Ok(Some(rs1)),
-        OpcodeKind::CSRRS => Ok(Some(rs1)),
-        OpcodeKind::CSRRC => Ok(Some(rs1)),
-        OpcodeKind::CSRRWI => Ok(Some(rs1)),
-        OpcodeKind::CSRRSI => Ok(Some(rs1)),
-        OpcodeKind::CSRRCI => Ok(Some(rs1)),
+        OpcodeKind::CSRRW
+        | OpcodeKind::CSRRS
+        | OpcodeKind::CSRRC
+        | OpcodeKind::CSRRWI
+        | OpcodeKind::CSRRSI
+        | OpcodeKind::CSRRCI => Ok(Some(rs1)),
         _ => panic!("rs1 not found in csr instruction"),
     }
 }
@@ -52,12 +52,12 @@ pub fn parse_rs2(inst: u32, opkind: &OpcodeKind) -> Result<Option<usize>, Decodi
     let csr: usize = inst.slice(31, 20) as usize;
 
     match opkind {
-        OpcodeKind::CSRRW => Ok(Some(csr)),
-        OpcodeKind::CSRRS => Ok(Some(csr)),
-        OpcodeKind::CSRRC => Ok(Some(csr)),
-        OpcodeKind::CSRRWI => Ok(Some(csr)),
-        OpcodeKind::CSRRSI => Ok(Some(csr)),
-        OpcodeKind::CSRRCI => Ok(Some(csr)),
+        OpcodeKind::CSRRW
+        | OpcodeKind::CSRRS
+        | OpcodeKind::CSRRC
+        | OpcodeKind::CSRRWI
+        | OpcodeKind::CSRRSI
+        | OpcodeKind::CSRRCI => Ok(Some(csr)),
         _ => panic!("rs2 not found in csr instruction"),
     }
 }

@@ -135,45 +135,45 @@ pub fn parse_rd(inst: u32, opkind: &OpcodeKind) -> Result<Option<usize>, Decodin
 
     // B(EQ|NE|LT|GE|LTU|GEU), S(B|H|W), ECALL, EBREAK
     match opkind {
-        OpcodeKind::LUI => Ok(Some(rd)),
-        OpcodeKind::AUIPC => Ok(Some(rd)),
-        OpcodeKind::JAL => Ok(Some(rd)),
-        OpcodeKind::JALR => Ok(Some(rd)),
-        OpcodeKind::LB => Ok(Some(rd)),
-        OpcodeKind::LH => Ok(Some(rd)),
-        OpcodeKind::LW => Ok(Some(rd)),
-        OpcodeKind::LBU => Ok(Some(rd)),
-        OpcodeKind::LHU => Ok(Some(rd)),
-        OpcodeKind::ADDI => Ok(Some(rd)),
-        OpcodeKind::SLTI => Ok(Some(rd)),
-        OpcodeKind::SLTIU => Ok(Some(rd)),
-        OpcodeKind::XORI => Ok(Some(rd)),
-        OpcodeKind::ORI => Ok(Some(rd)),
-        OpcodeKind::ANDI => Ok(Some(rd)),
-        OpcodeKind::SLLI => Ok(Some(rd)),
-        OpcodeKind::SRLI => Ok(Some(rd)),
-        OpcodeKind::SRAI => Ok(Some(rd)),
-        OpcodeKind::ADD => Ok(Some(rd)),
-        OpcodeKind::SUB => Ok(Some(rd)),
-        OpcodeKind::SLL => Ok(Some(rd)),
-        OpcodeKind::SLT => Ok(Some(rd)),
-        OpcodeKind::SLTU => Ok(Some(rd)),
-        OpcodeKind::XOR => Ok(Some(rd)),
-        OpcodeKind::SRL => Ok(Some(rd)),
-        OpcodeKind::SRA => Ok(Some(rd)),
-        OpcodeKind::OR => Ok(Some(rd)),
-        OpcodeKind::AND => Ok(Some(rd)),
-        OpcodeKind::LWU => Ok(Some(rd)),
-        OpcodeKind::LD => Ok(Some(rd)),
-        OpcodeKind::ADDIW => Ok(Some(rd)),
-        OpcodeKind::SLLIW => Ok(Some(rd)),
-        OpcodeKind::SRLIW => Ok(Some(rd)),
-        OpcodeKind::SRAIW => Ok(Some(rd)),
-        OpcodeKind::ADDW => Ok(Some(rd)),
-        OpcodeKind::SUBW => Ok(Some(rd)),
-        OpcodeKind::SLLW => Ok(Some(rd)),
-        OpcodeKind::SRLW => Ok(Some(rd)),
-        OpcodeKind::SRAW => Ok(Some(rd)),
+        OpcodeKind::LUI
+        | OpcodeKind::AUIPC
+        | OpcodeKind::JAL
+        | OpcodeKind::JALR
+        | OpcodeKind::LB
+        | OpcodeKind::LH
+        | OpcodeKind::LW
+        | OpcodeKind::LBU
+        | OpcodeKind::LHU
+        | OpcodeKind::ADDI
+        | OpcodeKind::SLTI
+        | OpcodeKind::SLTIU
+        | OpcodeKind::XORI
+        | OpcodeKind::ORI
+        | OpcodeKind::ANDI
+        | OpcodeKind::SLLI
+        | OpcodeKind::SRLI
+        | OpcodeKind::SRAI
+        | OpcodeKind::ADD
+        | OpcodeKind::SUB
+        | OpcodeKind::SLL
+        | OpcodeKind::SLT
+        | OpcodeKind::SLTU
+        | OpcodeKind::XOR
+        | OpcodeKind::SRL
+        | OpcodeKind::SRA
+        | OpcodeKind::OR
+        | OpcodeKind::AND
+        | OpcodeKind::LWU
+        | OpcodeKind::LD
+        | OpcodeKind::ADDIW
+        | OpcodeKind::SLLIW
+        | OpcodeKind::SRLIW
+        | OpcodeKind::SRAIW
+        | OpcodeKind::ADDW
+        | OpcodeKind::SUBW
+        | OpcodeKind::SLLW
+        | OpcodeKind::SRLW
+        | OpcodeKind::SRAW => Ok(Some(rd)),
         _ => Ok(None),
     }
 }
@@ -183,52 +183,52 @@ pub fn parse_rs1(inst: u32, opkind: &OpcodeKind) -> Result<Option<usize>, Decodi
 
     // LUI, AUIPC, JAL, FENCE, ECALL, EBREAK
     match opkind {
-        OpcodeKind::JALR => Ok(Some(rs1)),
-        OpcodeKind::BEQ => Ok(Some(rs1)),
-        OpcodeKind::BNE => Ok(Some(rs1)),
-        OpcodeKind::BLT => Ok(Some(rs1)),
-        OpcodeKind::BGE => Ok(Some(rs1)),
-        OpcodeKind::BLTU => Ok(Some(rs1)),
-        OpcodeKind::BGEU => Ok(Some(rs1)),
-        OpcodeKind::LB => Ok(Some(rs1)),
-        OpcodeKind::LH => Ok(Some(rs1)),
-        OpcodeKind::LW => Ok(Some(rs1)),
-        OpcodeKind::LBU => Ok(Some(rs1)),
-        OpcodeKind::LHU => Ok(Some(rs1)),
-        OpcodeKind::SB => Ok(Some(rs1)),
-        OpcodeKind::SH => Ok(Some(rs1)),
-        OpcodeKind::SW => Ok(Some(rs1)),
-        OpcodeKind::ADDI => Ok(Some(rs1)),
-        OpcodeKind::SLTI => Ok(Some(rs1)),
-        OpcodeKind::SLTIU => Ok(Some(rs1)),
-        OpcodeKind::XORI => Ok(Some(rs1)),
-        OpcodeKind::ORI => Ok(Some(rs1)),
-        OpcodeKind::ANDI => Ok(Some(rs1)),
-        OpcodeKind::SLLI => Ok(Some(rs1)),
-        OpcodeKind::SRLI => Ok(Some(rs1)),
-        OpcodeKind::SRAI => Ok(Some(rs1)),
-        OpcodeKind::ADD => Ok(Some(rs1)),
-        OpcodeKind::SUB => Ok(Some(rs1)),
-        OpcodeKind::SLL => Ok(Some(rs1)),
-        OpcodeKind::SLT => Ok(Some(rs1)),
-        OpcodeKind::SLTU => Ok(Some(rs1)),
-        OpcodeKind::XOR => Ok(Some(rs1)),
-        OpcodeKind::SRL => Ok(Some(rs1)),
-        OpcodeKind::SRA => Ok(Some(rs1)),
-        OpcodeKind::OR => Ok(Some(rs1)),
-        OpcodeKind::AND => Ok(Some(rs1)),
-        OpcodeKind::LWU => Ok(Some(rs1)),
-        OpcodeKind::LD => Ok(Some(rs1)),
-        OpcodeKind::SD => Ok(Some(rs1)),
-        OpcodeKind::ADDIW => Ok(Some(rs1)),
-        OpcodeKind::SLLIW => Ok(Some(rs1)),
-        OpcodeKind::SRLIW => Ok(Some(rs1)),
-        OpcodeKind::SRAIW => Ok(Some(rs1)),
-        OpcodeKind::ADDW => Ok(Some(rs1)),
-        OpcodeKind::SUBW => Ok(Some(rs1)),
-        OpcodeKind::SLLW => Ok(Some(rs1)),
-        OpcodeKind::SRLW => Ok(Some(rs1)),
-        OpcodeKind::SRAW => Ok(Some(rs1)),
+        OpcodeKind::JALR
+        | OpcodeKind::BEQ
+        | OpcodeKind::BNE
+        | OpcodeKind::BLT
+        | OpcodeKind::BGE
+        | OpcodeKind::BLTU
+        | OpcodeKind::BGEU
+        | OpcodeKind::LB
+        | OpcodeKind::LH
+        | OpcodeKind::LW
+        | OpcodeKind::LBU
+        | OpcodeKind::LHU
+        | OpcodeKind::SB
+        | OpcodeKind::SH
+        | OpcodeKind::SW
+        | OpcodeKind::ADDI
+        | OpcodeKind::SLTI
+        | OpcodeKind::SLTIU
+        | OpcodeKind::XORI
+        | OpcodeKind::ORI
+        | OpcodeKind::ANDI
+        | OpcodeKind::SLLI
+        | OpcodeKind::SRLI
+        | OpcodeKind::SRAI
+        | OpcodeKind::ADD
+        | OpcodeKind::SUB
+        | OpcodeKind::SLL
+        | OpcodeKind::SLT
+        | OpcodeKind::SLTU
+        | OpcodeKind::XOR
+        | OpcodeKind::SRL
+        | OpcodeKind::SRA
+        | OpcodeKind::OR
+        | OpcodeKind::AND
+        | OpcodeKind::LWU
+        | OpcodeKind::LD
+        | OpcodeKind::SD
+        | OpcodeKind::ADDIW
+        | OpcodeKind::SLLIW
+        | OpcodeKind::SRLIW
+        | OpcodeKind::SRAIW
+        | OpcodeKind::ADDW
+        | OpcodeKind::SUBW
+        | OpcodeKind::SLLW
+        | OpcodeKind::SRLW
+        | OpcodeKind::SRAW => Ok(Some(rs1)),
         _ => Ok(None),
     }
 }
@@ -240,31 +240,31 @@ pub fn parse_rs2(inst: u32, opkind: &OpcodeKind) -> Result<Option<usize>, Decodi
     // ADDI, SLTI, SLTIU, XORI, ORI, ANDI, SLLI,
     // FENCE, ECALL, EBREAK
     match opkind {
-        OpcodeKind::BEQ => Ok(Some(rs2)),
-        OpcodeKind::BNE => Ok(Some(rs2)),
-        OpcodeKind::BLT => Ok(Some(rs2)),
-        OpcodeKind::BGE => Ok(Some(rs2)),
-        OpcodeKind::BLTU => Ok(Some(rs2)),
-        OpcodeKind::BGEU => Ok(Some(rs2)),
-        OpcodeKind::SB => Ok(Some(rs2)),
-        OpcodeKind::SH => Ok(Some(rs2)),
-        OpcodeKind::SW => Ok(Some(rs2)),
-        OpcodeKind::ADD => Ok(Some(rs2)),
-        OpcodeKind::SUB => Ok(Some(rs2)),
-        OpcodeKind::SLL => Ok(Some(rs2)),
-        OpcodeKind::SLT => Ok(Some(rs2)),
-        OpcodeKind::SLTU => Ok(Some(rs2)),
-        OpcodeKind::XOR => Ok(Some(rs2)),
-        OpcodeKind::SRL => Ok(Some(rs2)),
-        OpcodeKind::SRA => Ok(Some(rs2)),
-        OpcodeKind::OR => Ok(Some(rs2)),
-        OpcodeKind::AND => Ok(Some(rs2)),
-        OpcodeKind::SD => Ok(Some(rs2)),
-        OpcodeKind::ADDW => Ok(Some(rs2)),
-        OpcodeKind::SUBW => Ok(Some(rs2)),
-        OpcodeKind::SLLW => Ok(Some(rs2)),
-        OpcodeKind::SRLW => Ok(Some(rs2)),
-        OpcodeKind::SRAW => Ok(Some(rs2)),
+        OpcodeKind::BEQ
+        | OpcodeKind::BNE
+        | OpcodeKind::BLT
+        | OpcodeKind::BGE
+        | OpcodeKind::BLTU
+        | OpcodeKind::BGEU
+        | OpcodeKind::SB
+        | OpcodeKind::SH
+        | OpcodeKind::SW
+        | OpcodeKind::ADD
+        | OpcodeKind::SUB
+        | OpcodeKind::SLL
+        | OpcodeKind::SLT
+        | OpcodeKind::SLTU
+        | OpcodeKind::XOR
+        | OpcodeKind::SRL
+        | OpcodeKind::SRA
+        | OpcodeKind::OR
+        | OpcodeKind::AND
+        | OpcodeKind::SD
+        | OpcodeKind::ADDW
+        | OpcodeKind::SUBW
+        | OpcodeKind::SLLW
+        | OpcodeKind::SRLW
+        | OpcodeKind::SRAW => Ok(Some(rs2)),
         _ => Ok(None),
     }
 }
@@ -296,45 +296,40 @@ pub fn parse_imm(inst: u32, opkind: &OpcodeKind, isa: Isa) -> Result<Option<i32>
     let shamt6 = || inst.slice(25, 20) as i32;
 
     match opkind {
-        OpcodeKind::LUI => Ok(Some(U_type())),
-        OpcodeKind::AUIPC => Ok(Some(U_type())),
+        // u-type
+        OpcodeKind::LUI | OpcodeKind::AUIPC => Ok(Some(U_type())),
+        // j-type
         OpcodeKind::JAL => Ok(Some(J_type())),
-        OpcodeKind::JALR => Ok(Some(I_type())),
-        OpcodeKind::BEQ => Ok(Some(B_type())),
-        OpcodeKind::BNE => Ok(Some(B_type())),
-        OpcodeKind::BLT => Ok(Some(B_type())),
-        OpcodeKind::BGE => Ok(Some(B_type())),
-        OpcodeKind::BLTU => Ok(Some(B_type())),
-        OpcodeKind::BGEU => Ok(Some(B_type())),
-        OpcodeKind::LB => Ok(Some(I_type())),
-        OpcodeKind::LH => Ok(Some(I_type())),
-        OpcodeKind::LW => Ok(Some(I_type())),
-        OpcodeKind::LBU => Ok(Some(I_type())),
-        OpcodeKind::LHU => Ok(Some(I_type())),
-        OpcodeKind::SB => Ok(Some(S_type())),
-        OpcodeKind::SH => Ok(Some(S_type())),
-        OpcodeKind::SW => Ok(Some(S_type())),
-        OpcodeKind::ADDI => Ok(Some(I_type())),
-        OpcodeKind::SLTI => Ok(Some(I_type())),
-        OpcodeKind::SLTIU => Ok(Some(I_type())),
-        OpcodeKind::XORI => Ok(Some(I_type())),
-        OpcodeKind::ORI => Ok(Some(I_type())),
-        OpcodeKind::ANDI => Ok(Some(I_type())),
-        OpcodeKind::SLLI | OpcodeKind::SRLI => match isa {
+        // b-type
+        OpcodeKind::BEQ
+        | OpcodeKind::BNE
+        | OpcodeKind::BLT
+        | OpcodeKind::BGE
+        | OpcodeKind::BLTU
+        | OpcodeKind::BGEU => Ok(Some(B_type())),
+        // i-type
+        OpcodeKind::JALR
+        | OpcodeKind::LB
+        | OpcodeKind::LH
+        | OpcodeKind::LW
+        | OpcodeKind::LBU
+        | OpcodeKind::LHU
+        | OpcodeKind::ADDI
+        | OpcodeKind::SLTI
+        | OpcodeKind::SLTIU
+        | OpcodeKind::XORI
+        | OpcodeKind::ORI
+        | OpcodeKind::ANDI
+        | OpcodeKind::LWU
+        | OpcodeKind::ADDIW
+        | OpcodeKind::LD => Ok(Some(I_type())),
+        // s-type
+        OpcodeKind::SD | OpcodeKind::SB | OpcodeKind::SH | OpcodeKind::SW => Ok(Some(S_type())),
+        OpcodeKind::SRAI | OpcodeKind::SLLI | OpcodeKind::SRLI => match isa {
             Isa::Rv32 => Ok(Some(shamt5())), // shamt
             Isa::Rv64 => Ok(Some(shamt6())),
         },
-        OpcodeKind::SRAI => match isa {
-            Isa::Rv32 => Ok(Some(shamt5())), // shamt
-            Isa::Rv64 => Ok(Some(shamt6())),
-        },
-        OpcodeKind::SLLIW => Ok(Some(shamt5())),
-        OpcodeKind::SRLIW => Ok(Some(shamt5())),
-        OpcodeKind::SRAIW => Ok(Some(shamt5())),
-        OpcodeKind::LWU => Ok(Some(I_type())),
-        OpcodeKind::LD => Ok(Some(I_type())),
-        OpcodeKind::SD => Ok(Some(S_type())),
-        OpcodeKind::ADDIW => Ok(Some(I_type())),
+        OpcodeKind::SLLIW | OpcodeKind::SRLIW | OpcodeKind::SRAIW => Ok(Some(shamt5())),
         _ => Ok(None),
     }
 }

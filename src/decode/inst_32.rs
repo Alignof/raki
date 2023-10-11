@@ -5,7 +5,7 @@ mod priv_extension;
 mod zicsr_extension;
 
 use super::{Decode, DecodeUtil};
-use crate::instruction::{Extensions, Instruction, OpcodeKind};
+use crate::instruction::{Extensions, InstFormat, Instruction, OpcodeKind};
 use crate::Isa;
 
 #[allow(non_snake_case)]
@@ -16,6 +16,8 @@ impl Decode for u32 {
         let new_rs1: Option<usize> = self.parse_rs1(&new_opc)?;
         let new_rs2: Option<usize> = self.parse_rs2(&new_opc)?;
         let new_imm: Option<i32> = self.parse_imm(&new_opc, isa)?;
+        let new_ext: Extensions = new_opc.get_extension();
+        let new_fmt: InstFormat = new_opc.get_format();
 
         Ok(Instruction {
             opc: new_opc,
@@ -23,6 +25,8 @@ impl Decode for u32 {
             rs1: new_rs1,
             rs2: new_rs2,
             imm: new_imm,
+            extension: new_ext,
+            inst_format: new_fmt,
         })
     }
 

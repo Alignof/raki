@@ -1,16 +1,10 @@
-use super::super::{only_rv64, DecodeUtil};
+use super::super::{only_rv64, DecodeUtil, DecodingError};
 use crate::instruction::OpcodeKind;
 use crate::Isa;
 
-pub fn parse_opcode(inst: u32, isa: Isa) -> Result<OpcodeKind, (Option<u64>, String)> {
+pub fn parse_opcode(inst: u32, isa: Isa) -> Result<OpcodeKind, DecodingError> {
     let opmap: u8 = inst.slice(6, 0) as u8;
     let funct3: u8 = inst.slice(14, 12) as u8;
-    let illegal_inst_exception = || {
-        Err((
-            Some(u64::from(inst)),
-            format!("opcode decoding failed in m extension, {inst:b}"),
-        ))
-    };
 
     match opmap {
         0b0110011 => match funct3 {
@@ -22,7 +16,7 @@ pub fn parse_opcode(inst: u32, isa: Isa) -> Result<OpcodeKind, (Option<u64>, Str
             0b101 => Ok(OpcodeKind::DIVU),
             0b110 => Ok(OpcodeKind::REM),
             0b111 => Ok(OpcodeKind::REMU),
-            _ => illegal_inst_exception(),
+            _ => Err(DecodingError::IllegalOpcode),
         },
         0b0111011 => match funct3 {
             0b000 => only_rv64(OpcodeKind::MULW, isa),
@@ -30,13 +24,13 @@ pub fn parse_opcode(inst: u32, isa: Isa) -> Result<OpcodeKind, (Option<u64>, Str
             0b101 => only_rv64(OpcodeKind::DIVUW, isa),
             0b110 => only_rv64(OpcodeKind::REMW, isa),
             0b111 => only_rv64(OpcodeKind::REMUW, isa),
-            _ => illegal_inst_exception(),
+            _ => Err(DecodingError::IllegalOpcode),
         },
-        _ => illegal_inst_exception(),
+        _ => Err(DecodingError::IllegalOpcode),
     }
 }
 
-pub fn parse_rd(inst: u32, opkind: &OpcodeKind) -> Result<Option<usize>, (Option<u64>, String)> {
+pub fn parse_rd(inst: u32, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError> {
     let rd: usize = inst.slice(11, 7) as usize;
 
     match opkind {
@@ -57,7 +51,7 @@ pub fn parse_rd(inst: u32, opkind: &OpcodeKind) -> Result<Option<usize>, (Option
     }
 }
 
-pub fn parse_rs1(inst: u32, opkind: &OpcodeKind) -> Result<Option<usize>, (Option<u64>, String)> {
+pub fn parse_rs1(inst: u32, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError> {
     let rs1: usize = inst.slice(19, 15) as usize;
 
     match opkind {
@@ -78,7 +72,7 @@ pub fn parse_rs1(inst: u32, opkind: &OpcodeKind) -> Result<Option<usize>, (Optio
     }
 }
 
-pub fn parse_rs2(inst: u32, opkind: &OpcodeKind) -> Result<Option<usize>, (Option<u64>, String)> {
+pub fn parse_rs2(inst: u32, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError> {
     let rs2: usize = inst.slice(24, 20) as usize;
 
     match opkind {
@@ -100,6 +94,6 @@ pub fn parse_rs2(inst: u32, opkind: &OpcodeKind) -> Result<Option<usize>, (Optio
 }
 
 #[allow(non_snake_case)]
-pub fn parse_imm(_inst: u32, _opkind: &OpcodeKind) -> Result<Option<i32>, (Option<u64>, String)> {
+pub fn parse_imm(_inst: u32, _opkind: &OpcodeKind) -> Result<Option<i32>, DecodingError> {
     Ok(None)
 }

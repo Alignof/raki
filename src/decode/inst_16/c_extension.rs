@@ -1,32 +1,23 @@
-use super::super::{only_rv64, DecodeUtil};
+use super::super::{only_rv64, DecodeUtil, DecodingError};
 use crate::instruction::OpcodeKind;
 use crate::Isa;
 
-fn quadrant0(inst: u16, opmap: &u8, isa: Isa) -> Result<OpcodeKind, (Option<u64>, String)> {
+fn quadrant0(inst: u16, opmap: &u8, isa: Isa) -> Result<OpcodeKind, DecodingError> {
     match opmap {
         0b000 => Ok(OpcodeKind::C_ADDI4SPN),
         0b010 => Ok(OpcodeKind::C_LW),
         0b011 => only_rv64(OpcodeKind::C_LD, isa),
         0b110 => Ok(OpcodeKind::C_SW),
         0b111 => only_rv64(OpcodeKind::C_SD, isa),
-        _ => Err((
-            Some(u64::from(inst)),
-            format!("opcode decoding failed, {inst:b}"),
-        )),
+        _ => Err(DecodingError::IllegalOpcode),
     }
 }
 
-fn quadrant1(inst: u16, opmap: &u8, isa: Isa) -> Result<OpcodeKind, (Option<u64>, String)> {
+fn quadrant1(inst: u16, opmap: &u8, isa: Isa) -> Result<OpcodeKind, DecodingError> {
     let sr_flag: u8 = inst.slice(11, 10) as u8;
     let lo_flag: u8 = inst.slice(6, 5) as u8;
     let mi_flag: u8 = inst.slice(11, 7) as u8;
     let bit_12: u8 = inst.slice(12, 12) as u8;
-    let illegal_inst_exception = || {
-        Err((
-            Some(u64::from(inst)),
-            format!("opcode decoding failed in c extension, {inst:b}"),
-        ))
-    };
 
     match opmap {
         0b000 => match mi_flag {
@@ -52,25 +43,25 @@ fn quadrant1(inst: u16, opmap: &u8, isa: Isa) -> Result<OpcodeKind, (Option<u64>
                     0b01 => Ok(OpcodeKind::C_XOR),
                     0b10 => Ok(OpcodeKind::C_OR),
                     0b11 => Ok(OpcodeKind::C_AND),
-                    _ => illegal_inst_exception(),
+                    _ => Err(DecodingError::IllegalOpcode),
                 },
                 0b1 => match lo_flag {
                     0b00 => only_rv64(OpcodeKind::C_SUBW, isa),
                     0b01 => only_rv64(OpcodeKind::C_ADDW, isa),
-                    _ => illegal_inst_exception(),
+                    _ => Err(DecodingError::IllegalOpcode),
                 },
                 _ => unreachable!(),
             },
-            _ => illegal_inst_exception(),
+            _ => Err(DecodingError::IllegalOpcode),
         },
         0b101 => Ok(OpcodeKind::C_J),
         0b110 => Ok(OpcodeKind::C_BEQZ),
         0b111 => Ok(OpcodeKind::C_BNEZ),
-        _ => illegal_inst_exception(),
+        _ => Err(DecodingError::IllegalOpcode),
     }
 }
 
-fn quadrant2(inst: u16, opmap: &u8, isa: Isa) -> Result<OpcodeKind, (Option<u64>, String)> {
+fn quadrant2(inst: u16, opmap: &u8, isa: Isa) -> Result<OpcodeKind, DecodingError> {
     let lo_flag: u8 = inst.slice(6, 2) as u8;
     let mi_flag: u8 = inst.slice(11, 7) as u8;
     let hi_flag: u8 = inst.slice(12, 12) as u8;
@@ -91,43 +82,31 @@ fn quadrant2(inst: u16, opmap: &u8, isa: Isa) -> Result<OpcodeKind, (Option<u64>
                     _ => Ok(OpcodeKind::C_ADD),
                 },
             },
-            _ => Err((
-                Some(u64::from(inst)),
-                format!("opcode decoding failed, {inst:b}"),
-            )),
+            _ => Err(DecodingError::IllegalOpcode),
         },
         0b110 => Ok(OpcodeKind::C_SWSP),
         0b111 => only_rv64(OpcodeKind::C_SDSP, isa),
-        _ => Err((
-            Some(u64::from(inst)),
-            format!("opcode decoding failed, {inst:b}"),
-        )),
+        _ => Err(DecodingError::IllegalOpcode),
     }
 }
 
-pub fn parse_opcode(inst: u16, isa: Isa) -> Result<OpcodeKind, (Option<u64>, String)> {
+pub fn parse_opcode(inst: u16, isa: Isa) -> Result<OpcodeKind, DecodingError> {
     let opmap: u8 = inst.slice(15, 13) as u8;
     let quadrant: u8 = inst.slice(1, 0) as u8;
 
     if inst == 0b0000000000000000 {
-        return Err((
-            Some(u64::from(inst)),
-            format!("opcode decoding failed, {inst:b}"),
-        ));
+        return Err(DecodingError::IllegalOpcode);
     }
 
     match quadrant {
         0b00 => quadrant0(inst, &opmap, isa),
         0b01 => quadrant1(inst, &opmap, isa),
         0b10 => quadrant2(inst, &opmap, isa),
-        _ => Err((
-            Some(u64::from(inst)),
-            format!("opcode decoding failed, {inst:b}"),
-        )),
+        _ => Err(DecodingError::IllegalOpcode),
     }
 }
 
-pub fn parse_rd(inst: u16, opkind: &OpcodeKind) -> Result<Option<usize>, (Option<u64>, String)> {
+pub fn parse_rd(inst: u16, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError> {
     // see riscv-spec-20191213.pdf, page 100, Table 16.2
     let q0_rd: usize = (inst.slice(4, 2) + 8) as usize;
     let q1_rd: usize = (inst.slice(9, 7) + 8) as usize;
@@ -166,7 +145,7 @@ pub fn parse_rd(inst: u16, opkind: &OpcodeKind) -> Result<Option<usize>, (Option
     }
 }
 
-pub fn parse_rs1(inst: u16, opkind: &OpcodeKind) -> Result<Option<usize>, (Option<u64>, String)> {
+pub fn parse_rs1(inst: u16, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError> {
     // see riscv-spec-20191213.pdf, page 100, Table 16.2
     let q0_rs1: usize = (inst.slice(9, 7) + 8) as usize;
     let q1_rs1: usize = (inst.slice(9, 7) + 8) as usize;
@@ -203,7 +182,7 @@ pub fn parse_rs1(inst: u16, opkind: &OpcodeKind) -> Result<Option<usize>, (Optio
     }
 }
 
-pub fn parse_rs2(inst: u16, opkind: &OpcodeKind) -> Result<Option<usize>, (Option<u64>, String)> {
+pub fn parse_rs2(inst: u16, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError> {
     // see riscv-spec-20191213.pdf, page 100, Table 16.2
     let q0_rs2: usize = (inst.slice(4, 2) + 8) as usize;
     let q1_rs2: usize = (inst.slice(4, 2) + 8) as usize;
@@ -229,7 +208,7 @@ pub fn parse_rs2(inst: u16, opkind: &OpcodeKind) -> Result<Option<usize>, (Optio
     }
 }
 
-pub fn parse_imm(inst: u16, opkind: &OpcodeKind) -> Result<Option<i32>, (Option<u64>, String)> {
+pub fn parse_imm(inst: u16, opkind: &OpcodeKind) -> Result<Option<i32>, DecodingError> {
     let q0_uimm = || (inst.slice(12, 10).set(&[5, 4, 3]) | inst.slice(6, 5).set(&[2, 6])) as i32;
     let q0_uimm_64 = || (inst.slice(12, 10).set(&[5, 4, 3]) | inst.slice(6, 5).set(&[7, 6])) as i32;
     let q0_nzuimm = || inst.slice(12, 5).set(&[5, 4, 9, 8, 7, 6, 2, 3]) as i32;

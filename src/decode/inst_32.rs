@@ -4,13 +4,13 @@ mod m_extension;
 mod priv_extension;
 mod zicsr_extension;
 
-use super::{Decode, DecodeUtil};
+use super::{Decode, DecodeUtil, DecodingError};
 use crate::instruction::{Extensions, InstFormat, Instruction, OpcodeKind};
 use crate::Isa;
 
 #[allow(non_snake_case)]
 impl Decode for u32 {
-    fn decode(&self, isa: Isa) -> Result<Instruction, (Option<u64>, String)> {
+    fn decode(&self, isa: Isa) -> Result<Instruction, DecodingError> {
         let new_opc: OpcodeKind = self.parse_opcode(isa)?;
         let new_rd: Option<usize> = self.parse_rd(&new_opc)?;
         let new_rs1: Option<usize> = self.parse_rs1(&new_opc)?;
@@ -30,7 +30,7 @@ impl Decode for u32 {
         })
     }
 
-    fn parse_opcode(self, isa: Isa) -> Result<OpcodeKind, (Option<u64>, String)> {
+    fn parse_opcode(self, isa: Isa) -> Result<OpcodeKind, DecodingError> {
         match self.extension() {
             Extensions::BaseI => base_i::parse_opcode(self, isa),
             Extensions::M => m_extension::parse_opcode(self, isa),
@@ -41,7 +41,7 @@ impl Decode for u32 {
         }
     }
 
-    fn parse_rd(self, opkind: &OpcodeKind) -> Result<Option<usize>, (Option<u64>, String)> {
+    fn parse_rd(self, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError> {
         match self.extension() {
             Extensions::BaseI => base_i::parse_rd(self, opkind),
             Extensions::M => m_extension::parse_rd(self, opkind),
@@ -52,7 +52,7 @@ impl Decode for u32 {
         }
     }
 
-    fn parse_rs1(self, opkind: &OpcodeKind) -> Result<Option<usize>, (Option<u64>, String)> {
+    fn parse_rs1(self, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError> {
         match self.extension() {
             Extensions::BaseI => base_i::parse_rs1(self, opkind),
             Extensions::M => m_extension::parse_rs1(self, opkind),
@@ -63,7 +63,7 @@ impl Decode for u32 {
         }
     }
 
-    fn parse_rs2(self, opkind: &OpcodeKind) -> Result<Option<usize>, (Option<u64>, String)> {
+    fn parse_rs2(self, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError> {
         match self.extension() {
             Extensions::BaseI => base_i::parse_rs2(self, opkind),
             Extensions::M => m_extension::parse_rs2(self, opkind),
@@ -74,11 +74,7 @@ impl Decode for u32 {
         }
     }
 
-    fn parse_imm(
-        self,
-        opkind: &OpcodeKind,
-        isa: Isa,
-    ) -> Result<Option<i32>, (Option<u64>, String)> {
+    fn parse_imm(self, opkind: &OpcodeKind, isa: Isa) -> Result<Option<i32>, DecodingError> {
         match self.extension() {
             Extensions::BaseI => base_i::parse_imm(self, opkind, isa),
             Extensions::M => m_extension::parse_imm(self, opkind),

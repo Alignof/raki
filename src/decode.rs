@@ -4,12 +4,9 @@ mod inst_32;
 use crate::instruction::{Extensions, Instruction, OpcodeKind};
 use crate::Isa;
 
-pub fn only_rv64(opcode: OpcodeKind, isa: Isa) -> Result<OpcodeKind, (Option<u64>, String)> {
+pub fn only_rv64(opcode: OpcodeKind, isa: Isa) -> Result<OpcodeKind, DecodingError> {
     match isa {
-        Isa::Rv32 => Err((
-            None,
-            "This instruction is only available on rv64".to_string(),
-        )),
+        Isa::Rv32 => Err(DecodingError::OnlyRv64Inst),
         Isa::Rv64 => Ok(opcode),
     }
 }
@@ -26,16 +23,12 @@ pub enum DecodingError {
 }
 
 pub trait Decode {
-    fn decode(&self, isa: Isa) -> Result<Instruction, (Option<u64>, String)>;
-    fn parse_opcode(self, isa: Isa) -> Result<OpcodeKind, (Option<u64>, String)>;
-    fn parse_rd(self, opkind: &OpcodeKind) -> Result<Option<usize>, (Option<u64>, String)>;
-    fn parse_rs1(self, opkind: &OpcodeKind) -> Result<Option<usize>, (Option<u64>, String)>;
-    fn parse_rs2(self, opkind: &OpcodeKind) -> Result<Option<usize>, (Option<u64>, String)>;
-    fn parse_imm(
-        self,
-        opkind: &OpcodeKind,
-        isa: Isa,
-    ) -> Result<Option<i32>, (Option<u64>, String)>;
+    fn decode(&self, isa: Isa) -> Result<Instruction, DecodingError>;
+    fn parse_opcode(self, isa: Isa) -> Result<OpcodeKind, DecodingError>;
+    fn parse_rd(self, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError>;
+    fn parse_rs1(self, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError>;
+    fn parse_rs2(self, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError>;
+    fn parse_imm(self, opkind: &OpcodeKind, isa: Isa) -> Result<Option<i32>, DecodingError>;
 }
 
 pub trait DecodeUtil {

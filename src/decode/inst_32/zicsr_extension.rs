@@ -1,7 +1,7 @@
-use super::super::DecodeUtil;
+use super::super::{DecodeUtil, DecodingError};
 use crate::instruction::OpcodeKind;
 
-pub fn parse_opcode(inst: u32) -> Result<OpcodeKind, (Option<u64>, String)> {
+pub fn parse_opcode(inst: u32) -> Result<OpcodeKind, DecodingError> {
     let opmap: u8 = inst.slice(6, 0) as u8;
     let funct3: u8 = inst.slice(14, 12) as u8;
 
@@ -13,19 +13,13 @@ pub fn parse_opcode(inst: u32) -> Result<OpcodeKind, (Option<u64>, String)> {
             0b101 => Ok(OpcodeKind::CSRRWI),
             0b110 => Ok(OpcodeKind::CSRRSI),
             0b111 => Ok(OpcodeKind::CSRRCI),
-            _ => Err((
-                Some(u64::from(inst)),
-                format!("opcode decoding failed in zicsr extension, {inst:b}"),
-            )),
+            _ => Err(DecodingError::IllegalOpcode),
         },
-        _ => Err((
-            Some(u64::from(inst)),
-            format!("opcode decoding failed in zicsr extension, {inst:b}"),
-        )),
+        _ => Err(DecodingError::IllegalOpcode),
     }
 }
 
-pub fn parse_rd(inst: u32, opkind: &OpcodeKind) -> Result<Option<usize>, (Option<u64>, String)> {
+pub fn parse_rd(inst: u32, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError> {
     let rd: usize = inst.slice(11, 7) as usize;
 
     match opkind {
@@ -39,7 +33,7 @@ pub fn parse_rd(inst: u32, opkind: &OpcodeKind) -> Result<Option<usize>, (Option
     }
 }
 
-pub fn parse_rs1(inst: u32, opkind: &OpcodeKind) -> Result<Option<usize>, (Option<u64>, String)> {
+pub fn parse_rs1(inst: u32, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError> {
     let rs1: usize = inst.slice(19, 15) as usize;
 
     // LUI, AUIPC, JAL, FENCE, ECALL, EBREAK
@@ -54,7 +48,7 @@ pub fn parse_rs1(inst: u32, opkind: &OpcodeKind) -> Result<Option<usize>, (Optio
     }
 }
 
-pub fn parse_rs2(inst: u32, opkind: &OpcodeKind) -> Result<Option<usize>, (Option<u64>, String)> {
+pub fn parse_rs2(inst: u32, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError> {
     let csr: usize = inst.slice(31, 20) as usize;
 
     match opkind {
@@ -68,6 +62,6 @@ pub fn parse_rs2(inst: u32, opkind: &OpcodeKind) -> Result<Option<usize>, (Optio
     }
 }
 
-pub fn parse_imm(_inst: u32, _opkind: &OpcodeKind) -> Result<Option<i32>, (Option<u64>, String)> {
+pub fn parse_imm(_inst: u32, _opkind: &OpcodeKind) -> Result<Option<i32>, DecodingError> {
     Ok(None)
 }

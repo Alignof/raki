@@ -231,7 +231,7 @@ impl Instruction {
     }
 }
 
-pub fn reg2str(rd_value: usize) -> &'static str {
+fn reg2str(rd_value: usize) -> &'static str {
     match rd_value {
         0 => "zero",
         1 => "ra",

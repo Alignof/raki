@@ -40,7 +40,6 @@ impl OpcodeKind {
             | OpcodeKind::SRA
             | OpcodeKind::OR
             | OpcodeKind::AND
-            | OpcodeKind::FENCE
             | OpcodeKind::SLLIW
             | OpcodeKind::SRLIW
             | OpcodeKind::SRAIW
@@ -52,7 +51,7 @@ impl OpcodeKind {
             OpcodeKind::SB | OpcodeKind::SH | OpcodeKind::SW | OpcodeKind::SD => InstFormat::Stype,
             OpcodeKind::JAL => InstFormat::Jtype,
             OpcodeKind::LUI | OpcodeKind::AUIPC => InstFormat::Utype,
-            OpcodeKind::ECALL | OpcodeKind::EBREAK => InstFormat::Uncategorized,
+            OpcodeKind::ECALL | OpcodeKind::FENCE | OpcodeKind::EBREAK => InstFormat::Uncategorized,
 
             // Zicsr
             OpcodeKind::CSRRW
@@ -82,8 +81,8 @@ impl OpcodeKind {
             | OpcodeKind::REMUW => InstFormat::Mtype,
 
             // Atomic
-            OpcodeKind::LR_W
-            | OpcodeKind::SC_W
+            OpcodeKind::LR_W => InstFormat::Alrtype,
+            OpcodeKind::SC_W
             | OpcodeKind::AMOSWAP_W
             | OpcodeKind::AMOADD_W
             | OpcodeKind::AMOXOR_W

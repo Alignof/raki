@@ -34,9 +34,9 @@ impl Display for Instruction {
                 reg2str(self.rs1.unwrap()),
                 reg2str(self.rs2.unwrap())
             ),
-            InstFormat::Itype => write!(
+            InstFormat::Alrtype | InstFormat::Itype => write!(
                 f,
-                "{} {}, {}, {:x}",
+                "{} {}, {}, {:#x}",
                 self.opc.to_string(),
                 reg2str(self.rd.unwrap()),
                 reg2str(self.rs1.unwrap()),
@@ -44,7 +44,7 @@ impl Display for Instruction {
             ),
             InstFormat::Stype | InstFormat::Btype => write!(
                 f,
-                "{} {}, {}, {:x}({})",
+                "{} {}, {}, {:#x}({})",
                 self.opc.to_string(),
                 reg2str(self.rd.unwrap()),
                 reg2str(self.rs1.unwrap()),
@@ -54,7 +54,7 @@ impl Display for Instruction {
             InstFormat::Utype | InstFormat::Jtype => {
                 write!(
                     f,
-                    "{} {}, {:x}",
+                    "{} {}, {:#x}",
                     self.opc.to_string(),
                     reg2str(self.rd.unwrap()),
                     self.imm.unwrap()
@@ -63,7 +63,7 @@ impl Display for Instruction {
             InstFormat::CSRtype => {
                 write!(
                     f,
-                    "{} {}, {:x}, {}",
+                    "{} {}, {:#x}, {}",
                     self.opc.to_string(),
                     reg2str(self.rd.unwrap()),
                     self.rs2.unwrap(),
@@ -73,7 +73,7 @@ impl Display for Instruction {
             InstFormat::CSRuitype => {
                 write!(
                     f,
-                    "{} {}, {:x}, {}",
+                    "{} {}, {:#x}, {}",
                     self.opc.to_string(),
                     reg2str(self.rd.unwrap()),
                     self.rs2.unwrap(),
@@ -188,6 +188,8 @@ pub enum InstFormat {
     Mtype,
     /// A-extension instruction format
     Atype,
+    /// lr.w instruction format in A-extension
+    Alrtype,
     /// Uncategorized format
     Uncategorized,
 }

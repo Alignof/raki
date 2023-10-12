@@ -25,27 +25,85 @@ pub struct Instruction {
 
 impl Display for Instruction {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-        write!(
-            f,
-            "{}{}{}{}{}",
-            self.opc.to_string(),
-            match self.rd {
-                Some(rd) => format!(" {}", reg2str(rd)),
-                None => String::new(),
-            },
-            match self.rs1 {
-                Some(rs1) => format!(" {}", rs1),
-                None => String::new(),
-            },
-            match self.rs2 {
-                Some(rs2) => format!(" {}", rs2),
-                None => String::new(),
-            },
-            match self.imm {
-                Some(imm) => format!(" {}", imm),
-                None => String::new(),
-            },
-        )
+        match self.inst_format {
+            InstFormat::Rtype | InstFormat::Mtype | InstFormat::Atype => write!(
+                f,
+                "{} {}, {}, {}",
+                self.opc.to_string(),
+                reg2str(self.rd.unwrap()),
+                reg2str(self.rs1.unwrap()),
+                reg2str(self.rs2.unwrap())
+            ),
+            InstFormat::Itype => write!(
+                f,
+                "{} {}, {}, {:x}",
+                self.opc.to_string(),
+                reg2str(self.rd.unwrap()),
+                reg2str(self.rs1.unwrap()),
+                self.imm.unwrap()
+            ),
+            InstFormat::Stype | InstFormat::Btype => write!(
+                f,
+                "{} {}, {}, {:x}({})",
+                self.opc.to_string(),
+                reg2str(self.rd.unwrap()),
+                reg2str(self.rs1.unwrap()),
+                self.imm.unwrap(),
+                reg2str(self.rs2.unwrap()),
+            ),
+            InstFormat::Utype | InstFormat::Jtype => {
+                write!(
+                    f,
+                    "{} {}, {:x}",
+                    self.opc.to_string(),
+                    reg2str(self.rd.unwrap()),
+                    self.imm.unwrap()
+                )
+            }
+            InstFormat::CSRtype => {
+                write!(
+                    f,
+                    "{} {}, {:x}, {}",
+                    self.opc.to_string(),
+                    reg2str(self.rd.unwrap()),
+                    self.rs2.unwrap(),
+                    reg2str(self.rs1.unwrap()),
+                )
+            }
+            InstFormat::CSRuitype => {
+                write!(
+                    f,
+                    "{} {}, {:x}, {}",
+                    self.opc.to_string(),
+                    reg2str(self.rd.unwrap()),
+                    self.rs2.unwrap(),
+                    self.imm.unwrap(),
+                )
+            }
+            InstFormat::Ctype | InstFormat::Uncategorized => {
+                write!(
+                    f,
+                    "{}{}{}{}{}",
+                    self.opc.to_string(),
+                    match self.rd {
+                        Some(rd) => format!(" {}", reg2str(rd)),
+                        None => String::new(),
+                    },
+                    match self.rs1 {
+                        Some(rs1) => format!(" {}", rs1),
+                        None => String::new(),
+                    },
+                    match self.rs2 {
+                        Some(rs2) => format!(" {}", rs2),
+                        None => String::new(),
+                    },
+                    match self.imm {
+                        Some(imm) => format!(" {}", imm),
+                        None => String::new(),
+                    },
+                )
+            }
+        }
     }
 }
 

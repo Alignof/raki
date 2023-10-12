@@ -207,5 +207,14 @@ mod decode_32 {
             Some(24),
         );
         test_32(0x0010_0513, ADDI, Some(10), Some(0), None, Some(1));
+        test_32(0x04d7_27af, AMOADD_W, Some(15), Some(14), Some(13), Some(2));
+        test_32(0x4170_04b3, SUB, Some(9), Some(0), Some(23), None);
+        test_32(0x3307_3983, LD, Some(19), Some(14), None, Some(816));
+        test_32(0x10ec_eb63, BLTU, None, Some(25), Some(14), Some(278));
+        test_32(0x31e1_60ef, JAL, Some(1), None, None, Some(90910));
+        test_32(0x0019_4913, XORI, Some(18), Some(18), None, Some(1));
+        test_32(0x00a9_3933, SLTU, Some(18), Some(18), Some(10), None);
+        test_32(0x0289_7933, REMU, Some(18), Some(18), Some(8), None);
+        test_32(0x0289_5933, DIVU, Some(18), Some(18), Some(8), None);
     }
 }

@@ -122,6 +122,14 @@ pub enum InstFormat {
     /// Compressed instruction
     /// C-type may possibly be further divided (Q0, Q1, Q2...).
     Ctype,
+    /// Csr format
+    CSRtype,
+    /// Csr with uimm format
+    CSRuitype,
+    /// M-extension instruction format
+    Mtype,
+    /// A-extension instruction format
+    Atype,
     /// Uncategorized format
     Uncategorized,
 }

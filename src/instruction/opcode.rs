@@ -5,107 +5,105 @@ impl OpcodeKind {
     pub fn get_format(&self) -> InstFormat {
         match self {
             // Base Integer
-            OpcodeKind::LUI => InstFormat::Utype,
-            OpcodeKind::AUIPC => InstFormat::Utype,
+            OpcodeKind::BEQ
+            | OpcodeKind::BNE
+            | OpcodeKind::BLT
+            | OpcodeKind::BGE
+            | OpcodeKind::BLTU
+            | OpcodeKind::BGEU => InstFormat::Btype,
+            OpcodeKind::JALR
+            | OpcodeKind::LB
+            | OpcodeKind::LH
+            | OpcodeKind::LW
+            | OpcodeKind::LBU
+            | OpcodeKind::LHU
+            | OpcodeKind::ADDI
+            | OpcodeKind::SLTI
+            | OpcodeKind::SLTIU
+            | OpcodeKind::XORI
+            | OpcodeKind::ORI
+            | OpcodeKind::ANDI
+            | OpcodeKind::LWU
+            | OpcodeKind::LD
+            | OpcodeKind::ADDIW => InstFormat::Itype,
+            OpcodeKind::SLLI
+            | OpcodeKind::SRLI
+            | OpcodeKind::SRAI
+            | OpcodeKind::ADD
+            | OpcodeKind::SUB
+            | OpcodeKind::SLL
+            | OpcodeKind::SLT
+            | OpcodeKind::SLTU
+            | OpcodeKind::XOR
+            | OpcodeKind::SRL
+            | OpcodeKind::SRA
+            | OpcodeKind::OR
+            | OpcodeKind::AND
+            | OpcodeKind::FENCE
+            | OpcodeKind::SLLIW
+            | OpcodeKind::SRLIW
+            | OpcodeKind::SRAIW
+            | OpcodeKind::ADDW
+            | OpcodeKind::SUBW
+            | OpcodeKind::SLLW
+            | OpcodeKind::SRLW
+            | OpcodeKind::SRAW => InstFormat::Rtype,
+            OpcodeKind::SB | OpcodeKind::SH | OpcodeKind::SW | OpcodeKind::SD => InstFormat::Stype,
             OpcodeKind::JAL => InstFormat::Jtype,
-            OpcodeKind::JALR => InstFormat::Itype,
-            OpcodeKind::BEQ => InstFormat::Btype,
-            OpcodeKind::BNE => InstFormat::Btype,
-            OpcodeKind::BLT => InstFormat::Btype,
-            OpcodeKind::BGE => InstFormat::Btype,
-            OpcodeKind::BLTU => InstFormat::Btype,
-            OpcodeKind::BGEU => InstFormat::Btype,
-            OpcodeKind::LB => InstFormat::Itype,
-            OpcodeKind::LH => InstFormat::Itype,
-            OpcodeKind::LW => InstFormat::Itype,
-            OpcodeKind::LBU => InstFormat::Itype,
-            OpcodeKind::LHU => InstFormat::Itype,
-            OpcodeKind::SB => InstFormat::Stype,
-            OpcodeKind::SH => InstFormat::Stype,
-            OpcodeKind::SW => InstFormat::Stype,
-            OpcodeKind::ADDI => InstFormat::Itype,
-            OpcodeKind::SLTI => InstFormat::Itype,
-            OpcodeKind::SLTIU => InstFormat::Itype,
-            OpcodeKind::XORI => InstFormat::Itype,
-            OpcodeKind::ORI => InstFormat::Itype,
-            OpcodeKind::ANDI => InstFormat::Itype,
-            OpcodeKind::SLLI => InstFormat::Rtype,
-            OpcodeKind::SRLI => InstFormat::Rtype,
-            OpcodeKind::SRAI => InstFormat::Rtype,
-            OpcodeKind::ADD => InstFormat::Rtype,
-            OpcodeKind::SUB => InstFormat::Rtype,
-            OpcodeKind::SLL => InstFormat::Rtype,
-            OpcodeKind::SLT => InstFormat::Rtype,
-            OpcodeKind::SLTU => InstFormat::Rtype,
-            OpcodeKind::XOR => InstFormat::Rtype,
-            OpcodeKind::SRL => InstFormat::Rtype,
-            OpcodeKind::SRA => InstFormat::Rtype,
-            OpcodeKind::OR => InstFormat::Rtype,
-            OpcodeKind::AND => InstFormat::Rtype,
-            OpcodeKind::FENCE => InstFormat::Rtype,
-            OpcodeKind::ECALL => InstFormat::Uncategorized,
-            OpcodeKind::EBREAK => InstFormat::Uncategorized,
-            OpcodeKind::LWU => InstFormat::Itype,
-            OpcodeKind::LD => InstFormat::Itype,
-            OpcodeKind::SD => InstFormat::Stype,
-            OpcodeKind::ADDIW => InstFormat::Itype,
-            OpcodeKind::SLLIW => InstFormat::Rtype,
-            OpcodeKind::SRLIW => InstFormat::Rtype,
-            OpcodeKind::SRAIW => InstFormat::Rtype,
-            OpcodeKind::ADDW => InstFormat::Rtype,
-            OpcodeKind::SUBW => InstFormat::Rtype,
-            OpcodeKind::SLLW => InstFormat::Rtype,
-            OpcodeKind::SRLW => InstFormat::Rtype,
-            OpcodeKind::SRAW => InstFormat::Rtype,
+            OpcodeKind::LUI | OpcodeKind::AUIPC => InstFormat::Utype,
+            OpcodeKind::ECALL | OpcodeKind::EBREAK => InstFormat::Uncategorized,
+
             // Zicsr
-            OpcodeKind::CSRRW => InstFormat::CSRtype,
-            OpcodeKind::CSRRS => InstFormat::CSRtype,
-            OpcodeKind::CSRRC => InstFormat::CSRtype,
-            OpcodeKind::CSRRWI => InstFormat::CSRuitype,
-            OpcodeKind::CSRRSI => InstFormat::CSRuitype,
-            OpcodeKind::CSRRCI => InstFormat::CSRuitype,
+            OpcodeKind::CSRRW
+            | OpcodeKind::CSRRS
+            | OpcodeKind::CSRRC
+            | OpcodeKind::CSRRWI
+            | OpcodeKind::CSRRSI
+            | OpcodeKind::CSRRCI => InstFormat::CSRuitype,
+
             // Privileged
-            OpcodeKind::SRET => InstFormat::Uncategorized,
-            OpcodeKind::MRET => InstFormat::Uncategorized,
-            OpcodeKind::WFI => InstFormat::Uncategorized,
-            OpcodeKind::SFENCE_VMA => InstFormat::Uncategorized,
+            OpcodeKind::SRET | OpcodeKind::MRET | OpcodeKind::WFI => InstFormat::Uncategorized,
+            OpcodeKind::SFENCE_VMA => InstFormat::Rtype,
+
             // Multiplication and Division
-            OpcodeKind::MUL => InstFormat::Mtype,
-            OpcodeKind::MULH => InstFormat::Mtype,
-            OpcodeKind::MULHSU => InstFormat::Mtype,
-            OpcodeKind::MULHU => InstFormat::Mtype,
-            OpcodeKind::DIV => InstFormat::Mtype,
-            OpcodeKind::DIVU => InstFormat::Mtype,
-            OpcodeKind::REM => InstFormat::Mtype,
-            OpcodeKind::REMU => InstFormat::Mtype,
-            OpcodeKind::MULW => InstFormat::Mtype,
-            OpcodeKind::DIVW => InstFormat::Mtype,
-            OpcodeKind::DIVUW => InstFormat::Mtype,
-            OpcodeKind::REMW => InstFormat::Mtype,
-            OpcodeKind::REMUW => InstFormat::Mtype,
+            OpcodeKind::MUL
+            | OpcodeKind::MULH
+            | OpcodeKind::MULHSU
+            | OpcodeKind::MULHU
+            | OpcodeKind::DIV
+            | OpcodeKind::DIVU
+            | OpcodeKind::REM
+            | OpcodeKind::REMU
+            | OpcodeKind::MULW
+            | OpcodeKind::DIVW
+            | OpcodeKind::DIVUW
+            | OpcodeKind::REMW
+            | OpcodeKind::REMUW => InstFormat::Mtype,
+
             // Atomic
-            OpcodeKind::LR_W => InstFormat::Atype,
-            OpcodeKind::SC_W => InstFormat::Atype,
-            OpcodeKind::AMOSWAP_W => InstFormat::Atype,
-            OpcodeKind::AMOADD_W => InstFormat::Atype,
-            OpcodeKind::AMOXOR_W => InstFormat::Atype,
-            OpcodeKind::AMOAND_W => InstFormat::Atype,
-            OpcodeKind::AMOOR_W => InstFormat::Atype,
-            OpcodeKind::AMOMIN_W => InstFormat::Atype,
-            OpcodeKind::AMOMAX_W => InstFormat::Atype,
-            OpcodeKind::AMOMINU_W => InstFormat::Atype,
-            OpcodeKind::AMOMAXU_W => InstFormat::Atype,
-            OpcodeKind::LR_D => InstFormat::Atype,
-            OpcodeKind::SC_D => InstFormat::Atype,
-            OpcodeKind::AMOSWAP_D => InstFormat::Atype,
-            OpcodeKind::AMOADD_D => InstFormat::Atype,
-            OpcodeKind::AMOXOR_D => InstFormat::Atype,
-            OpcodeKind::AMOAND_D => InstFormat::Atype,
-            OpcodeKind::AMOOR_D => InstFormat::Atype,
-            OpcodeKind::AMOMIN_D => InstFormat::Atype,
-            OpcodeKind::AMOMAX_D => InstFormat::Atype,
-            OpcodeKind::AMOMINU_D => InstFormat::Atype,
-            OpcodeKind::AMOMAXU_D => InstFormat::Atype,
+            OpcodeKind::LR_W
+            | OpcodeKind::SC_W
+            | OpcodeKind::AMOSWAP_W
+            | OpcodeKind::AMOADD_W
+            | OpcodeKind::AMOXOR_W
+            | OpcodeKind::AMOAND_W
+            | OpcodeKind::AMOOR_W
+            | OpcodeKind::AMOMIN_W
+            | OpcodeKind::AMOMAX_W
+            | OpcodeKind::AMOMINU_W
+            | OpcodeKind::AMOMAXU_W
+            | OpcodeKind::LR_D
+            | OpcodeKind::SC_D
+            | OpcodeKind::AMOSWAP_D
+            | OpcodeKind::AMOADD_D
+            | OpcodeKind::AMOXOR_D
+            | OpcodeKind::AMOAND_D
+            | OpcodeKind::AMOOR_D
+            | OpcodeKind::AMOMIN_D
+            | OpcodeKind::AMOMAX_D
+            | OpcodeKind::AMOMINU_D
+            | OpcodeKind::AMOMAXU_D => InstFormat::Atype,
+
             // Compressed
             OpcodeKind::C_ADDI4SPN
             | OpcodeKind::C_LW
@@ -200,6 +198,7 @@ impl OpcodeKind {
             | OpcodeKind::SLLW
             | OpcodeKind::SRLW
             | OpcodeKind::SRAW => Extensions::BaseI,
+
             // Control and Status Register Instruction
             OpcodeKind::CSRRW
             | OpcodeKind::CSRRS
@@ -207,10 +206,12 @@ impl OpcodeKind {
             | OpcodeKind::CSRRWI
             | OpcodeKind::CSRRSI
             | OpcodeKind::CSRRCI => Extensions::Zicsr,
+
             // Privileged
             OpcodeKind::SRET | OpcodeKind::MRET | OpcodeKind::WFI | OpcodeKind::SFENCE_VMA => {
                 Extensions::Priv
             }
+
             // Multiplication and Division
             OpcodeKind::MUL
             | OpcodeKind::MULH
@@ -225,6 +226,7 @@ impl OpcodeKind {
             | OpcodeKind::DIVUW
             | OpcodeKind::REMW
             | OpcodeKind::REMUW => Extensions::M,
+
             // Atomic
             OpcodeKind::LR_W
             | OpcodeKind::SC_W
@@ -248,6 +250,7 @@ impl OpcodeKind {
             | OpcodeKind::AMOMAX_D
             | OpcodeKind::AMOMINU_D
             | OpcodeKind::AMOMAXU_D => Extensions::A,
+
             // Compressed
             OpcodeKind::C_ADDI4SPN
             | OpcodeKind::C_LW

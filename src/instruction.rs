@@ -36,7 +36,7 @@ impl Display for Instruction {
             ),
             InstFormat::Alrtype | InstFormat::Itype => write!(
                 f,
-                "{} {}, {}, {:#x}",
+                "{} {}, {}, {}",
                 self.opc.to_string(),
                 reg2str(self.rd.unwrap()),
                 reg2str(self.rs1.unwrap()),
@@ -73,7 +73,7 @@ impl Display for Instruction {
             InstFormat::CSRuitype => {
                 write!(
                     f,
-                    "{} {}, {:#x}, {}",
+                    "{} {}, {}, {}",
                     self.opc.to_string(),
                     reg2str(self.rd.unwrap()),
                     self.rs2.unwrap(),

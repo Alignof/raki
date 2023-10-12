@@ -14,7 +14,26 @@ fn only_rv64(opcode: OpcodeKind, isa: Isa) -> Result<OpcodeKind, DecodingError> 
     }
 }
 
-/// Error kind
+/// Cause of decoding error.
+///
+/// # Example
+/// ```
+/// use raki::Isa;
+/// use raki::decode::{Decode, DecodingError};
+/// use raki::instruction::Instruction;
+///
+/// // try to decode illegal instruction.
+/// let illegal_inst: u32 = 0b0000_0000_0000_0000_0000_0000_0000_0000;
+/// if let Err(error) = illegal_inst.decode(Isa::Rv64) {
+///     assert!(matches!(error, DecodingError::IllegalOpcode));
+/// }
+///
+/// // try to decode rv64 instruction on rv32 environment.
+/// let rv64_inst: u32 = 0b100000000100010011010000100011;
+/// if let Err(error) = rv64_inst.decode(Isa::Rv32) {
+///     assert!(matches!(error, DecodingError::OnlyRv64Inst));
+/// }
+/// ```
 #[derive(Debug)]
 pub enum DecodingError {
     /// 32bit instructions are expected, but it is compressed instruction.
@@ -36,6 +55,17 @@ pub enum DecodingError {
 }
 
 /// A trait to decode an instruction from u16/u32.
+///
+/// # Usage
+/// `decode` method is implemented for u16/u32.
+/// thus, just call `decode` as method of u16/u32.
+/// ```
+/// use raki::Isa;
+/// use raki::decode::Decode;
+///
+/// let inst: u32 = 0b1110_1110_1100_0010_1000_0010_1001_0011;
+/// println!("{:?}", inst.decode(Isa::Rv64));
+/// ```
 pub trait Decode {
     /// Decode an instruction from u16/u32.
     fn decode(&self, isa: Isa) -> Result<Instruction, DecodingError>;

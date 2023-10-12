@@ -5,7 +5,8 @@
 //! # Usage
 //! `decode` method is implemented for u16/u32.
 //! ```
-//! use raki::{Decode, Isa};
+//! use raki::Isa;
+//! use raki::decode::Decode;
 //! use raki::instruction::Instruction;
 //!
 //! let inst: u32 = 0b1110_1110_1100_0010_1000_0010_1001_0011;
@@ -17,8 +18,6 @@
 
 pub mod decode;
 pub mod instruction;
-
-pub use crate::decode::Decode;
 
 /// Target isa.
 #[derive(Copy, Clone)]

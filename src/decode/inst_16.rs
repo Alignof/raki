@@ -85,20 +85,41 @@ impl DecodeUtil for u16 {
 #[allow(unused_variables)]
 mod decode_16 {
     #[test]
-    fn parsing_compressed_opcode_test() {
+    fn decoding_16bit_test() {
         use super::*;
         use OpcodeKind::*;
-        let test_16 = |inst_16: u16, _op: OpcodeKind, _rd: Option<u8>| {
+        let test_16 = |inst_16: u16,
+                       op: OpcodeKind,
+                       rd: Option<usize>,
+                       rs1: Option<usize>,
+                       rs2: Option<usize>,
+                       imm: Option<i32>| {
             let op_16 = inst_16.parse_opcode(Isa::Rv64).unwrap();
-            assert!(matches!(&op_16, _op));
-            assert!(matches!(inst_16.parse_rd(&op_16), _rd));
+            assert!(matches!(&op_16, op));
+            assert_eq!(inst_16.parse_rd(&op_16).unwrap(), rd);
+            assert_eq!(inst_16.parse_rs1(&op_16).unwrap(), rs1);
+            assert_eq!(inst_16.parse_rs2(&op_16).unwrap(), rs2);
+            assert_eq!(inst_16.parse_imm(&op_16, Isa::Rv64).unwrap(), imm);
         };
 
-        test_16(0b0000_0000_0000_0001, C_NOP, None);
-        test_16(0b0000_0000_1000_0001, C_ADDI, Some(0));
-        test_16(0b0110_0001_0000_0001, C_ADDI16SP, None);
-        test_16(0b0110_0011_1000_0001, C_LUI, None);
-        test_16(0b1000_0010_1100_0001, C_SRAI, Some(0));
-        test_16(0b1000_0100_1100_0001, C_ANDI, None);
+        test_16(0b0000_0000_0000_0001, C_NOP, None, None, None, Some(0));
+        test_16(0b0110_0011_1000_0001, C_LUI, Some(7), None, None, Some(0));
+        test_16(
+            0b1000_0010_1100_0001,
+            C_SRAI,
+            Some(13),
+            Some(13),
+            None,
+            Some(16),
+        );
+        test_16(0x4521, C_LI, Some(10), None, None, Some(8));
+        test_16(0xb5e5, C_J, None, None, None, Some(-280));
+        test_16(0x6105, C_ADDI, None, Some(2), None, Some(32));
+        test_16(0x8082, C_JR, None, Some(1), None, None);
+        test_16(0xe29d, C_BNEZ, None, Some(13), None, Some(38));
+        test_16(0xc05c, C_SW, None, Some(8), Some(15), Some(4));
+        test_16(0x9002, C_EBREAK, None, None, None, None);
+        test_16(0x880a, C_MV, Some(16), None, Some(2), None);
+        test_16(0x8585, C_SRAI, Some(11), Some(11), None, Some(1));
     }
 }

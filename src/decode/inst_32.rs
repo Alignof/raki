@@ -133,7 +133,7 @@ impl DecodeUtil for u32 {
 mod decode_32 {
     #[test]
     #[allow(overflowing_literals)]
-    fn parsing_opcode_test() {
+    fn decoding_32bit_inst_test() {
         use super::*;
         use OpcodeKind::*;
         let test_32 = |inst_32: u32,

@@ -63,4 +63,31 @@ mod tests {
             println!("{inst}");
         }
     }
+
+    #[test]
+    fn display_16bit_test() {
+        use crate::decode::Decode;
+        use crate::instruction::Instruction;
+        use crate::Isa;
+
+        let instructions: [u16; 8] = [
+            0b1110010000100110,
+            0b110110000000100,
+            0b1110010100010001,
+            0b1000010100100110,
+            0b1011011111110101,
+            0b110000,
+            0b1000000010000010,
+            0b11011111111101,
+        ];
+
+        for inst in &instructions {
+            let inst: Instruction = match inst.decode(Isa::Rv64) {
+                Ok(inst) => inst,
+                Err(e) => panic!("decoding failed due to {e:?}"),
+            };
+
+            println!("{inst}");
+        }
+    }
 }

@@ -30,7 +30,10 @@ impl OpcodeKind {
             OpcodeKind::SLLI
             | OpcodeKind::SRLI
             | OpcodeKind::SRAI
-            | OpcodeKind::ADD
+            | OpcodeKind::SLLIW
+            | OpcodeKind::SRLIW
+            | OpcodeKind::SRAIW => InstFormat::R_SHAMTtype,
+            OpcodeKind::ADD
             | OpcodeKind::SUB
             | OpcodeKind::SLL
             | OpcodeKind::SLT
@@ -40,9 +43,6 @@ impl OpcodeKind {
             | OpcodeKind::SRA
             | OpcodeKind::OR
             | OpcodeKind::AND
-            | OpcodeKind::SLLIW
-            | OpcodeKind::SRLIW
-            | OpcodeKind::SRAIW
             | OpcodeKind::ADDW
             | OpcodeKind::SUBW
             | OpcodeKind::SLLW
@@ -106,10 +106,9 @@ impl OpcodeKind {
 
             // Compressed
             // Quadrant 0
-            OpcodeKind::C_ADDI4SPN => InstFormat::C_Q0_Itype,
-            OpcodeKind::C_LW | OpcodeKind::C_SW | OpcodeKind::C_LD | OpcodeKind::C_SD => {
-                InstFormat::C_Stype
-            }
+            OpcodeKind::C_ADDI4SPN => InstFormat::C_Q0_SPtype,
+            OpcodeKind::C_LW | OpcodeKind::C_LD => InstFormat::C_Q0_Itype,
+            OpcodeKind::C_SW | OpcodeKind::C_SD => InstFormat::C_Stype,
             // Quadrant 1
             OpcodeKind::C_BEQZ | OpcodeKind::C_BNEZ => InstFormat::C_Btype,
             OpcodeKind::C_JAL | OpcodeKind::C_J => InstFormat::C_Q1_Jtype,
@@ -125,11 +124,9 @@ impl OpcodeKind {
             | OpcodeKind::C_SUBW
             | OpcodeKind::C_ADDW => InstFormat::C_Q1_Rtype,
             // Quadrant 2
-            OpcodeKind::C_LDSP | OpcodeKind::C_SDSP | OpcodeKind::C_LWSP | OpcodeKind::C_SWSP => {
-                InstFormat::C_Q2_SPtype
-            }
+            OpcodeKind::C_SDSP | OpcodeKind::C_SWSP => InstFormat::C_Q2_SPtype,
             OpcodeKind::C_JR | OpcodeKind::C_JALR => InstFormat::C_Q2_Jtype,
-            OpcodeKind::C_SLLI => InstFormat::C_Q2_Itype,
+            OpcodeKind::C_LDSP | OpcodeKind::C_LWSP | OpcodeKind::C_SLLI => InstFormat::C_Q2_Itype,
             OpcodeKind::C_MV | OpcodeKind::C_ADD => InstFormat::C_Q2_Rtype,
             OpcodeKind::C_EBREAK => InstFormat::Uncategorized,
         }

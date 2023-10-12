@@ -26,11 +26,7 @@ pub struct Instruction {
 impl Display for Instruction {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         match self.inst_format {
-            InstFormat::C_Q1_Rtype
-            | InstFormat::C_Q2_Rtype
-            | InstFormat::Rtype
-            | InstFormat::Mtype
-            | InstFormat::Atype => {
+            InstFormat::C_Q1_Rtype | InstFormat::Rtype | InstFormat::Mtype | InstFormat::Atype => {
                 write!(
                     f,
                     "{} {}, {}, {}",
@@ -40,11 +36,16 @@ impl Display for Instruction {
                     reg2str(self.rs2.unwrap())
                 )
             }
-            InstFormat::A_LRtype
-            | InstFormat::Itype
-            | InstFormat::C_Q0_Itype
-            | InstFormat::C_Q1_Itype
-            | InstFormat::C_Q2_Itype => write!(
+            InstFormat::R_SHAMTtype => {
+                write!(
+                    f,
+                    "{} {}, {}",
+                    self.opc.to_string(),
+                    reg2str(self.rd.unwrap()),
+                    reg2str(self.rs1.unwrap()),
+                )
+            }
+            InstFormat::A_LRtype | InstFormat::Itype | InstFormat::C_Q0_Itype => write!(
                 f,
                 "{} {}, {}, {}",
                 self.opc.to_string(),
@@ -52,7 +53,7 @@ impl Display for Instruction {
                 reg2str(self.rs1.unwrap()),
                 self.imm.unwrap()
             ),
-            InstFormat::Stype | InstFormat::C_Stype | InstFormat::Btype => write!(
+            InstFormat::C_Stype | InstFormat::Stype | InstFormat::Btype => write!(
                 f,
                 "{} {}, {:#x}({})",
                 self.opc.to_string(),
@@ -60,13 +61,34 @@ impl Display for Instruction {
                 self.imm.unwrap(),
                 reg2str(self.rs2.unwrap()),
             ),
-            InstFormat::Utype | InstFormat::Jtype | InstFormat::C_Utype => {
+            InstFormat::C_Q2_Itype | InstFormat::C_Q1_Itype => {
+                write!(
+                    f,
+                    "{} {}, {}",
+                    self.opc.to_string(),
+                    reg2str(self.rd.unwrap()),
+                    self.imm.unwrap()
+                )
+            }
+            InstFormat::C_Q0_SPtype
+            | InstFormat::Utype
+            | InstFormat::Jtype
+            | InstFormat::C_Utype => {
                 write!(
                     f,
                     "{} {}, {:#x}",
                     self.opc.to_string(),
                     reg2str(self.rd.unwrap()),
                     self.imm.unwrap()
+                )
+            }
+            InstFormat::C_Q2_Rtype => {
+                write!(
+                    f,
+                    "{} {}, {}",
+                    self.opc.to_string(),
+                    reg2str(self.rd.unwrap()),
+                    reg2str(self.rs2.unwrap())
                 )
             }
             InstFormat::C_Q1_Jtype | InstFormat::C_Q1_NoRDtype => {
@@ -87,10 +109,10 @@ impl Display for Instruction {
             InstFormat::C_Q2_SPtype => {
                 write!(
                     f,
-                    "{} {:#x}, {}",
+                    "{} {}, {}",
                     self.opc.to_string(),
                     self.rs2.unwrap(),
-                    reg2str(self.rs1.unwrap()),
+                    self.imm.unwrap(),
                 )
             }
             InstFormat::CSRtype => {
@@ -205,6 +227,12 @@ pub enum InstFormat {
     /// ```
     Rtype,
 
+    /// Regular format with shamt
+    /// ```ignore
+    /// srai rd, rs1
+    /// ```
+    R_SHAMTtype,
+
     /// Immediate format
     /// ```ignore
     /// lw rd, imm(rs1)
@@ -239,11 +267,17 @@ pub enum InstFormat {
     /// ```ignore
     /// c.addi4spn rd, nzuimm
     /// ```
+    C_Q0_SPtype,
+
+    /// Compressed Immediate format in Quadrant 0
+    /// ```ignore
+    /// c.lw rd imm(rs1)
+    /// ```
     C_Q0_Itype,
 
     /// Compressed Store format
     /// ```ignore
-    /// c.lw rd, imm(rs1)
+    /// c.sw rs2, imm(rs1)
     /// ```
     C_Stype,
 

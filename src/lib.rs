@@ -1,9 +1,13 @@
 //! raki
 //!
-//! `raki` is a RISC-V instruction decoder.
+//! `raki` is a RISC-V instruction decoder written in Rust.
+//!
+//! - Both 32/64bit support.
+//! - Support `rv32/64imac`, `Zicsr`, `Zifencei` extensions.
+//! - Implement Display trait for formatting.
 //!
 //! # Usage
-//! `decode` method is implemented for u16/u32.
+//! Call the `decode` as u16/u32 method.
 //! ```
 //! use raki::Isa;
 //! use raki::decode::Decode;
@@ -14,6 +18,9 @@
 //!     Ok(inst) => inst,
 //!     Err(e) => panic!("decoding failed due to {e:?}"),
 //! };
+//! println!("{inst}");
+//! // --output--
+//! // addi t0, t0, -276
 //! ```
 
 pub mod decode;
@@ -22,7 +29,9 @@ pub mod instruction;
 /// Target isa.
 #[derive(Copy, Clone)]
 pub enum Isa {
+    /// 32 bit architecture.
     Rv32,
+    /// 64 bit architecture.
     Rv64,
 }
 

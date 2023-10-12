@@ -290,7 +290,7 @@ impl OpcodeKind {
         }
     }
 
-    /// `OpcodeKind` to string
+    /// Convert `OpcodeKind` to string
     #[must_use]
     pub fn to_string(&self) -> &'static str {
         match self {

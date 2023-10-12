@@ -60,12 +60,7 @@ impl Display for Instruction {
                 self.imm.unwrap(),
                 reg2str(self.rs2.unwrap()),
             ),
-            InstFormat::Utype
-            | InstFormat::Jtype
-            | InstFormat::C_Utype
-            | InstFormat::C_Q1_Jtype
-            | InstFormat::C_Q2_Jtype
-            | InstFormat::C_Q1_NoRDtype => {
+            InstFormat::Utype | InstFormat::Jtype | InstFormat::C_Utype => {
                 write!(
                     f,
                     "{} {}, {:#x}",
@@ -73,6 +68,12 @@ impl Display for Instruction {
                     reg2str(self.rd.unwrap()),
                     self.imm.unwrap()
                 )
+            }
+            InstFormat::C_Q1_Jtype | InstFormat::C_Q1_NoRDtype => {
+                write!(f, "{} ({:#x})", self.opc.to_string(), self.imm.unwrap())
+            }
+            InstFormat::C_Q2_Jtype => {
+                write!(f, "{} ({:#x})", self.opc.to_string(), self.rs1.unwrap())
             }
             InstFormat::C_Btype => {
                 write!(

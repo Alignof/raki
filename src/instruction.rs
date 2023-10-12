@@ -26,15 +26,25 @@ pub struct Instruction {
 impl Display for Instruction {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         match self.inst_format {
-            InstFormat::Rtype | InstFormat::Mtype | InstFormat::Atype => write!(
-                f,
-                "{} {}, {}, {}",
-                self.opc.to_string(),
-                reg2str(self.rd.unwrap()),
-                reg2str(self.rs1.unwrap()),
-                reg2str(self.rs2.unwrap())
-            ),
-            InstFormat::Alrtype | InstFormat::Itype => write!(
+            InstFormat::C_Q1_Rtype
+            | InstFormat::C_Q2_Rtype
+            | InstFormat::Rtype
+            | InstFormat::Mtype
+            | InstFormat::Atype => {
+                write!(
+                    f,
+                    "{} {}, {}, {}",
+                    self.opc.to_string(),
+                    reg2str(self.rd.unwrap()),
+                    reg2str(self.rs1.unwrap()),
+                    reg2str(self.rs2.unwrap())
+                )
+            }
+            InstFormat::A_LRtype
+            | InstFormat::Itype
+            | InstFormat::C_Q0_Itype
+            | InstFormat::C_Q1_Itype
+            | InstFormat::C_Q2_Itype => write!(
                 f,
                 "{} {}, {}, {}",
                 self.opc.to_string(),
@@ -42,22 +52,44 @@ impl Display for Instruction {
                 reg2str(self.rs1.unwrap()),
                 self.imm.unwrap()
             ),
-            InstFormat::Stype | InstFormat::Btype => write!(
+            InstFormat::Stype | InstFormat::C_Stype | InstFormat::Btype => write!(
                 f,
-                "{} {}, {}, {:#x}({})",
+                "{} {}, {:#x}({})",
                 self.opc.to_string(),
-                reg2str(self.rd.unwrap()),
                 reg2str(self.rs1.unwrap()),
                 self.imm.unwrap(),
                 reg2str(self.rs2.unwrap()),
             ),
-            InstFormat::Utype | InstFormat::Jtype => {
+            InstFormat::Utype
+            | InstFormat::Jtype
+            | InstFormat::C_Utype
+            | InstFormat::C_Q1_Jtype
+            | InstFormat::C_Q2_Jtype
+            | InstFormat::C_Q1_NoRDtype => {
                 write!(
                     f,
                     "{} {}, {:#x}",
                     self.opc.to_string(),
                     reg2str(self.rd.unwrap()),
                     self.imm.unwrap()
+                )
+            }
+            InstFormat::C_Btype => {
+                write!(
+                    f,
+                    "{} {}, {}",
+                    self.opc.to_string(),
+                    self.rs1.unwrap(),
+                    self.imm.unwrap(),
+                )
+            }
+            InstFormat::C_Q2_SPtype => {
+                write!(
+                    f,
+                    "{} {:#x}, {}",
+                    self.opc.to_string(),
+                    self.rs2.unwrap(),
+                    reg2str(self.rs1.unwrap()),
                 )
             }
             InstFormat::CSRtype => {
@@ -80,7 +112,7 @@ impl Display for Instruction {
                     self.imm.unwrap(),
                 )
             }
-            InstFormat::Ctype | InstFormat::Uncategorized => {
+            InstFormat::Uncategorized => {
                 write!(
                     f,
                     "{}{}{}{}{}",

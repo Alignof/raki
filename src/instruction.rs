@@ -1,3 +1,5 @@
+//! Define instructions data structure.
+
 mod opcode;
 
 /// Instruction

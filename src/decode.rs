@@ -1,3 +1,5 @@
+//! Implementation of decoder.
+
 mod inst_16;
 mod inst_32;
 

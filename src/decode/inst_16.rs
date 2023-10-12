@@ -84,10 +84,9 @@ impl DecodeUtil for u16 {
 #[cfg(test)]
 #[allow(unused_variables)]
 mod decode_16 {
-    use super::*;
-
     #[test]
     fn parsing_compressed_opcode_test() {
+        use super::*;
         use OpcodeKind::*;
         let test_16 = |inst_16: u16, _op: OpcodeKind, _rd: Option<u8>| {
             let op_16 = inst_16.parse_opcode(Isa::Rv64).unwrap();

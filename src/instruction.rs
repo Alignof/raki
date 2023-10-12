@@ -90,15 +90,15 @@ impl Display for Instruction {
                         None => String::new(),
                     },
                     match self.rs1 {
-                        Some(rs1) => format!(" {}", rs1),
+                        Some(rs1) => format!(" {rs1}"),
                         None => String::new(),
                     },
                     match self.rs2 {
-                        Some(rs2) => format!(" {}", rs2),
+                        Some(rs2) => format!(" {rs2}"),
                         None => String::new(),
                     },
                     match self.imm {
-                        Some(imm) => format!(" {}", imm),
+                        Some(imm) => format!(" {imm}"),
                         None => String::new(),
                     },
                 )

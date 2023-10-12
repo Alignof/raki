@@ -25,35 +25,27 @@ pub struct Instruction {
 
 impl Display for Instruction {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-        match self.inst_format {
-            _ => {
-                write!(
-                    f,
-                    "{}{}{}{}{}",
-                    self.opc.to_string(),
-                    if let Some(rd) = self.rd {
-                        format!(" {}", reg2str(rd))
-                    } else {
-                        format!("")
-                    },
-                    if let Some(rs1) = self.rs1 {
-                        format!(" {}", rs1)
-                    } else {
-                        format!("")
-                    },
-                    if let Some(rs2) = self.rs2 {
-                        format!(" {}", rs2)
-                    } else {
-                        format!("")
-                    },
-                    if let Some(imm) = self.imm {
-                        format!(" {}", imm)
-                    } else {
-                        format!("")
-                    },
-                )
-            }
-        }
+        write!(
+            f,
+            "{}{}{}{}{}",
+            self.opc.to_string(),
+            match self.rd {
+                Some(rd) => format!(" {}", reg2str(rd)),
+                None => String::new(),
+            },
+            match self.rs1 {
+                Some(rs1) => format!(" {}", rs1),
+                None => String::new(),
+            },
+            match self.rs2 {
+                Some(rs2) => format!(" {}", rs2),
+                None => String::new(),
+            },
+            match self.imm {
+                Some(imm) => format!(" {}", imm),
+                None => String::new(),
+            },
+        )
     }
 }
 
@@ -284,25 +276,4 @@ pub enum OpcodeKind {
     C_ADDW,
     C_LDSP,
     C_SDSP,
-}
-
-impl Instruction {
-    pub fn print_myself(&self) {
-        println!(
-            "{:<8} {:>4},  {:?},  {:?},  {:?}",
-            self.opc.to_string(),
-            self.rd_to_str(),
-            self.rs1,
-            self.rs2,
-            self.imm
-        );
-    }
-
-    fn rd_to_str(&self) -> &'static str {
-        if let Some(rd_val) = self.rd {
-            reg2str(rd_val)
-        } else {
-            "--"
-        }
-    }
 }

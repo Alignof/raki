@@ -1,4 +1,5 @@
 # raki
+[![Rust](https://github.com/Alignof/raki/actions/workflows/rust.yml/badge.svg)](https://github.com/Alignof/raki/actions/workflows/rust.yml)  
 RISC-V instruction decoder written in Rust.
 
 - Both 32/64bit support.
@@ -23,5 +24,5 @@ println!("{inst}");
 ```
 
 ## License
-This crate is licensed under MIT.
+This crate is licensed under MIT.  
 See `LICENSE` for details.

@@ -1,6 +1,7 @@
 pub mod decode;
 pub mod instruction;
 
+/// Target Isa
 #[derive(Copy, Clone)]
 pub enum Isa {
     Rv32,

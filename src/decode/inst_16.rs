@@ -7,6 +7,10 @@ use crate::Isa;
 
 impl Decode for u16 {
     fn decode(&self, isa: Isa) -> Result<Instruction, DecodingError> {
+        if *self == 0 {
+            return Err(DecodingError::IllegalInstruction);
+        }
+
         let new_opc = self.parse_opcode(isa)?;
         let new_rd: Option<usize> = self.parse_rd(&new_opc)?;
         let new_rs1: Option<usize> = self.parse_rs1(&new_opc)?;

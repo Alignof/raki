@@ -9,7 +9,7 @@ fn quadrant0(_inst: u16, opmap: u8, isa: Isa) -> Result<OpcodeKind, DecodingErro
         0b011 => only_rv64(OpcodeKind::C_LD, isa),
         0b110 => Ok(OpcodeKind::C_SW),
         0b111 => only_rv64(OpcodeKind::C_SD, isa),
-        _ => Err(DecodingError::IllegalOpcode),
+        _ => Err(DecodingError::InvalidOpcode),
     }
 }
 
@@ -43,21 +43,21 @@ fn quadrant1(inst: u16, opmap: u8, isa: Isa) -> Result<OpcodeKind, DecodingError
                     0b01 => Ok(OpcodeKind::C_XOR),
                     0b10 => Ok(OpcodeKind::C_OR),
                     0b11 => Ok(OpcodeKind::C_AND),
-                    _ => Err(DecodingError::IllegalOpcode),
+                    _ => Err(DecodingError::InvalidOpcode),
                 },
                 0b1 => match lo_flag {
                     0b00 => only_rv64(OpcodeKind::C_SUBW, isa),
                     0b01 => only_rv64(OpcodeKind::C_ADDW, isa),
-                    _ => Err(DecodingError::IllegalOpcode),
+                    _ => Err(DecodingError::InvalidOpcode),
                 },
                 _ => unreachable!(),
             },
-            _ => Err(DecodingError::IllegalOpcode),
+            _ => Err(DecodingError::InvalidOpcode),
         },
         0b101 => Ok(OpcodeKind::C_J),
         0b110 => Ok(OpcodeKind::C_BEQZ),
         0b111 => Ok(OpcodeKind::C_BNEZ),
-        _ => Err(DecodingError::IllegalOpcode),
+        _ => Err(DecodingError::InvalidOpcode),
     }
 }
 
@@ -82,11 +82,11 @@ fn quadrant2(inst: u16, opmap: u8, isa: Isa) -> Result<OpcodeKind, DecodingError
                     _ => Ok(OpcodeKind::C_ADD),
                 },
             },
-            _ => Err(DecodingError::IllegalOpcode),
+            _ => Err(DecodingError::InvalidOpcode),
         },
         0b110 => Ok(OpcodeKind::C_SWSP),
         0b111 => only_rv64(OpcodeKind::C_SDSP, isa),
-        _ => Err(DecodingError::IllegalOpcode),
+        _ => Err(DecodingError::InvalidOpcode),
     }
 }
 
@@ -95,14 +95,14 @@ pub fn parse_opcode(inst: u16, isa: Isa) -> Result<OpcodeKind, DecodingError> {
     let quadrant: u8 = inst.slice(1, 0) as u8;
 
     if inst == 0b0000_0000_0000_0000 {
-        return Err(DecodingError::IllegalOpcode);
+        return Err(DecodingError::InvalidOpcode);
     }
 
     match quadrant {
         0b00 => quadrant0(inst, opmap, isa),
         0b01 => quadrant1(inst, opmap, isa),
         0b10 => quadrant2(inst, opmap, isa),
-        _ => Err(DecodingError::IllegalOpcode),
+        _ => Err(DecodingError::InvalidOpcode),
     }
 }
 

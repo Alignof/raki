@@ -13,9 +13,9 @@ pub fn parse_opcode(inst: u32) -> Result<OpcodeKind, DecodingError> {
             0b101 => Ok(OpcodeKind::CSRRWI),
             0b110 => Ok(OpcodeKind::CSRRSI),
             0b111 => Ok(OpcodeKind::CSRRCI),
-            _ => Err(DecodingError::IllegalFunct3),
+            _ => Err(DecodingError::InvalidFunct3),
         },
-        _ => Err(DecodingError::IllegalOpcode),
+        _ => Err(DecodingError::InvalidOpcode),
     }
 }
 

@@ -55,13 +55,13 @@ impl Display for Instruction {
             ),
             InstFormat::C_Stype | InstFormat::Stype | InstFormat::Btype => write!(
                 f,
-                "{} {}, {:#x}({})",
+                "{} {}, {}({})",
                 self.opc.to_string(),
                 reg2str(self.rs1.unwrap()),
                 self.imm.unwrap(),
                 reg2str(self.rs2.unwrap()),
             ),
-            InstFormat::C_Q2_Itype | InstFormat::C_Q1_Itype => {
+            InstFormat::C_Q1_Itype | InstFormat::C_Q2_Itype => {
                 write!(
                     f,
                     "{} {}, {}",
@@ -92,10 +92,10 @@ impl Display for Instruction {
                 )
             }
             InstFormat::C_Q1_Jtype | InstFormat::C_Q1_NoRDtype => {
-                write!(f, "{} ({:#x})", self.opc.to_string(), self.imm.unwrap())
+                write!(f, "{} ({})", self.opc.to_string(), self.imm.unwrap())
             }
             InstFormat::C_Q2_Jtype => {
-                write!(f, "{} ({:#x})", self.opc.to_string(), self.rs1.unwrap())
+                write!(f, "{} ({})", self.opc.to_string(), self.rs1.unwrap())
             }
             InstFormat::C_Btype => {
                 write!(

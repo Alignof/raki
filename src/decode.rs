@@ -25,7 +25,7 @@ fn only_rv64(opcode: OpcodeKind, isa: Isa) -> Result<OpcodeKind, DecodingError> 
 /// // try to decode illegal instruction.
 /// let illegal_inst: u32 = 0b0000_0000_0000_0000_0000_0000_0000_0000;
 /// if let Err(error) = illegal_inst.decode(Isa::Rv64) {
-///     assert!(matches!(error, DecodingError::IllegalOpcode));
+///     assert!(matches!(error, DecodingError::InvalidOpcode));
 /// }
 ///
 /// // try to decode rv64 instruction on rv32 environment.
@@ -41,15 +41,17 @@ pub enum DecodingError {
     /// Compressed instructions are expected, but it is 32bit length.
     Not32BitInst,
     /// It has unexpected Funct3 value.
-    IllegalFunct3,
+    InvalidFunct3,
     /// It has unexpected Funct5 value.
-    IllegalFunct5,
+    InvalidFunct5,
     /// It has unexpected Funct6 value.
-    IllegalFunct6,
+    InvalidFunct6,
     /// It has unexpected Funct7 value.
-    IllegalFunct7,
+    InvalidFunct7,
     /// Has an opcode that cannot be decoded.
-    IllegalOpcode,
+    InvalidOpcode,
+    /// Illegal instruction (e.g. all zero value instruction)
+    IllegalInstruction,
     /// This instruction is only for Rv64 but appeared at Rv32.
     OnlyRv64Inst,
 }

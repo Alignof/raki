@@ -12,7 +12,7 @@ pub fn parse_opcode(inst: u32) -> Result<OpcodeKind, DecodingError> {
         0b0001_0000_0101_0000_0000_0000_0111_0011 => Ok(OpcodeKind::WFI),
         _ => match funct7 {
             0b000_1001 => Ok(OpcodeKind::SFENCE_VMA),
-            _ => Err(DecodingError::IllegalFunct7),
+            _ => Err(DecodingError::InvalidFunct7),
         },
     }
 }

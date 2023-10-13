@@ -21,7 +21,7 @@ pub fn parse_opcode(inst: u32, isa: Isa) -> Result<OpcodeKind, DecodingError> {
                 0b10100 => Ok(OpcodeKind::AMOMAX_W),
                 0b11000 => Ok(OpcodeKind::AMOMINU_W),
                 0b11100 => Ok(OpcodeKind::AMOMAXU_W),
-                _ => Err(DecodingError::IllegalFunct7),
+                _ => Err(DecodingError::InvalidFunct7),
             },
             0b011 => match funct7 {
                 0b00010 => only_rv64(OpcodeKind::LR_D, isa),
@@ -35,11 +35,11 @@ pub fn parse_opcode(inst: u32, isa: Isa) -> Result<OpcodeKind, DecodingError> {
                 0b10100 => only_rv64(OpcodeKind::AMOMAX_D, isa),
                 0b11000 => only_rv64(OpcodeKind::AMOMINU_D, isa),
                 0b11100 => only_rv64(OpcodeKind::AMOMAXU_D, isa),
-                _ => Err(DecodingError::IllegalFunct7),
+                _ => Err(DecodingError::InvalidFunct7),
             },
-            _ => Err(DecodingError::IllegalFunct3),
+            _ => Err(DecodingError::InvalidFunct3),
         },
-        _ => Err(DecodingError::IllegalOpcode),
+        _ => Err(DecodingError::InvalidOpcode),
     }
 }
 

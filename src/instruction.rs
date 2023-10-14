@@ -26,7 +26,7 @@ pub struct Instruction {
 impl Display for Instruction {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         match self.inst_format {
-            InstFormat::C_Q1_Rtype | InstFormat::Rtype | InstFormat::Mtype | InstFormat::Atype => {
+            InstFormat::Rtype | InstFormat::Mtype | InstFormat::Atype => {
                 write!(
                     f,
                     "{} {}, {}, {}",
@@ -45,7 +45,7 @@ impl Display for Instruction {
                     reg2str(self.rs1.unwrap()),
                 )
             }
-            InstFormat::A_LRtype | InstFormat::Itype | InstFormat::C_Q0_Itype => write!(
+            InstFormat::CLtype | InstFormat::A_LRtype | InstFormat::Itype => write!(
                 f,
                 "{} {}, {}, {}",
                 self.opc.to_string(),
@@ -53,7 +53,7 @@ impl Display for Instruction {
                 reg2str(self.rs1.unwrap()),
                 self.imm.unwrap()
             ),
-            InstFormat::C_Stype | InstFormat::Stype | InstFormat::Btype => write!(
+            InstFormat::CStype | InstFormat::Stype | InstFormat::Btype => write!(
                 f,
                 "{} {}, {}({})",
                 self.opc.to_string(),
@@ -61,19 +61,25 @@ impl Display for Instruction {
                 self.imm.unwrap(),
                 reg2str(self.rs2.unwrap()),
             ),
-            InstFormat::C_Q1_Itype | InstFormat::C_Q2_Itype => {
+            InstFormat::CIWtype => {
                 write!(
                     f,
-                    "{} {}, {}",
+                    "{} {}, sp, {:x}",
                     self.opc.to_string(),
                     reg2str(self.rd.unwrap()),
                     self.imm.unwrap()
                 )
             }
-            InstFormat::C_Q0_SPtype
-            | InstFormat::Utype
-            | InstFormat::Jtype
-            | InstFormat::C_Utype => {
+            InstFormat::CSStype => {
+                write!(
+                    f,
+                    "{} {}, {}(sp)",
+                    self.opc.to_string(),
+                    reg2str(self.rs2.unwrap()),
+                    self.imm.unwrap()
+                )
+            }
+            InstFormat::Utype | InstFormat::Jtype => {
                 write!(
                     f,
                     "{} {}, {:#x}",
@@ -82,36 +88,35 @@ impl Display for Instruction {
                     self.imm.unwrap()
                 )
             }
-            InstFormat::C_Q2_Rtype => {
+            InstFormat::CJtype => {
+                write!(f, "{} {}", self.opc.to_string(), self.imm.unwrap())
+            }
+            InstFormat::CItype => {
                 write!(
                     f,
-                    "{} {}, {}",
+                    "{} {}, {}, {}",
                     self.opc.to_string(),
+                    reg2str(self.rd.unwrap()),
+                    reg2str(self.rd.unwrap()),
+                    self.imm.unwrap()
+                )
+            }
+            InstFormat::CRtype | InstFormat::CAtype => {
+                write!(
+                    f,
+                    "{} {}, {}, {}",
+                    self.opc.to_string(),
+                    reg2str(self.rd.unwrap()),
                     reg2str(self.rd.unwrap()),
                     reg2str(self.rs2.unwrap())
                 )
             }
-            InstFormat::C_Q1_Jtype | InstFormat::C_Q1_NoRDtype => {
-                write!(f, "{} ({})", self.opc.to_string(), self.imm.unwrap())
-            }
-            InstFormat::C_Q2_Jtype => {
-                write!(f, "{} ({})", self.opc.to_string(), self.rs1.unwrap())
-            }
-            InstFormat::C_Btype => {
+            InstFormat::CBtype => {
                 write!(
                     f,
                     "{} {}, {}",
                     self.opc.to_string(),
                     self.rs1.unwrap(),
-                    self.imm.unwrap(),
-                )
-            }
-            InstFormat::C_Q2_SPtype => {
-                write!(
-                    f,
-                    "{} {}, {}",
-                    self.opc.to_string(),
-                    self.rs2.unwrap(),
                     self.imm.unwrap(),
                 )
             }

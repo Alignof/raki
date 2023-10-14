@@ -126,9 +126,11 @@ pub fn parse_rd(inst: u16, opkind: &OpcodeKind) -> Result<Option<usize>, Decodin
         | OpcodeKind::C_AND
         | OpcodeKind::C_ADDW
         | OpcodeKind::C_SUBW => Ok(Some(q1_rd)),
-        OpcodeKind::C_LI | OpcodeKind::C_LUI | OpcodeKind::C_ADDI | OpcodeKind::C_ADDIW => {
-            Ok(Some(q1_wide_rd))
-        }
+        OpcodeKind::C_LI
+        | OpcodeKind::C_LUI
+        | OpcodeKind::C_ADDI
+        | OpcodeKind::C_ADDIW
+        | OpcodeKind::C_ADDI16SP => Ok(Some(q1_wide_rd)),
         // Quadrant 2
         OpcodeKind::C_SLLI
         | OpcodeKind::C_LWSP

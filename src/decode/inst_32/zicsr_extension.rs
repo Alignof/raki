@@ -38,13 +38,8 @@ pub fn parse_rs1(inst: u32, opkind: &OpcodeKind) -> Result<Option<usize>, Decodi
 
     // LUI, AUIPC, JAL, FENCE, ECALL, EBREAK
     match opkind {
-        OpcodeKind::CSRRW
-        | OpcodeKind::CSRRS
-        | OpcodeKind::CSRRC
-        | OpcodeKind::CSRRWI
-        | OpcodeKind::CSRRSI
-        | OpcodeKind::CSRRCI => Ok(Some(rs1)),
-        _ => panic!("This instruction does not have rs1"),
+        OpcodeKind::CSRRW | OpcodeKind::CSRRS | OpcodeKind::CSRRC => Ok(Some(rs1)),
+        _ => Ok(None),
     }
 }
 
@@ -62,6 +57,10 @@ pub fn parse_rs2(inst: u32, opkind: &OpcodeKind) -> Result<Option<usize>, Decodi
     }
 }
 
-pub fn parse_imm(_inst: u32, _opkind: &OpcodeKind) -> Result<Option<i32>, DecodingError> {
-    Ok(None)
+pub fn parse_imm(inst: u32, opkind: &OpcodeKind) -> Result<Option<i32>, DecodingError> {
+    let uimm: i32 = inst.slice(19, 15) as i32;
+    match opkind {
+        OpcodeKind::CSRRWI | OpcodeKind::CSRRSI | OpcodeKind::CSRRCI => Ok(Some(uimm)),
+        _ => Ok(None),
+    }
 }

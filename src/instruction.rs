@@ -26,7 +26,7 @@ pub struct Instruction {
 impl Display for Instruction {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         match self.inst_format {
-            InstFormat::C_Q1_Rtype | InstFormat::Rtype | InstFormat::Mtype | InstFormat::Atype => {
+            InstFormat::Rformat | InstFormat::Mformat | InstFormat::Aformat => {
                 write!(
                     f,
                     "{} {}, {}, {}",
@@ -36,7 +36,7 @@ impl Display for Instruction {
                     reg2str(self.rs2.unwrap())
                 )
             }
-            InstFormat::R_SHAMTtype => {
+            InstFormat::R_SHAMTformat => {
                 write!(
                     f,
                     "{} {}, {}",
@@ -45,7 +45,7 @@ impl Display for Instruction {
                     reg2str(self.rs1.unwrap()),
                 )
             }
-            InstFormat::A_LRtype | InstFormat::Itype | InstFormat::C_Q0_Itype => write!(
+            InstFormat::CLformat | InstFormat::A_LRformat | InstFormat::Iformat => write!(
                 f,
                 "{} {}, {}, {}",
                 self.opc.to_string(),
@@ -53,7 +53,7 @@ impl Display for Instruction {
                 reg2str(self.rs1.unwrap()),
                 self.imm.unwrap()
             ),
-            InstFormat::C_Stype | InstFormat::Stype | InstFormat::Btype => write!(
+            InstFormat::CSformat | InstFormat::Sformat | InstFormat::Bformat => write!(
                 f,
                 "{} {}, {}({})",
                 self.opc.to_string(),
@@ -61,19 +61,25 @@ impl Display for Instruction {
                 self.imm.unwrap(),
                 reg2str(self.rs2.unwrap()),
             ),
-            InstFormat::C_Q1_Itype | InstFormat::C_Q2_Itype => {
+            InstFormat::CIWformat => {
                 write!(
                     f,
-                    "{} {}, {}",
+                    "{} {}, sp, {:x}",
                     self.opc.to_string(),
                     reg2str(self.rd.unwrap()),
                     self.imm.unwrap()
                 )
             }
-            InstFormat::C_Q0_SPtype
-            | InstFormat::Utype
-            | InstFormat::Jtype
-            | InstFormat::C_Utype => {
+            InstFormat::CSSformat => {
+                write!(
+                    f,
+                    "{} {}, {}(sp)",
+                    self.opc.to_string(),
+                    reg2str(self.rs2.unwrap()),
+                    self.imm.unwrap()
+                )
+            }
+            InstFormat::Uformat | InstFormat::Jformat => {
                 write!(
                     f,
                     "{} {}, {:#x}",
@@ -82,22 +88,57 @@ impl Display for Instruction {
                     self.imm.unwrap()
                 )
             }
-            InstFormat::C_Q2_Rtype => {
+            InstFormat::CJformat => {
+                write!(f, "{} {}", self.opc.to_string(), self.imm.unwrap())
+            }
+            InstFormat::CIformat => {
                 write!(
+                    f,
+                    "{} {}, {}, {}",
+                    self.opc.to_string(),
+                    reg2str(self.rd.unwrap()),
+                    reg2str(self.rd.unwrap()),
+                    self.imm.unwrap()
+                )
+            }
+            InstFormat::CRformat => match self.opc {
+                OpcodeKind::C_JR | OpcodeKind::C_JALR => {
+                    write!(
+                        f,
+                        "{} {}, 0({})",
+                        self.opc.to_string(),
+                        reg2str(self.rs1.unwrap()),
+                        self.rs2.unwrap()
+                    )
+                }
+                OpcodeKind::C_MV => write!(
                     f,
                     "{} {}, {}",
                     self.opc.to_string(),
                     reg2str(self.rd.unwrap()),
                     reg2str(self.rs2.unwrap())
+                ),
+                OpcodeKind::C_ADD => write!(
+                    f,
+                    "{} {}, {}, {}",
+                    self.opc.to_string(),
+                    reg2str(self.rd.unwrap()),
+                    reg2str(self.rd.unwrap()),
+                    reg2str(self.rs2.unwrap())
+                ),
+                _ => unreachable!(),
+            },
+            InstFormat::CAformat => {
+                write!(
+                    f,
+                    "{} {}, {}, {}",
+                    self.opc.to_string(),
+                    reg2str(self.rd.unwrap()),
+                    reg2str(self.rd.unwrap()),
+                    reg2str(self.rs2.unwrap())
                 )
             }
-            InstFormat::C_Q1_Jtype | InstFormat::C_Q1_NoRDtype => {
-                write!(f, "{} ({})", self.opc.to_string(), self.imm.unwrap())
-            }
-            InstFormat::C_Q2_Jtype => {
-                write!(f, "{} ({})", self.opc.to_string(), self.rs1.unwrap())
-            }
-            InstFormat::C_Btype => {
+            InstFormat::CBformat => {
                 write!(
                     f,
                     "{} {}, {}",
@@ -106,16 +147,7 @@ impl Display for Instruction {
                     self.imm.unwrap(),
                 )
             }
-            InstFormat::C_Q2_SPtype => {
-                write!(
-                    f,
-                    "{} {}, {}",
-                    self.opc.to_string(),
-                    self.rs2.unwrap(),
-                    self.imm.unwrap(),
-                )
-            }
-            InstFormat::CSRtype => {
+            InstFormat::CSRformat => {
                 write!(
                     f,
                     "{} {}, {:#x}, {}",
@@ -125,7 +157,7 @@ impl Display for Instruction {
                     reg2str(self.rs1.unwrap()),
                 )
             }
-            InstFormat::CSRuitype => {
+            InstFormat::CSRuiformat => {
                 write!(
                     f,
                     "{} {}, {}, {}",
@@ -225,152 +257,133 @@ pub enum InstFormat {
     /// ```ignore
     /// add rd, rs1, rs2
     /// ```
-    Rtype,
+    Rformat,
 
     /// Regular format with shamt
     /// ```ignore
     /// srai rd, rs1
     /// ```
-    R_SHAMTtype,
+    R_SHAMTformat,
 
     /// Immediate format
     /// ```ignore
     /// lw rd, imm(rs1)
     /// ```
-    Itype,
+    Iformat,
 
     /// Store format
     /// ```ignore
     /// sw rs2, imm(rs1)
     /// ```
-    Stype,
+    Sformat,
 
     /// Branch format
     /// ```ignore
     /// beq rs1, rs2, imm
     /// ```
-    Btype,
+    Bformat,
 
     /// Upper immediate format
     /// ```ignore
     /// lui rd, imm
     /// ```
-    Utype,
+    Uformat,
 
     /// Jump format
     /// ```ignore
     /// jal rd, imm
     /// ```
-    Jtype,
+    Jformat,
 
-    /// Compressed Immediate format in Quadrant 0
+    /// Compressed Register format
     /// ```ignore
-    /// c.addi4spn rd, nzuimm
+    /// c.mv rd, rs2
+    /// c.add rd, rd, rs2
     /// ```
-    C_Q0_SPtype,
+    CRformat,
 
-    /// Compressed Immediate format in Quadrant 0
+    /// Compressed Immediate format
+    /// ```ignore
+    /// c.nop
+    /// c.addi rd, rd, imm
+    /// c.addi16sp x2, x2, nzimm
+    /// ```
+    CIformat,
+
+    /// Compressed Stack-relative Store format
+    /// ```ignore
+    /// c.swsp rs2, imm
+    /// -> sw rs2, imm[8:3](x2)
+    /// ```
+    CSSformat,
+
+    /// Compressed Wide Immediate Store format
+    /// ```ignore
+    /// c.addi4spn rd, x2, nzuimm
+    /// ```
+    CIWformat,
+
+    /// Compressed Load format
     /// ```ignore
     /// c.lw rd imm(rs1)
     /// ```
-    C_Q0_Itype,
+    CLformat,
 
     /// Compressed Store format
     /// ```ignore
     /// c.sw rs2, imm(rs1)
     /// ```
-    C_Stype,
+    CSformat,
 
-    /// Compressed Immediate format in Quadrant 1
-    /// ```ignore
-    /// c.addi rd, rd, nzuimm
-    /// ```
-    C_Q1_Itype,
-
-    /// Compressed Jump format in Quadrant 1
-    /// ```ignore
-    /// c.j imm
-    /// ```
-    C_Q1_Jtype,
-
-    /// Compressed instruction does not have rd in Quadrant 1
-    /// ```ignore
-    /// c.addi16sp nzuimm
-    /// ```
-    C_Q1_NoRDtype,
-
-    /// Compressed Upper immediate format (Quadrant 1)
-    /// ```ignore
-    /// c.lui rd, nzuimm
-    /// ```
-    C_Utype,
-
-    /// Compressed Regular format in Quadrant 1
+    /// Compressed Arithmetic format
     /// ```ignore
     /// c.and rd, rd, rs2
     /// ```
-    C_Q1_Rtype,
+    CAformat,
 
-    /// Compressed Branch format (Quadrant 1)
+    /// Compressed Branch format
     /// ```ignore
     /// c.beqz rs1, imm
+    /// c.srai rd, rd, shamt
     /// ```
-    C_Btype,
+    CBformat,
 
-    /// Compressed Immediate format in Quadrant 2
+    /// Compressed Jump format
     /// ```ignore
-    /// c.slli rd, rd, nzuimm
+    /// c.j imm
     /// ```
-    C_Q2_Itype,
-
-    /// Compressed Jump format in Quadrant 2
-    /// ```ignore
-    /// c.jr rs1
-    /// ```
-    C_Q2_Jtype,
-
-    /// Compressed load/store stack pointer instruction in Quadrant 2
-    /// ```ignore
-    /// c.swsp rs2, uimm
-    /// ```
-    C_Q2_SPtype,
-
-    /// Compressed Regular format in Quadrant 2
-    /// ```ignore
-    /// c.add rd, rd, rs2
-    /// c.mv rd, rs2
-    /// ```
-    C_Q2_Rtype,
+    CJformat,
 
     /// Compressed Csr format
     /// ```ignore
     /// csrrw rd, csr, rs1
+    /// csrrwi rd, csr, imm
     /// ```
-    CSRtype,
+    CSRformat,
 
     /// Csr with uimm format
     /// ```ignore
     /// csrrwi rd, csr, imm
     /// ```
-    CSRuitype,
+    CSRuiformat,
 
     /// M-extension instruction format
     /// ```ignore
     /// mul rd, rs1, rs2
     /// ```
-    Mtype,
+    Mformat,
 
     /// A-extension instruction format
     /// ```ignore
     /// sc.w rd, rs2, (rs1)
     /// ```
-    Atype,
+    Aformat,
 
     /// lr.w instruction format in A-extension
     /// ```ignore
     /// lr.w rd, (rs1)
     /// ```
-    A_LRtype,
+    A_LRformat,
 
     /// Uncategorized format
     /// ```ignore

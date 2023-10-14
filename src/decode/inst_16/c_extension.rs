@@ -126,15 +126,16 @@ pub fn parse_rd(inst: u16, opkind: &OpcodeKind) -> Result<Option<usize>, Decodin
         | OpcodeKind::C_AND
         | OpcodeKind::C_ADDW
         | OpcodeKind::C_SUBW => Ok(Some(q1_rd)),
-        OpcodeKind::C_LI | OpcodeKind::C_LUI | OpcodeKind::C_ADDI | OpcodeKind::C_ADDIW => {
-            Ok(Some(q1_wide_rd))
-        }
+        OpcodeKind::C_LI
+        | OpcodeKind::C_LUI
+        | OpcodeKind::C_ADDI
+        | OpcodeKind::C_ADDIW
+        | OpcodeKind::C_ADDI16SP => Ok(Some(q1_wide_rd)),
         // Quadrant 2
         OpcodeKind::C_SLLI
         | OpcodeKind::C_LWSP
         | OpcodeKind::C_LDSP
         | OpcodeKind::C_MV
-        | OpcodeKind::C_JALR
         | OpcodeKind::C_ADD => Ok(Some(q2_rd)),
         _ => Ok(None),
     }
@@ -190,9 +191,12 @@ pub fn parse_rs2(inst: u16, opkind: &OpcodeKind) -> Result<Option<usize>, Decodi
         | OpcodeKind::C_SUBW
         | OpcodeKind::C_ADDW => Ok(Some(q1_rs2)),
         // Quadrant 2
-        OpcodeKind::C_MV | OpcodeKind::C_ADD | OpcodeKind::C_SWSP | OpcodeKind::C_SDSP => {
-            Ok(Some(q2_rs2))
-        }
+        OpcodeKind::C_JR
+        | OpcodeKind::C_JALR
+        | OpcodeKind::C_MV
+        | OpcodeKind::C_ADD
+        | OpcodeKind::C_SWSP
+        | OpcodeKind::C_SDSP => Ok(Some(q2_rs2)),
         _ => Ok(None),
     }
 }

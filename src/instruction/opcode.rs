@@ -11,7 +11,7 @@ impl OpcodeKind {
             | OpcodeKind::BLT
             | OpcodeKind::BGE
             | OpcodeKind::BLTU
-            | OpcodeKind::BGEU => InstFormat::Btype,
+            | OpcodeKind::BGEU => InstFormat::Bformat,
             OpcodeKind::JALR
             | OpcodeKind::LB
             | OpcodeKind::LH
@@ -26,13 +26,13 @@ impl OpcodeKind {
             | OpcodeKind::ANDI
             | OpcodeKind::LWU
             | OpcodeKind::LD
-            | OpcodeKind::ADDIW => InstFormat::Itype,
+            | OpcodeKind::ADDIW => InstFormat::Iformat,
             OpcodeKind::SLLI
             | OpcodeKind::SRLI
             | OpcodeKind::SRAI
             | OpcodeKind::SLLIW
             | OpcodeKind::SRLIW
-            | OpcodeKind::SRAIW => InstFormat::R_SHAMTtype,
+            | OpcodeKind::SRAIW => InstFormat::R_SHAMTformat,
             OpcodeKind::ADD
             | OpcodeKind::SUB
             | OpcodeKind::SLL
@@ -47,10 +47,12 @@ impl OpcodeKind {
             | OpcodeKind::SUBW
             | OpcodeKind::SLLW
             | OpcodeKind::SRLW
-            | OpcodeKind::SRAW => InstFormat::Rtype,
-            OpcodeKind::SB | OpcodeKind::SH | OpcodeKind::SW | OpcodeKind::SD => InstFormat::Stype,
-            OpcodeKind::JAL => InstFormat::Jtype,
-            OpcodeKind::LUI | OpcodeKind::AUIPC => InstFormat::Utype,
+            | OpcodeKind::SRAW => InstFormat::Rformat,
+            OpcodeKind::SB | OpcodeKind::SH | OpcodeKind::SW | OpcodeKind::SD => {
+                InstFormat::Sformat
+            }
+            OpcodeKind::JAL => InstFormat::Jformat,
+            OpcodeKind::LUI | OpcodeKind::AUIPC => InstFormat::Uformat,
             OpcodeKind::ECALL | OpcodeKind::FENCE | OpcodeKind::EBREAK => InstFormat::Uncategorized,
 
             // Zicsr
@@ -59,11 +61,11 @@ impl OpcodeKind {
             | OpcodeKind::CSRRC
             | OpcodeKind::CSRRWI
             | OpcodeKind::CSRRSI
-            | OpcodeKind::CSRRCI => InstFormat::CSRuitype,
+            | OpcodeKind::CSRRCI => InstFormat::CSRuiformat,
 
             // Privileged
             OpcodeKind::SRET | OpcodeKind::MRET | OpcodeKind::WFI => InstFormat::Uncategorized,
-            OpcodeKind::SFENCE_VMA => InstFormat::Rtype,
+            OpcodeKind::SFENCE_VMA => InstFormat::Rformat,
 
             // Multiplication and Division
             OpcodeKind::MUL
@@ -78,10 +80,10 @@ impl OpcodeKind {
             | OpcodeKind::DIVW
             | OpcodeKind::DIVUW
             | OpcodeKind::REMW
-            | OpcodeKind::REMUW => InstFormat::Mtype,
+            | OpcodeKind::REMUW => InstFormat::Mformat,
 
             // Atomic
-            OpcodeKind::LR_W => InstFormat::A_LRtype,
+            OpcodeKind::LR_W => InstFormat::A_LRformat,
             OpcodeKind::SC_W
             | OpcodeKind::AMOSWAP_W
             | OpcodeKind::AMOADD_W
@@ -102,32 +104,38 @@ impl OpcodeKind {
             | OpcodeKind::AMOMIN_D
             | OpcodeKind::AMOMAX_D
             | OpcodeKind::AMOMINU_D
-            | OpcodeKind::AMOMAXU_D => InstFormat::Atype,
+            | OpcodeKind::AMOMAXU_D => InstFormat::Aformat,
 
             // Compressed
             // Quadrant 0
-            OpcodeKind::C_ADDI4SPN => InstFormat::C_Q0_SPtype,
-            OpcodeKind::C_LW | OpcodeKind::C_LD => InstFormat::C_Q0_Itype,
-            OpcodeKind::C_SW | OpcodeKind::C_SD => InstFormat::C_Stype,
+            OpcodeKind::C_LW | OpcodeKind::C_LD => InstFormat::CLformat,
+            OpcodeKind::C_ADDI4SPN => InstFormat::CIWformat,
+            OpcodeKind::C_SW | OpcodeKind::C_SD => InstFormat::CSformat,
             // Quadrant 1
-            OpcodeKind::C_BEQZ | OpcodeKind::C_BNEZ => InstFormat::C_Btype,
-            OpcodeKind::C_JAL | OpcodeKind::C_J => InstFormat::C_Q1_Jtype,
-            OpcodeKind::C_NOP | OpcodeKind::C_ADDI16SP => InstFormat::C_Q1_NoRDtype,
-            OpcodeKind::C_ANDI | OpcodeKind::C_SRLI | OpcodeKind::C_SRAI => InstFormat::C_Q1_Itype,
-            OpcodeKind::C_ADDI | OpcodeKind::C_LI | OpcodeKind::C_ADDIW | OpcodeKind::C_LUI => {
-                InstFormat::C_Q1_Itype
-            }
+            OpcodeKind::C_JAL | OpcodeKind::C_J => InstFormat::CJformat,
+            OpcodeKind::C_BEQZ
+            | OpcodeKind::C_ANDI
+            | OpcodeKind::C_SRLI
+            | OpcodeKind::C_SRAI
+            | OpcodeKind::C_BNEZ => InstFormat::CBformat,
+            OpcodeKind::C_LI
+            | OpcodeKind::C_ADDI
+            | OpcodeKind::C_ADDIW
+            | OpcodeKind::C_ADDI16SP
+            | OpcodeKind::C_LUI => InstFormat::CIformat,
+            OpcodeKind::C_NOP => InstFormat::Uncategorized,
             OpcodeKind::C_SUB
             | OpcodeKind::C_XOR
             | OpcodeKind::C_OR
             | OpcodeKind::C_AND
             | OpcodeKind::C_SUBW
-            | OpcodeKind::C_ADDW => InstFormat::C_Q1_Rtype,
+            | OpcodeKind::C_ADDW => InstFormat::CAformat,
             // Quadrant 2
-            OpcodeKind::C_SDSP | OpcodeKind::C_SWSP => InstFormat::C_Q2_SPtype,
-            OpcodeKind::C_JR | OpcodeKind::C_JALR => InstFormat::C_Q2_Jtype,
-            OpcodeKind::C_LDSP | OpcodeKind::C_LWSP | OpcodeKind::C_SLLI => InstFormat::C_Q2_Itype,
-            OpcodeKind::C_MV | OpcodeKind::C_ADD => InstFormat::C_Q2_Rtype,
+            OpcodeKind::C_LDSP | OpcodeKind::C_SLLI | OpcodeKind::C_LWSP => InstFormat::CIformat,
+            OpcodeKind::C_SDSP | OpcodeKind::C_SWSP => InstFormat::CSSformat,
+            OpcodeKind::C_JR | OpcodeKind::C_JALR | OpcodeKind::C_MV | OpcodeKind::C_ADD => {
+                InstFormat::CRformat
+            }
             OpcodeKind::C_EBREAK => InstFormat::Uncategorized,
         }
     }

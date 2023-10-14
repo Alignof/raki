@@ -106,28 +106,33 @@ impl OpcodeKind {
 
             // Compressed
             // Quadrant 0
-            OpcodeKind::C_ADDI4SPN => InstFormat::C_Q0_SPtype,
-            OpcodeKind::C_LW | OpcodeKind::C_LD => InstFormat::C_Q0_Itype,
-            OpcodeKind::C_SW | OpcodeKind::C_SD => InstFormat::C_Stype,
+            OpcodeKind::C_LW | OpcodeKind::C_LD => InstFormat::CLtype,
+            OpcodeKind::C_ADDI4SPN => InstFormat::CIWtype,
+            OpcodeKind::C_SW | OpcodeKind::C_SD => InstFormat::CStype,
             // Quadrant 1
-            OpcodeKind::C_BEQZ | OpcodeKind::C_BNEZ => InstFormat::C_Btype,
-            OpcodeKind::C_JAL | OpcodeKind::C_J => InstFormat::C_Q1_Jtype,
-            OpcodeKind::C_NOP | OpcodeKind::C_ADDI16SP => InstFormat::C_Q1_NoRDtype,
-            OpcodeKind::C_ANDI | OpcodeKind::C_SRLI | OpcodeKind::C_SRAI => InstFormat::C_Q1_Itype,
-            OpcodeKind::C_ADDI | OpcodeKind::C_LI | OpcodeKind::C_ADDIW | OpcodeKind::C_LUI => {
-                InstFormat::C_Q1_Itype
-            }
+            OpcodeKind::C_JAL | OpcodeKind::C_J => InstFormat::CJtype,
+            OpcodeKind::C_BEQZ
+            | OpcodeKind::C_ANDI
+            | OpcodeKind::C_SRLI
+            | OpcodeKind::C_SRAI
+            | OpcodeKind::C_BNEZ => InstFormat::CBtype,
+            OpcodeKind::C_LI
+            | OpcodeKind::C_ADDI
+            | OpcodeKind::C_ADDIW
+            | OpcodeKind::C_ADDI16SP
+            | OpcodeKind::C_NOP
+            | OpcodeKind::C_LUI => InstFormat::CItype,
             OpcodeKind::C_SUB
             | OpcodeKind::C_XOR
             | OpcodeKind::C_OR
             | OpcodeKind::C_AND
             | OpcodeKind::C_SUBW
-            | OpcodeKind::C_ADDW => InstFormat::C_Q1_Rtype,
+            | OpcodeKind::C_ADDW => InstFormat::CAtype,
             // Quadrant 2
-            OpcodeKind::C_SDSP | OpcodeKind::C_SWSP => InstFormat::C_Q2_SPtype,
-            OpcodeKind::C_JR | OpcodeKind::C_JALR => InstFormat::C_Q2_Jtype,
-            OpcodeKind::C_LDSP | OpcodeKind::C_LWSP | OpcodeKind::C_SLLI => InstFormat::C_Q2_Itype,
-            OpcodeKind::C_MV | OpcodeKind::C_ADD => InstFormat::C_Q2_Rtype,
+            OpcodeKind::C_LDSP | OpcodeKind::C_SLLI | OpcodeKind::C_LWSP => InstFormat::CItype,
+            OpcodeKind::C_SDSP | OpcodeKind::C_SWSP => InstFormat::CSStype,
+            OpcodeKind::C_MV | OpcodeKind::C_ADD => InstFormat::CRtype,
+            OpcodeKind::C_JR | OpcodeKind::C_JALR => InstFormat::CJtype,
             OpcodeKind::C_EBREAK => InstFormat::Uncategorized,
         }
     }

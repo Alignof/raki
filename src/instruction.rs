@@ -263,88 +263,69 @@ pub enum InstFormat {
     /// ```
     Jtype,
 
-    /// Compressed Immediate format in Quadrant 0
+    /// Compressed Register format
     /// ```ignore
-    /// c.addi4spn rd, nzuimm
+    /// c.mv rd, rs2
+    /// c.add rd, rd, rs2
     /// ```
-    C_Q0_SPtype,
+    CRtype,
 
-    /// Compressed Immediate format in Quadrant 0
+    /// Compressed Immediate format
+    /// ```ignore
+    /// c.nop
+    /// c.addi rd, rd, imm
+    /// c.addi16sp x2, x2, nzimm
+    /// ```
+    CItype,
+
+    /// Compressed Stack-relative Store format
+    /// ```ignore
+    /// c.swsp rs2, imm
+    /// -> sw rs2, imm[8:3](x2)
+    /// ```
+    CSStype,
+
+    /// Compressed Wide Immediate Store format
+    /// ```ignore
+    /// c.addi4spn rd, x2, nzuimm
+    /// ```
+    CIWtype,
+
+    /// Compressed Load format
     /// ```ignore
     /// c.lw rd imm(rs1)
     /// ```
-    C_Q0_Itype,
+    CLtype,
 
     /// Compressed Store format
     /// ```ignore
     /// c.sw rs2, imm(rs1)
     /// ```
-    C_Stype,
+    CStype,
 
-    /// Compressed Immediate format in Quadrant 1
-    /// ```ignore
-    /// c.addi rd, rd, nzuimm
-    /// ```
-    C_Q1_Itype,
-
-    /// Compressed Jump format in Quadrant 1
-    /// ```ignore
-    /// c.j imm
-    /// ```
-    C_Q1_Jtype,
-
-    /// Compressed instruction does not have rd in Quadrant 1
-    /// ```ignore
-    /// c.addi16sp nzuimm
-    /// ```
-    C_Q1_NoRDtype,
-
-    /// Compressed Upper immediate format (Quadrant 1)
-    /// ```ignore
-    /// c.lui rd, nzuimm
-    /// ```
-    C_Utype,
-
-    /// Compressed Regular format in Quadrant 1
+    /// Compressed Arithmetic format
     /// ```ignore
     /// c.and rd, rd, rs2
     /// ```
-    C_Q1_Rtype,
+    CAtype,
 
-    /// Compressed Branch format (Quadrant 1)
+    /// Compressed Branch format
     /// ```ignore
     /// c.beqz rs1, imm
+    /// c.srai rd, rd, shamt
     /// ```
-    C_Btype,
+    CBtype,
 
-    /// Compressed Immediate format in Quadrant 2
+    /// Compressed Jump format
     /// ```ignore
-    /// c.slli rd, rd, nzuimm
+    /// c.j imm
     /// ```
-    C_Q2_Itype,
-
-    /// Compressed Jump format in Quadrant 2
-    /// ```ignore
-    /// c.jr rs1
-    /// ```
-    C_Q2_Jtype,
-
-    /// Compressed load/store stack pointer instruction in Quadrant 2
-    /// ```ignore
-    /// c.swsp rs2, uimm
-    /// ```
-    C_Q2_SPtype,
-
-    /// Compressed Regular format in Quadrant 2
-    /// ```ignore
-    /// c.add rd, rd, rs2
-    /// c.mv rd, rs2
-    /// ```
-    C_Q2_Rtype,
+    CJtype,
 
     /// Compressed Csr format
     /// ```ignore
     /// csrrw rd, csr, rs1
+    /// csrrwi rd, csr, imm
     /// ```
     CSRtype,
 

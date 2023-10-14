@@ -101,7 +101,34 @@ impl Display for Instruction {
                     self.imm.unwrap()
                 )
             }
-            InstFormat::CRformat | InstFormat::CAformat => {
+            InstFormat::CRformat => match self.opc {
+                OpcodeKind::C_JR | OpcodeKind::C_JALR => {
+                    write!(
+                        f,
+                        "{} {}, 0({})",
+                        self.opc.to_string(),
+                        reg2str(self.rs1.unwrap()),
+                        self.rs2.unwrap()
+                    )
+                }
+                OpcodeKind::C_MV => write!(
+                    f,
+                    "{} {}, {}",
+                    self.opc.to_string(),
+                    reg2str(self.rd.unwrap()),
+                    reg2str(self.rs2.unwrap())
+                ),
+                OpcodeKind::C_ADD => write!(
+                    f,
+                    "{} {}, {}, {}",
+                    self.opc.to_string(),
+                    reg2str(self.rd.unwrap()),
+                    reg2str(self.rd.unwrap()),
+                    reg2str(self.rs2.unwrap())
+                ),
+                _ => unreachable!(),
+            },
+            InstFormat::CAformat => {
                 write!(
                     f,
                     "{} {}, {}, {}",

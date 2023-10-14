@@ -136,8 +136,6 @@ pub fn parse_rd(inst: u16, opkind: &OpcodeKind) -> Result<Option<usize>, Decodin
         | OpcodeKind::C_LWSP
         | OpcodeKind::C_LDSP
         | OpcodeKind::C_MV
-        | OpcodeKind::C_JALR
-        | OpcodeKind::C_JR
         | OpcodeKind::C_ADD => Ok(Some(q2_rd)),
         _ => Ok(None),
     }

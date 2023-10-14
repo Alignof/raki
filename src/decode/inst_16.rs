@@ -118,8 +118,8 @@ mod decode_16 {
         );
         test_16(0x4521, C_LI, Some(10), None, None, Some(8));
         test_16(0xb5e5, C_J, None, None, None, Some(-280));
-        test_16(0x6105, C_ADDI, None, Some(2), None, Some(32));
-        test_16(0x8082, C_JR, None, Some(1), None, None);
+        test_16(0x6105, C_ADDI, Some(2), Some(2), None, Some(32));
+        test_16(0x8082, C_JR, None, Some(1), Some(0), None);
         test_16(0xe29d, C_BNEZ, None, Some(13), None, Some(38));
         test_16(0xc05c, C_SW, None, Some(8), Some(15), Some(4));
         test_16(0x9002, C_EBREAK, None, None, None, None);

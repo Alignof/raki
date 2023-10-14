@@ -120,8 +120,8 @@ impl OpcodeKind {
             | OpcodeKind::C_ADDI
             | OpcodeKind::C_ADDIW
             | OpcodeKind::C_ADDI16SP
-            | OpcodeKind::C_NOP
             | OpcodeKind::C_LUI => InstFormat::CItype,
+            OpcodeKind::C_NOP => InstFormat::Uncategorized,
             OpcodeKind::C_SUB
             | OpcodeKind::C_XOR
             | OpcodeKind::C_OR
@@ -131,8 +131,9 @@ impl OpcodeKind {
             // Quadrant 2
             OpcodeKind::C_LDSP | OpcodeKind::C_SLLI | OpcodeKind::C_LWSP => InstFormat::CItype,
             OpcodeKind::C_SDSP | OpcodeKind::C_SWSP => InstFormat::CSStype,
-            OpcodeKind::C_MV | OpcodeKind::C_ADD => InstFormat::CRtype,
-            OpcodeKind::C_JR | OpcodeKind::C_JALR => InstFormat::CJtype,
+            OpcodeKind::C_JR | OpcodeKind::C_JALR | OpcodeKind::C_MV | OpcodeKind::C_ADD => {
+                InstFormat::CRtype
+            }
             OpcodeKind::C_EBREAK => InstFormat::Uncategorized,
         }
     }

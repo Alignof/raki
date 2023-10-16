@@ -112,7 +112,7 @@ trait DecodeUtil {
     fn set(self, mask: &[u32]) -> u32;
 
     /// Get `Extensions` from a u16/u32 value.
-    fn extension(self) -> Extensions;
+    fn extension(self) -> Result<Extensions, DecodingError>;
 
     /// Convert i32 to a sign-extended any size number.
     /// # Arguments

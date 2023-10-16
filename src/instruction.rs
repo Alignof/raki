@@ -102,13 +102,20 @@ impl Display for Instruction {
                 )
             }
             InstFormat::CRformat => match self.opc {
-                OpcodeKind::C_JR | OpcodeKind::C_JALR => {
+                OpcodeKind::C_JR => {
                     write!(
                         f,
-                        "{} {}, 0({})",
+                        "{} zero, 0({})",
                         self.opc.to_string(),
                         reg2str(self.rs1.unwrap()),
-                        self.rs2.unwrap()
+                    )
+                }
+                OpcodeKind::C_JALR => {
+                    write!(
+                        f,
+                        "{} ra, 0({})",
+                        self.opc.to_string(),
+                        reg2str(self.rs1.unwrap()),
                     )
                 }
                 OpcodeKind::C_MV => write!(

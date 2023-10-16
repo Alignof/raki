@@ -50,6 +50,8 @@ pub enum DecodingError {
     InvalidFunct7,
     /// Has an opcode that cannot be decoded.
     InvalidOpcode,
+    /// This instruction is included in the unknown extension.
+    UnknownExtension,
     /// Illegal instruction (e.g. all zero value instruction)
     IllegalInstruction,
     /// This instruction is only for Rv64 but appeared at Rv32.

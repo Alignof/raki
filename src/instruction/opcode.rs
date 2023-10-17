@@ -56,12 +56,8 @@ impl OpcodeKind {
             OpcodeKind::ECALL | OpcodeKind::FENCE | OpcodeKind::EBREAK => InstFormat::Uncategorized,
 
             // Zicsr
-            OpcodeKind::CSRRW
-            | OpcodeKind::CSRRS
-            | OpcodeKind::CSRRC
-            | OpcodeKind::CSRRWI
-            | OpcodeKind::CSRRSI
-            | OpcodeKind::CSRRCI => InstFormat::CSRuiformat,
+            OpcodeKind::CSRRW | OpcodeKind::CSRRS | OpcodeKind::CSRRC => InstFormat::CSRformat,
+            OpcodeKind::CSRRWI | OpcodeKind::CSRRSI | OpcodeKind::CSRRCI => InstFormat::CSRuiformat,
 
             // Privileged
             OpcodeKind::SRET | OpcodeKind::MRET | OpcodeKind::WFI => InstFormat::Uncategorized,

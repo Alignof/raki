@@ -50,6 +50,8 @@ pub enum DecodingError {
     InvalidFunct7,
     /// Has an opcode that cannot be decoded.
     InvalidOpcode,
+    /// This instruction is included in the unknown extension.
+    UnknownExtension,
     /// Illegal instruction (e.g. all zero value instruction)
     IllegalInstruction,
     /// This instruction is only for Rv64 but appeared at Rv32.
@@ -110,7 +112,7 @@ trait DecodeUtil {
     fn set(self, mask: &[u32]) -> u32;
 
     /// Get `Extensions` from a u16/u32 value.
-    fn extension(self) -> Extensions;
+    fn extension(self) -> Result<Extensions, DecodingError>;
 
     /// Convert i32 to a sign-extended any size number.
     /// # Arguments

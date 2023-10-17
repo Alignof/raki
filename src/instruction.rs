@@ -26,7 +26,7 @@ pub struct Instruction {
 impl Display for Instruction {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         match self.inst_format {
-            InstFormat::Rformat | InstFormat::Mformat | InstFormat::Aformat => {
+            InstFormat::Rformat | InstFormat::Mformat => {
                 write!(
                     f,
                     "{} {}, {}, {}",
@@ -36,6 +36,23 @@ impl Display for Instruction {
                     reg2str(self.rs2.unwrap())
                 )
             }
+            InstFormat::Aformat => match self.opc {
+                OpcodeKind::LR_W | OpcodeKind::LR_D => write!(
+                    f,
+                    "{} {}, {}",
+                    self.opc.to_string(),
+                    reg2str(self.rd.unwrap()),
+                    reg2str(self.rs1.unwrap()),
+                ),
+                _ => write!(
+                    f,
+                    "{} {}, {}, {}",
+                    self.opc.to_string(),
+                    reg2str(self.rd.unwrap()),
+                    reg2str(self.rs1.unwrap()),
+                    reg2str(self.rs2.unwrap())
+                ),
+            },
             InstFormat::R_SHAMTformat => {
                 write!(
                     f,
@@ -102,13 +119,20 @@ impl Display for Instruction {
                 )
             }
             InstFormat::CRformat => match self.opc {
-                OpcodeKind::C_JR | OpcodeKind::C_JALR => {
+                OpcodeKind::C_JR => {
                     write!(
                         f,
-                        "{} {}, 0({})",
+                        "{} zero, 0({})",
                         self.opc.to_string(),
                         reg2str(self.rs1.unwrap()),
-                        self.rs2.unwrap()
+                    )
+                }
+                OpcodeKind::C_JALR => {
+                    write!(
+                        f,
+                        "{} ra, 0({})",
+                        self.opc.to_string(),
+                        reg2str(self.rs1.unwrap()),
                     )
                 }
                 OpcodeKind::C_MV => write!(

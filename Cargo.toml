@@ -4,7 +4,7 @@ version = "0.1.3"
 edition = "2021"
 authors = ["Norimasa Takana <alignof@outlook.com>"]
 repository = "https://github.com/Alignof/raki"
-keywords = ["risc-v", "docoder"]
+keywords = ["risc-v", "decoder"]
 description = "RISC-V instruction decoder written in Rust."
 license = "MIT"
 

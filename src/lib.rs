@@ -22,6 +22,8 @@
 //! // --output--
 //! // addi t0, t0, -276
 //! ```
+#![cfg_attr(not(test), no_std)]
+extern crate alloc;
 
 pub mod decode;
 pub mod instruction;

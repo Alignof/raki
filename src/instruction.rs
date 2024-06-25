@@ -2,7 +2,9 @@
 
 mod opcode;
 
-use std::fmt::{self, Display, Formatter};
+use alloc::format;
+use alloc::string::String;
+use core::fmt::{self, Display, Formatter};
 
 /// Instruction
 #[derive(Debug)]

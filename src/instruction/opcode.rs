@@ -352,7 +352,7 @@ impl OpcodeKind {
             OpcodeKind::SFENCE_VMA => "sfence.vma",
             OpcodeKind::MUL => "mul",
             OpcodeKind::MULH => "mulh",
-            OpcodeKind::MULHSU => "mulhsu,",
+            OpcodeKind::MULHSU => "mulhsu",
             OpcodeKind::MULHU => "mulhu",
             OpcodeKind::DIV => "div",
             OpcodeKind::DIVU => "divu",

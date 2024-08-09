@@ -3,7 +3,9 @@
 use super::{InstFormat, Opcode};
 use core::fmt::{self, Display, Formatter};
 
+/// Privileged Insturctions.
 #[allow(non_camel_case_types)]
+#[derive(Debug)]
 pub enum PrivOpcode {
     SRET,
     MRET,

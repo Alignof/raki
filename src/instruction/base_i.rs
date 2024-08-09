@@ -3,6 +3,9 @@
 use super::{InstFormat, Opcode};
 use core::fmt::{self, Display, Formatter};
 
+/// Insturctions in Base-I.
+#[allow(non_camel_case_types)]
+#[derive(Debug)]
 pub enum BaseIOpcode {
     LUI,
     AUIPC,

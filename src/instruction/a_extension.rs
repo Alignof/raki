@@ -3,7 +3,9 @@
 use super::{InstFormat, Opcode};
 use core::fmt::{self, Display, Formatter};
 
+/// Insturctions in A Extension.
 #[allow(non_camel_case_types)]
+#[derive(Debug)]
 pub enum AOpcode {
     LR_W,
     SC_W,

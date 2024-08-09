@@ -1,8 +1,21 @@
 //! Define instructions data structure.
 
+mod a_extension;
+mod base_i;
+mod c_extension;
+mod m_extension;
 mod opcode;
+mod priv_extension;
+mod zicsr_extension;
 
 use std::fmt::{self, Display, Formatter};
+
+use a_extension::AOpcode;
+use base_i::BaseIOpcode;
+use c_extension::COpcode;
+use m_extension::MOpcode;
+use priv_extension::PrivOpcode;
+use zicsr_extension::ZicsrOpcode;
 
 /// Instruction
 #[derive(Debug)]

@@ -1,19 +1,19 @@
 use super::super::{only_rv64, DecodeUtil, DecodingError};
-use crate::instruction::OpcodeKind;
+use crate::instruction::c_extension::COpcode;
 use crate::Isa;
 
-fn quadrant0(_inst: u16, opmap: u8, isa: Isa) -> Result<OpcodeKind, DecodingError> {
+fn quadrant0(_inst: u16, opmap: u8, isa: Isa) -> Result<COpcode, DecodingError> {
     match opmap {
-        0b000 => Ok(OpcodeKind::C_ADDI4SPN),
-        0b010 => Ok(OpcodeKind::C_LW),
-        0b011 => only_rv64(OpcodeKind::C_LD, isa),
-        0b110 => Ok(OpcodeKind::C_SW),
-        0b111 => only_rv64(OpcodeKind::C_SD, isa),
+        0b000 => Ok(COpcode::ADDI4SPN),
+        0b010 => Ok(COpcode::LW),
+        0b011 => only_rv64(COpcode::LD, isa),
+        0b110 => Ok(COpcode::SW),
+        0b111 => only_rv64(COpcode::SD, isa),
         _ => Err(DecodingError::InvalidOpcode),
     }
 }
 
-fn quadrant1(inst: u16, opmap: u8, isa: Isa) -> Result<OpcodeKind, DecodingError> {
+fn quadrant1(inst: u16, opmap: u8, isa: Isa) -> Result<COpcode, DecodingError> {
     let sr_flag: u8 = inst.slice(11, 10) as u8;
     let lo_flag: u8 = inst.slice(6, 5) as u8;
     let mi_flag: u8 = inst.slice(11, 7) as u8;
@@ -21,76 +21,76 @@ fn quadrant1(inst: u16, opmap: u8, isa: Isa) -> Result<OpcodeKind, DecodingError
 
     match opmap {
         0b000 => match mi_flag {
-            0b00000 => Ok(OpcodeKind::C_NOP),
-            _ => Ok(OpcodeKind::C_ADDI),
+            0b00000 => Ok(COpcode::NOP),
+            _ => Ok(COpcode::ADDI),
         },
         0b001 => match isa {
-            Isa::Rv32 => Ok(OpcodeKind::C_JAL),
-            Isa::Rv64 => Ok(OpcodeKind::C_ADDIW),
+            Isa::Rv32 => Ok(COpcode::JAL),
+            Isa::Rv64 => Ok(COpcode::ADDIW),
         },
-        0b010 => Ok(OpcodeKind::C_LI),
+        0b010 => Ok(COpcode::LI),
         0b011 => match mi_flag {
-            0b00010 => Ok(OpcodeKind::C_ADDI16SP),
-            _ => Ok(OpcodeKind::C_LUI),
+            0b00010 => Ok(COpcode::ADDI16SP),
+            _ => Ok(COpcode::LUI),
         },
         0b100 => match sr_flag {
-            0b00 => Ok(OpcodeKind::C_SRLI),
-            0b01 => Ok(OpcodeKind::C_SRAI),
-            0b10 => Ok(OpcodeKind::C_ANDI),
+            0b00 => Ok(COpcode::SRLI),
+            0b01 => Ok(COpcode::SRAI),
+            0b10 => Ok(COpcode::ANDI),
             0b11 => match bit_12 {
                 0b0 => match lo_flag {
-                    0b00 => Ok(OpcodeKind::C_SUB),
-                    0b01 => Ok(OpcodeKind::C_XOR),
-                    0b10 => Ok(OpcodeKind::C_OR),
-                    0b11 => Ok(OpcodeKind::C_AND),
+                    0b00 => Ok(COpcode::SUB),
+                    0b01 => Ok(COpcode::XOR),
+                    0b10 => Ok(COpcode::OR),
+                    0b11 => Ok(COpcode::AND),
                     _ => Err(DecodingError::InvalidOpcode),
                 },
                 0b1 => match lo_flag {
-                    0b00 => only_rv64(OpcodeKind::C_SUBW, isa),
-                    0b01 => only_rv64(OpcodeKind::C_ADDW, isa),
+                    0b00 => only_rv64(COpcode::SUBW, isa),
+                    0b01 => only_rv64(COpcode::ADDW, isa),
                     _ => Err(DecodingError::InvalidOpcode),
                 },
                 _ => unreachable!(),
             },
             _ => Err(DecodingError::InvalidOpcode),
         },
-        0b101 => Ok(OpcodeKind::C_J),
-        0b110 => Ok(OpcodeKind::C_BEQZ),
-        0b111 => Ok(OpcodeKind::C_BNEZ),
+        0b101 => Ok(COpcode::J),
+        0b110 => Ok(COpcode::BEQZ),
+        0b111 => Ok(COpcode::BNEZ),
         _ => Err(DecodingError::InvalidOpcode),
     }
 }
 
-fn quadrant2(inst: u16, opmap: u8, isa: Isa) -> Result<OpcodeKind, DecodingError> {
+fn quadrant2(inst: u16, opmap: u8, isa: Isa) -> Result<COpcode, DecodingError> {
     let lo_flag: u8 = inst.slice(6, 2) as u8;
     let mi_flag: u8 = inst.slice(11, 7) as u8;
     let hi_flag: u8 = inst.slice(12, 12) as u8;
 
     match opmap {
-        0b000 => Ok(OpcodeKind::C_SLLI),
-        0b010 => Ok(OpcodeKind::C_LWSP),
-        0b011 => only_rv64(OpcodeKind::C_LDSP, isa),
+        0b000 => Ok(COpcode::SLLI),
+        0b010 => Ok(COpcode::LWSP),
+        0b011 => only_rv64(COpcode::LDSP, isa),
         0b100 => match hi_flag {
             0b0 => match lo_flag {
-                0b0 => Ok(OpcodeKind::C_JR),
-                _ => Ok(OpcodeKind::C_MV),
+                0b0 => Ok(COpcode::JR),
+                _ => Ok(COpcode::MV),
             },
             0b1 => match mi_flag {
-                0b0 => Ok(OpcodeKind::C_EBREAK),
+                0b0 => Ok(COpcode::EBREAK),
                 _ => match lo_flag {
-                    0b0 => Ok(OpcodeKind::C_JALR),
-                    _ => Ok(OpcodeKind::C_ADD),
+                    0b0 => Ok(COpcode::JALR),
+                    _ => Ok(COpcode::ADD),
                 },
             },
             _ => Err(DecodingError::InvalidOpcode),
         },
-        0b110 => Ok(OpcodeKind::C_SWSP),
-        0b111 => only_rv64(OpcodeKind::C_SDSP, isa),
+        0b110 => Ok(COpcode::SWSP),
+        0b111 => only_rv64(COpcode::SDSP, isa),
         _ => Err(DecodingError::InvalidOpcode),
     }
 }
 
-pub fn parse_opcode(inst: u16, isa: Isa) -> Result<OpcodeKind, DecodingError> {
+pub fn parse_opcode(inst: u16, isa: Isa) -> Result<COpcode, DecodingError> {
     let opmap: u8 = inst.slice(15, 13) as u8;
     let quadrant: u8 = inst.slice(1, 0) as u8;
 
@@ -106,7 +106,7 @@ pub fn parse_opcode(inst: u16, isa: Isa) -> Result<OpcodeKind, DecodingError> {
     }
 }
 
-pub fn parse_rd(inst: u16, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError> {
+pub fn parse_rd(inst: u16, opkind: &COpcode) -> Result<Option<usize>, DecodingError> {
     // see riscv-spec-20191213.pdf, page 100, Table 16.2
     let q0_rd: usize = (inst.slice(4, 2) + 8) as usize;
     let q1_rd: usize = (inst.slice(9, 7) + 8) as usize;
@@ -115,33 +115,29 @@ pub fn parse_rd(inst: u16, opkind: &OpcodeKind) -> Result<Option<usize>, Decodin
 
     match opkind {
         // Quadrant 0
-        OpcodeKind::C_ADDI4SPN | OpcodeKind::C_LW | OpcodeKind::C_LD => Ok(Some(q0_rd)),
+        COpcode::ADDI4SPN | COpcode::LW | COpcode::LD => Ok(Some(q0_rd)),
         // Quadrant 1
-        OpcodeKind::C_SRLI
-        | OpcodeKind::C_SRAI
-        | OpcodeKind::C_ANDI
-        | OpcodeKind::C_SUB
-        | OpcodeKind::C_XOR
-        | OpcodeKind::C_OR
-        | OpcodeKind::C_AND
-        | OpcodeKind::C_ADDW
-        | OpcodeKind::C_SUBW => Ok(Some(q1_rd)),
-        OpcodeKind::C_LI
-        | OpcodeKind::C_LUI
-        | OpcodeKind::C_ADDI
-        | OpcodeKind::C_ADDIW
-        | OpcodeKind::C_ADDI16SP => Ok(Some(q1_wide_rd)),
+        COpcode::SRLI
+        | COpcode::SRAI
+        | COpcode::ANDI
+        | COpcode::SUB
+        | COpcode::XOR
+        | COpcode::OR
+        | COpcode::AND
+        | COpcode::ADDW
+        | COpcode::SUBW => Ok(Some(q1_rd)),
+        COpcode::LI | COpcode::LUI | COpcode::ADDI | COpcode::ADDIW | COpcode::ADDI16SP => {
+            Ok(Some(q1_wide_rd))
+        }
         // Quadrant 2
-        OpcodeKind::C_SLLI
-        | OpcodeKind::C_LWSP
-        | OpcodeKind::C_LDSP
-        | OpcodeKind::C_MV
-        | OpcodeKind::C_ADD => Ok(Some(q2_rd)),
+        COpcode::SLLI | COpcode::LWSP | COpcode::LDSP | COpcode::MV | COpcode::ADD => {
+            Ok(Some(q2_rd))
+        }
         _ => Ok(None),
     }
 }
 
-pub fn parse_rs1(inst: u16, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError> {
+pub fn parse_rs1(inst: u16, opkind: &COpcode) -> Result<Option<usize>, DecodingError> {
     // see riscv-spec-20191213.pdf, page 100, Table 16.2
     let q0_rs1: usize = (inst.slice(9, 7) + 8) as usize;
     let q1_rs1: usize = (inst.slice(9, 7) + 8) as usize;
@@ -150,31 +146,27 @@ pub fn parse_rs1(inst: u16, opkind: &OpcodeKind) -> Result<Option<usize>, Decodi
 
     match opkind {
         // Quadrant 0
-        OpcodeKind::C_LW | OpcodeKind::C_LD | OpcodeKind::C_SW | OpcodeKind::C_SD => {
-            Ok(Some(q0_rs1))
-        }
+        COpcode::LW | COpcode::LD | COpcode::SW | COpcode::SD => Ok(Some(q0_rs1)),
         // Quadrant 1
-        OpcodeKind::C_ADDI | OpcodeKind::C_ADDIW | OpcodeKind::C_ADDI16SP => Ok(Some(q1_addi_rs1)),
-        OpcodeKind::C_SRLI
-        | OpcodeKind::C_SRAI
-        | OpcodeKind::C_ANDI
-        | OpcodeKind::C_SUB
-        | OpcodeKind::C_XOR
-        | OpcodeKind::C_OR
-        | OpcodeKind::C_AND
-        | OpcodeKind::C_BEQZ
-        | OpcodeKind::C_BNEZ
-        | OpcodeKind::C_SUBW
-        | OpcodeKind::C_ADDW => Ok(Some(q1_rs1)),
+        COpcode::ADDI | COpcode::ADDIW | COpcode::ADDI16SP => Ok(Some(q1_addi_rs1)),
+        COpcode::SRLI
+        | COpcode::SRAI
+        | COpcode::ANDI
+        | COpcode::SUB
+        | COpcode::XOR
+        | COpcode::OR
+        | COpcode::AND
+        | COpcode::BEQZ
+        | COpcode::BNEZ
+        | COpcode::SUBW
+        | COpcode::ADDW => Ok(Some(q1_rs1)),
         // Quadrant 2
-        OpcodeKind::C_SLLI | OpcodeKind::C_JR | OpcodeKind::C_JALR | OpcodeKind::C_ADD => {
-            Ok(Some(q2_rs1))
-        }
+        COpcode::SLLI | COpcode::JR | COpcode::JALR | COpcode::ADD => Ok(Some(q2_rs1)),
         _ => Ok(None),
     }
 }
 
-pub fn parse_rs2(inst: u16, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError> {
+pub fn parse_rs2(inst: u16, opkind: &COpcode) -> Result<Option<usize>, DecodingError> {
     // see riscv-spec-20191213.pdf, page 100, Table 16.2
     let q0_rs2: usize = (inst.slice(4, 2) + 8) as usize;
     let q1_rs2: usize = (inst.slice(4, 2) + 8) as usize;
@@ -182,26 +174,26 @@ pub fn parse_rs2(inst: u16, opkind: &OpcodeKind) -> Result<Option<usize>, Decodi
 
     match opkind {
         // Quadrant 0
-        OpcodeKind::C_SW | OpcodeKind::C_SD => Ok(Some(q0_rs2)),
+        COpcode::SW | COpcode::SD => Ok(Some(q0_rs2)),
         // Quadrant 1
-        OpcodeKind::C_SUB
-        | OpcodeKind::C_XOR
-        | OpcodeKind::C_OR
-        | OpcodeKind::C_AND
-        | OpcodeKind::C_SUBW
-        | OpcodeKind::C_ADDW => Ok(Some(q1_rs2)),
+        COpcode::SUB
+        | COpcode::XOR
+        | COpcode::OR
+        | COpcode::AND
+        | COpcode::SUBW
+        | COpcode::ADDW => Ok(Some(q1_rs2)),
         // Quadrant 2
-        OpcodeKind::C_JR
-        | OpcodeKind::C_JALR
-        | OpcodeKind::C_MV
-        | OpcodeKind::C_ADD
-        | OpcodeKind::C_SWSP
-        | OpcodeKind::C_SDSP => Ok(Some(q2_rs2)),
+        COpcode::JR
+        | COpcode::JALR
+        | COpcode::MV
+        | COpcode::ADD
+        | COpcode::SWSP
+        | COpcode::SDSP => Ok(Some(q2_rs2)),
         _ => Ok(None),
     }
 }
 
-pub fn parse_imm(inst: u16, opkind: &OpcodeKind) -> Result<Option<i32>, DecodingError> {
+pub fn parse_imm(inst: u16, opkind: &COpcode) -> Result<Option<i32>, DecodingError> {
     let q0_uimm = || (inst.slice(12, 10).set(&[5, 4, 3]) | inst.slice(6, 5).set(&[2, 6])) as i32;
     let q0_uimm_64 = || (inst.slice(12, 10).set(&[5, 4, 3]) | inst.slice(6, 5).set(&[7, 6])) as i32;
     let q0_nzuimm = || inst.slice(12, 5).set(&[5, 4, 9, 8, 7, 6, 2, 3]) as i32;
@@ -243,23 +235,23 @@ pub fn parse_imm(inst: u16, opkind: &OpcodeKind) -> Result<Option<i32>, Decoding
 
     match opkind {
         // Quadrant0
-        OpcodeKind::C_ADDI4SPN => Ok(Some(q0_nzuimm())),
-        OpcodeKind::C_LW | OpcodeKind::C_SW => Ok(Some(q0_uimm())),
-        OpcodeKind::C_LD | OpcodeKind::C_SD => Ok(Some(q0_uimm_64())),
+        COpcode::ADDI4SPN => Ok(Some(q0_nzuimm())),
+        COpcode::LW | COpcode::SW => Ok(Some(q0_uimm())),
+        COpcode::LD | COpcode::SD => Ok(Some(q0_uimm_64())),
         // Quadrant1
-        OpcodeKind::C_ADDIW | OpcodeKind::C_LI | OpcodeKind::C_ANDI => Ok(Some(q1_imm())),
-        OpcodeKind::C_NOP | OpcodeKind::C_ADDI => Ok(Some(q1_nzimm())),
-        OpcodeKind::C_SRLI | OpcodeKind::C_SRAI => Ok(Some(q1_nzuimm())),
-        OpcodeKind::C_JAL | OpcodeKind::C_J => Ok(Some(q1_j_imm())),
-        OpcodeKind::C_BEQZ | OpcodeKind::C_BNEZ => Ok(Some(q1_b_imm())),
-        OpcodeKind::C_LUI => Ok(Some(q1_lui_imm())),
-        OpcodeKind::C_ADDI16SP => Ok(Some(q1_16sp_nzimm())),
+        COpcode::ADDIW | COpcode::LI | COpcode::ANDI => Ok(Some(q1_imm())),
+        COpcode::NOP | COpcode::ADDI => Ok(Some(q1_nzimm())),
+        COpcode::SRLI | COpcode::SRAI => Ok(Some(q1_nzuimm())),
+        COpcode::JAL | COpcode::J => Ok(Some(q1_j_imm())),
+        COpcode::BEQZ | COpcode::BNEZ => Ok(Some(q1_b_imm())),
+        COpcode::LUI => Ok(Some(q1_lui_imm())),
+        COpcode::ADDI16SP => Ok(Some(q1_16sp_nzimm())),
         // Quadrant2
-        OpcodeKind::C_SLLI => Ok(Some(q2_imm())),
-        OpcodeKind::C_LWSP => Ok(Some(q2_lwsp_imm())),
-        OpcodeKind::C_LDSP => Ok(Some(q2_ldsp_imm())),
-        OpcodeKind::C_SWSP => Ok(Some(q2_swsp_imm())),
-        OpcodeKind::C_SDSP => Ok(Some(q2_sdsp_imm())),
+        COpcode::SLLI => Ok(Some(q2_imm())),
+        COpcode::LWSP => Ok(Some(q2_lwsp_imm())),
+        COpcode::LDSP => Ok(Some(q2_ldsp_imm())),
+        COpcode::SWSP => Ok(Some(q2_swsp_imm())),
+        COpcode::SDSP => Ok(Some(q2_sdsp_imm())),
         _ => Ok(None),
     }
 }

@@ -1,5 +1,6 @@
 //! C extension Insturction.
 
+use super::{InstFormat, Opcode};
 use core::fmt::{self, Display, Formatter};
 
 #[allow(non_camel_case_types)]
@@ -79,6 +80,37 @@ impl Display for COpcode {
             COpcode::ADDW => write!(f, "C.addw"),
             COpcode::LDSP => write!(f, "C.ldsp"),
             COpcode::SDSP => write!(f, "C.sdsp"),
+        }
+    }
+}
+
+impl Opcode for COpcode {
+    fn get_format(&self) -> InstFormat {
+        match self {
+            // Quadrant 0
+            COpcode::LW | COpcode::LD => InstFormat::CLformat,
+            COpcode::ADDI4SPN => InstFormat::CIWformat,
+            COpcode::SW | COpcode::SD => InstFormat::CSformat,
+            // Quadrant 1
+            COpcode::JAL | COpcode::J => InstFormat::CJformat,
+            COpcode::BEQZ | COpcode::ANDI | COpcode::SRLI | COpcode::SRAI | COpcode::BNEZ => {
+                InstFormat::CBformat
+            }
+            COpcode::LI | COpcode::ADDI | COpcode::ADDIW | COpcode::ADDI16SP | COpcode::LUI => {
+                InstFormat::CIformat
+            }
+            COpcode::NOP => InstFormat::Uncategorized,
+            COpcode::SUB
+            | COpcode::XOR
+            | COpcode::OR
+            | COpcode::AND
+            | COpcode::SUBW
+            | COpcode::ADDW => InstFormat::CAformat,
+            // Quadrant 2
+            COpcode::LDSP | COpcode::SLLI | COpcode::LWSP => InstFormat::CIformat,
+            COpcode::SDSP | COpcode::SWSP => InstFormat::CSSformat,
+            COpcode::JR | COpcode::JALR | COpcode::MV | COpcode::ADD => InstFormat::CRformat,
+            COpcode::EBREAK => InstFormat::Uncategorized,
         }
     }
 }

@@ -1,5 +1,6 @@
 //! A extension Insturction.
 
+use super::{InstFormat, Opcode};
 use core::fmt::{self, Display, Formatter};
 
 #[allow(non_camel_case_types)]
@@ -55,6 +56,35 @@ impl Display for AOpcode {
             AOpcode::AMOMAX_D => write!(f, "amomax.d"),
             AOpcode::AMOMINU_D => write!(f, "amominu.d"),
             AOpcode::AMOMAXU_D => write!(f, "amomaxu.d"),
+        }
+    }
+}
+
+impl Opcode for AOpcode {
+    fn get_format(&self) -> InstFormat {
+        match self {
+            AOpcode::LR_W => InstFormat::A_LRformat,
+            AOpcode::SC_W
+            | AOpcode::AMOSWAP_W
+            | AOpcode::AMOADD_W
+            | AOpcode::AMOXOR_W
+            | AOpcode::AMOAND_W
+            | AOpcode::AMOOR_W
+            | AOpcode::AMOMIN_W
+            | AOpcode::AMOMAX_W
+            | AOpcode::AMOMINU_W
+            | AOpcode::AMOMAXU_W
+            | AOpcode::LR_D
+            | AOpcode::SC_D
+            | AOpcode::AMOSWAP_D
+            | AOpcode::AMOADD_D
+            | AOpcode::AMOXOR_D
+            | AOpcode::AMOAND_D
+            | AOpcode::AMOOR_D
+            | AOpcode::AMOMIN_D
+            | AOpcode::AMOMAX_D
+            | AOpcode::AMOMINU_D
+            | AOpcode::AMOMAXU_D => InstFormat::Aformat,
         }
     }
 }

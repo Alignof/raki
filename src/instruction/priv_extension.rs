@@ -1,5 +1,6 @@
 //! Privileged Instruction.
 
+use super::{InstFormat, Opcode};
 use core::fmt::{self, Display, Formatter};
 
 #[allow(non_camel_case_types)]
@@ -17,6 +18,15 @@ impl Display for PrivOpcode {
             PrivOpcode::MRET => write!(f, "mret"),
             PrivOpcode::WFI => write!(f, "wfi"),
             PrivOpcode::SFENCE_VMA => write!(f, "sfence.vma"),
+        }
+    }
+}
+
+impl Opcode for PrivOpcode {
+    fn get_format(&self) -> InstFormat {
+        match self {
+            PrivOpcode::SRET | PrivOpcode::MRET | PrivOpcode::WFI => InstFormat::Uncategorized,
+            PrivOpcode::SFENCE_VMA => InstFormat::Rformat,
         }
     }
 }

@@ -433,7 +433,9 @@ pub enum InstFormat {
 }
 
 /// Trait for `OpcodeKind`
-trait Opcode<Fmt> {
+trait Opcode {
+    /// Get Instruction format (e.g. R-type, I-type, S-type, etc...)
+    /// See: Chapter 34. RV32/64G Instruction Set Listings, p.554
     fn get_format(&self) -> InstFormat;
 }
 

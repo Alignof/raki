@@ -1,5 +1,6 @@
 //! M extension Instruction.
 
+use super::{InstFormat, Opcode};
 use core::fmt::{self, Display, Formatter};
 
 #[allow(non_camel_case_types)]
@@ -37,6 +38,26 @@ impl Display for MOpcode {
             MOpcode::DIVUW => write!(f, "divuw"),
             MOpcode::REMW => write!(f, "remw"),
             MOpcode::REMUW => write!(f, "remuw"),
+        }
+    }
+}
+
+impl Opcode for MOpcode {
+    fn get_format(&self) -> InstFormat {
+        match self {
+            MOpcode::MUL
+            | MOpcode::MULH
+            | MOpcode::MULHSU
+            | MOpcode::MULHU
+            | MOpcode::DIV
+            | MOpcode::DIVU
+            | MOpcode::REM
+            | MOpcode::REMU
+            | MOpcode::MULW
+            | MOpcode::DIVW
+            | MOpcode::DIVUW
+            | MOpcode::REMW
+            | MOpcode::REMUW => InstFormat::Mformat,
         }
     }
 }

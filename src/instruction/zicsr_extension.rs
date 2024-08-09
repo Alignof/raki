@@ -1,5 +1,6 @@
 //! Zicsr extension Instruction.
 
+use super::{InstFormat, Opcode};
 use core::fmt::{self, Display, Formatter};
 
 #[allow(non_camel_case_types)]
@@ -21,6 +22,17 @@ impl Display for ZicsrOpcode {
             ZicsrOpcode::CSRRWI => write!(f, "csrrwi"),
             ZicsrOpcode::CSRRSI => write!(f, "csrrsi"),
             ZicsrOpcode::CSRRCI => write!(f, "csrrci"),
+        }
+    }
+}
+
+impl Opcode for ZicsrOpcode {
+    fn get_format(&self) -> InstFormat {
+        match self {
+            ZicsrOpcode::CSRRW | ZicsrOpcode::CSRRS | ZicsrOpcode::CSRRC => InstFormat::CSRformat,
+            ZicsrOpcode::CSRRWI | ZicsrOpcode::CSRRSI | ZicsrOpcode::CSRRCI => {
+                InstFormat::CSRuiformat
+            }
         }
     }
 }

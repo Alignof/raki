@@ -1,5 +1,6 @@
 //! Base I Instructions.
 
+use super::{InstFormat, Opcode};
 use core::fmt::{self, Display, Formatter};
 
 pub enum BaseIOpcode {
@@ -114,6 +115,63 @@ impl Display for BaseIOpcode {
             BaseIOpcode::SLLW => write!(f, "sllw"),
             BaseIOpcode::SRLW => write!(f, "srlw"),
             BaseIOpcode::SRAW => write!(f, "sraw"),
+        }
+    }
+}
+
+impl Opcode for BaseIOpcode {
+    fn get_format(&self) -> InstFormat {
+        match self {
+            BaseIOpcode::BEQ
+            | BaseIOpcode::BNE
+            | BaseIOpcode::BLT
+            | BaseIOpcode::BGE
+            | BaseIOpcode::BLTU
+            | BaseIOpcode::BGEU => InstFormat::Bformat,
+            BaseIOpcode::JALR
+            | BaseIOpcode::LB
+            | BaseIOpcode::LH
+            | BaseIOpcode::LW
+            | BaseIOpcode::LBU
+            | BaseIOpcode::LHU
+            | BaseIOpcode::ADDI
+            | BaseIOpcode::SLTI
+            | BaseIOpcode::SLTIU
+            | BaseIOpcode::XORI
+            | BaseIOpcode::ORI
+            | BaseIOpcode::ANDI
+            | BaseIOpcode::LWU
+            | BaseIOpcode::LD
+            | BaseIOpcode::ADDIW => InstFormat::Iformat,
+            BaseIOpcode::SLLI
+            | BaseIOpcode::SRLI
+            | BaseIOpcode::SRAI
+            | BaseIOpcode::SLLIW
+            | BaseIOpcode::SRLIW
+            | BaseIOpcode::SRAIW => InstFormat::R_SHAMTformat,
+            BaseIOpcode::ADD
+            | BaseIOpcode::SUB
+            | BaseIOpcode::SLL
+            | BaseIOpcode::SLT
+            | BaseIOpcode::SLTU
+            | BaseIOpcode::XOR
+            | BaseIOpcode::SRL
+            | BaseIOpcode::SRA
+            | BaseIOpcode::OR
+            | BaseIOpcode::AND
+            | BaseIOpcode::ADDW
+            | BaseIOpcode::SUBW
+            | BaseIOpcode::SLLW
+            | BaseIOpcode::SRLW
+            | BaseIOpcode::SRAW => InstFormat::Rformat,
+            BaseIOpcode::SB | BaseIOpcode::SH | BaseIOpcode::SW | BaseIOpcode::SD => {
+                InstFormat::Sformat
+            }
+            BaseIOpcode::JAL => InstFormat::Jformat,
+            BaseIOpcode::LUI | BaseIOpcode::AUIPC => InstFormat::Uformat,
+            BaseIOpcode::ECALL | BaseIOpcode::FENCE | BaseIOpcode::EBREAK => {
+                InstFormat::Uncategorized
+            }
         }
     }
 }

@@ -47,7 +47,7 @@ impl Display for Instruction {
                 )
             }
             InstFormat::Aformat => match self.opc {
-                OpcodeKind::A(AOpcode::LR_W) | OpcodeKind::A(AOpcode::LR_D) => write!(
+                OpcodeKind::A(AOpcode::LR_W | AOpcode::LR_D) => write!(
                     f,
                     "{} {}, {}",
                     self.opc,
@@ -457,6 +457,7 @@ impl Display for OpcodeKind {
 }
 
 impl OpcodeKind {
+    #[must_use]
     pub fn get_format(&self) -> InstFormat {
         match &self {
             Self::BaseI(opc) => opc.get_format(),

@@ -40,24 +40,24 @@ impl Display for Instruction {
                 write!(
                     f,
                     "{} {}, {}, {}",
-                    self.opc.to_string(),
+                    self.opc,
                     reg2str(self.rd.unwrap()),
                     reg2str(self.rs1.unwrap()),
                     reg2str(self.rs2.unwrap())
                 )
             }
             InstFormat::Aformat => match self.opc {
-                OpcodeKind::LR_W | OpcodeKind::LR_D => write!(
+                OpcodeKind::A(AOpcode::LR_W) | OpcodeKind::A(AOpcode::LR_D) => write!(
                     f,
                     "{} {}, {}",
-                    self.opc.to_string(),
+                    self.opc,
                     reg2str(self.rd.unwrap()),
                     reg2str(self.rs1.unwrap()),
                 ),
                 _ => write!(
                     f,
                     "{} {}, {}, {}",
-                    self.opc.to_string(),
+                    self.opc,
                     reg2str(self.rd.unwrap()),
                     reg2str(self.rs1.unwrap()),
                     reg2str(self.rs2.unwrap())
@@ -67,7 +67,7 @@ impl Display for Instruction {
                 write!(
                     f,
                     "{} {}, {}",
-                    self.opc.to_string(),
+                    self.opc,
                     reg2str(self.rd.unwrap()),
                     reg2str(self.rs1.unwrap()),
                 )
@@ -75,7 +75,7 @@ impl Display for Instruction {
             InstFormat::CLformat | InstFormat::A_LRformat | InstFormat::Iformat => write!(
                 f,
                 "{} {}, {}, {}",
-                self.opc.to_string(),
+                self.opc,
                 reg2str(self.rd.unwrap()),
                 reg2str(self.rs1.unwrap()),
                 self.imm.unwrap()
@@ -83,7 +83,7 @@ impl Display for Instruction {
             InstFormat::CSformat | InstFormat::Sformat | InstFormat::Bformat => write!(
                 f,
                 "{} {}, {}({})",
-                self.opc.to_string(),
+                self.opc,
                 reg2str(self.rs1.unwrap()),
                 self.imm.unwrap(),
                 reg2str(self.rs2.unwrap()),
@@ -92,7 +92,7 @@ impl Display for Instruction {
                 write!(
                     f,
                     "{} {}, sp, {:x}",
-                    self.opc.to_string(),
+                    self.opc,
                     reg2str(self.rd.unwrap()),
                     self.imm.unwrap()
                 )
@@ -101,7 +101,7 @@ impl Display for Instruction {
                 write!(
                     f,
                     "{} {}, {}(sp)",
-                    self.opc.to_string(),
+                    self.opc,
                     reg2str(self.rs2.unwrap()),
                     self.imm.unwrap()
                 )
@@ -110,52 +110,42 @@ impl Display for Instruction {
                 write!(
                     f,
                     "{} {}, {:#x}",
-                    self.opc.to_string(),
+                    self.opc,
                     reg2str(self.rd.unwrap()),
                     self.imm.unwrap()
                 )
             }
             InstFormat::CJformat => {
-                write!(f, "{} {}", self.opc.to_string(), self.imm.unwrap())
+                write!(f, "{} {}", self.opc, self.imm.unwrap())
             }
             InstFormat::CIformat => {
                 write!(
                     f,
                     "{} {}, {}, {}",
-                    self.opc.to_string(),
+                    self.opc,
                     reg2str(self.rd.unwrap()),
                     reg2str(self.rd.unwrap()),
                     self.imm.unwrap()
                 )
             }
             InstFormat::CRformat => match self.opc {
-                OpcodeKind::C_JR => {
-                    write!(
-                        f,
-                        "{} zero, 0({})",
-                        self.opc.to_string(),
-                        reg2str(self.rs1.unwrap()),
-                    )
+                OpcodeKind::C(COpcode::JR) => {
+                    write!(f, "{} zero, 0({})", self.opc, reg2str(self.rs1.unwrap()),)
                 }
-                OpcodeKind::C_JALR => {
-                    write!(
-                        f,
-                        "{} ra, 0({})",
-                        self.opc.to_string(),
-                        reg2str(self.rs1.unwrap()),
-                    )
+                OpcodeKind::C(COpcode::JALR) => {
+                    write!(f, "{} ra, 0({})", self.opc, reg2str(self.rs1.unwrap()),)
                 }
-                OpcodeKind::C_MV => write!(
+                OpcodeKind::C(COpcode::MV) => write!(
                     f,
                     "{} {}, {}",
-                    self.opc.to_string(),
+                    self.opc,
                     reg2str(self.rd.unwrap()),
                     reg2str(self.rs2.unwrap())
                 ),
-                OpcodeKind::C_ADD => write!(
+                OpcodeKind::C(COpcode::ADD) => write!(
                     f,
                     "{} {}, {}, {}",
-                    self.opc.to_string(),
+                    self.opc,
                     reg2str(self.rd.unwrap()),
                     reg2str(self.rd.unwrap()),
                     reg2str(self.rs2.unwrap())
@@ -166,7 +156,7 @@ impl Display for Instruction {
                 write!(
                     f,
                     "{} {}, {}, {}",
-                    self.opc.to_string(),
+                    self.opc,
                     reg2str(self.rd.unwrap()),
                     reg2str(self.rd.unwrap()),
                     reg2str(self.rs2.unwrap())
@@ -176,7 +166,7 @@ impl Display for Instruction {
                 write!(
                     f,
                     "{} {}, {}",
-                    self.opc.to_string(),
+                    self.opc,
                     self.rs1.unwrap(),
                     self.imm.unwrap(),
                 )
@@ -185,7 +175,7 @@ impl Display for Instruction {
                 write!(
                     f,
                     "{} {}, {:#x}, {}",
-                    self.opc.to_string(),
+                    self.opc,
                     reg2str(self.rd.unwrap()),
                     self.rs2.unwrap(),
                     reg2str(self.rs1.unwrap()),
@@ -195,7 +185,7 @@ impl Display for Instruction {
                 write!(
                     f,
                     "{} {}, {}, {}",
-                    self.opc.to_string(),
+                    self.opc,
                     reg2str(self.rd.unwrap()),
                     self.rs2.unwrap(),
                     self.imm.unwrap(),
@@ -205,7 +195,7 @@ impl Display for Instruction {
                 write!(
                     f,
                     "{}{}{}{}{}",
-                    self.opc.to_string(),
+                    self.opc,
                     match self.rd {
                         Some(rd) => format!(" {}", reg2str(rd)),
                         None => String::new(),
@@ -430,7 +420,7 @@ pub enum InstFormat {
 }
 
 /// Trait for `OpcodeKind`
-trait Opcode {
+pub trait Opcode {
     /// Get Instruction format (e.g. R-type, I-type, S-type, etc...)
     /// See: Chapter 34. RV32/64G Instruction Set Listings, p.554
     fn get_format(&self) -> InstFormat;
@@ -451,4 +441,30 @@ pub enum OpcodeKind {
     Zicsr(ZicsrOpcode),
     /// Privileged Instructions
     Priv(PrivOpcode),
+}
+
+impl Display for OpcodeKind {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        match self {
+            Self::BaseI(opc) => write!(f, "{opc}"),
+            Self::M(opc) => write!(f, "{opc}"),
+            Self::A(opc) => write!(f, "{opc}"),
+            Self::C(opc) => write!(f, "{opc}"),
+            Self::Zicsr(opc) => write!(f, "{opc}"),
+            Self::Priv(opc) => write!(f, "{opc}"),
+        }
+    }
+}
+
+impl OpcodeKind {
+    pub fn get_format(&self) -> InstFormat {
+        match &self {
+            Self::BaseI(opc) => opc.get_format(),
+            Self::M(opc) => opc.get_format(),
+            Self::A(opc) => opc.get_format(),
+            Self::C(opc) => opc.get_format(),
+            Self::Zicsr(opc) => opc.get_format(),
+            Self::Priv(opc) => opc.get_format(),
+        }
+    }
 }

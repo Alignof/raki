@@ -3,11 +3,11 @@
 mod inst_16;
 mod inst_32;
 
-use crate::instruction::{Extensions, Instruction, OpcodeKind};
+use crate::instruction::{Extensions, Instruction, Opcode, OpcodeKind};
 use crate::Isa;
 
 /// Return Err if given opcode is only available on Rv64.
-fn only_rv64(opcode: OpcodeKind, isa: Isa) -> Result<OpcodeKind, DecodingError> {
+fn only_rv64<T: Opcode>(opcode: T, isa: Isa) -> Result<T, DecodingError> {
     match isa {
         Isa::Rv32 => Err(DecodingError::OnlyRv64Inst),
         Isa::Rv64 => Ok(opcode),
@@ -73,6 +73,8 @@ pub enum DecodingError {
 pub trait Decode {
     /// Decode an instruction from u16/u32.
     fn decode(&self, isa: Isa) -> Result<Instruction, DecodingError>;
+    /// Parse extension from a u16/u32 value.
+    fn parse_extension(self) -> Result<Extensions, DecodingError>;
     /// Parse opcode.
     fn parse_opcode(self, isa: Isa) -> Result<OpcodeKind, DecodingError>;
     /// Parse destination register.
@@ -110,9 +112,6 @@ trait DecodeUtil {
     /// # Arguments
     /// * `mask` - It contain the bit order.
     fn set(self, mask: &[u32]) -> u32;
-
-    /// Get `Extensions` from a u16/u32 value.
-    fn extension(self) -> Result<Extensions, DecodingError>;
 
     /// Convert i32 to a sign-extended any size number.
     /// # Arguments

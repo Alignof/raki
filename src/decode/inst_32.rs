@@ -136,7 +136,8 @@ mod decode_32 {
     #[allow(overflowing_literals)]
     fn decoding_32bit_inst_test() {
         use super::*;
-        use OpcodeKind::*;
+        use crate::instruction::{a_extension::AOpcode, base_i::BaseIOpcode, m_extension::MOpcode};
+
         let test_32 = |inst_32: u32,
                        op: OpcodeKind,
                        rd: Option<usize>,
@@ -153,7 +154,7 @@ mod decode_32 {
 
         test_32(
             0b1000_0000_0000_0000_0000_0000_1011_0111,
-            LUI,
+            OpcodeKind::BaseI(BaseIOpcode::LUI),
             Some(1),
             None,
             None,
@@ -161,7 +162,7 @@ mod decode_32 {
         );
         test_32(
             0b0000_0000_0000_0000_0000_0010_1001_0111,
-            AUIPC,
+            OpcodeKind::BaseI(BaseIOpcode::AUIPC),
             Some(5),
             None,
             None,
@@ -169,7 +170,7 @@ mod decode_32 {
         );
         test_32(
             0b1111_1111_1001_1111_1111_0000_0110_1111,
-            JAL,
+            OpcodeKind::BaseI(BaseIOpcode::JAL),
             Some(0),
             None,
             None,
@@ -177,7 +178,7 @@ mod decode_32 {
         );
         test_32(
             0b1111_1110_0010_0000_1000_1110_1010_0011,
-            SB,
+            OpcodeKind::BaseI(BaseIOpcode::SB),
             None,
             Some(1),
             Some(2),
@@ -185,7 +186,7 @@ mod decode_32 {
         );
         test_32(
             0b1110_1110_1100_0010_1000_0010_1001_0011,
-            ADDI,
+            OpcodeKind::BaseI(BaseIOpcode::ADDI),
             Some(5),
             Some(5),
             None,
@@ -193,7 +194,7 @@ mod decode_32 {
         );
         test_32(
             0b0000_0000_0000_0000_0000_0000_0111_0011,
-            ECALL,
+            OpcodeKind::BaseI(BaseIOpcode::ECALL),
             None,
             None,
             None,
@@ -201,21 +202,91 @@ mod decode_32 {
         );
         test_32(
             0b0000_0000_0000_0101_0100_1100_0110_0011,
-            BLT,
+            OpcodeKind::BaseI(BaseIOpcode::BLT),
             None,
             Some(10),
             Some(0),
             Some(24),
         );
-        test_32(0x0010_0513, ADDI, Some(10), Some(0), None, Some(1));
-        test_32(0x04d7_27af, AMOADD_W, Some(15), Some(14), Some(13), Some(2));
-        test_32(0x4170_04b3, SUB, Some(9), Some(0), Some(23), None);
-        test_32(0x3307_3983, LD, Some(19), Some(14), None, Some(816));
-        test_32(0x10ec_eb63, BLTU, None, Some(25), Some(14), Some(278));
-        test_32(0x31e1_60ef, JAL, Some(1), None, None, Some(90910));
-        test_32(0x0019_4913, XORI, Some(18), Some(18), None, Some(1));
-        test_32(0x00a9_3933, SLTU, Some(18), Some(18), Some(10), None);
-        test_32(0x0289_7933, REMU, Some(18), Some(18), Some(8), None);
-        test_32(0x0289_5933, DIVU, Some(18), Some(18), Some(8), None);
+        test_32(
+            0x0010_0513,
+            OpcodeKind::BaseI(BaseIOpcode::ADDI),
+            Some(10),
+            Some(0),
+            None,
+            Some(1),
+        );
+        test_32(
+            0x04d7_27af,
+            OpcodeKind::A(AOpcode::AMOADD_W),
+            Some(15),
+            Some(14),
+            Some(13),
+            Some(2),
+        );
+        test_32(
+            0x4170_04b3,
+            OpcodeKind::BaseI(BaseIOpcode::SUB),
+            Some(9),
+            Some(0),
+            Some(23),
+            None,
+        );
+        test_32(
+            0x3307_3983,
+            OpcodeKind::BaseI(BaseIOpcode::LD),
+            Some(19),
+            Some(14),
+            None,
+            Some(816),
+        );
+        test_32(
+            0x10ec_eb63,
+            OpcodeKind::BaseI(BaseIOpcode::BLTU),
+            None,
+            Some(25),
+            Some(14),
+            Some(278),
+        );
+        test_32(
+            0x31e1_60ef,
+            OpcodeKind::BaseI(BaseIOpcode::JAL),
+            Some(1),
+            None,
+            None,
+            Some(90910),
+        );
+        test_32(
+            0x0019_4913,
+            OpcodeKind::BaseI(BaseIOpcode::XORI),
+            Some(18),
+            Some(18),
+            None,
+            Some(1),
+        );
+        test_32(
+            0x00a9_3933,
+            OpcodeKind::BaseI(BaseIOpcode::SLTU),
+            Some(18),
+            Some(18),
+            Some(10),
+            None,
+        );
+        test_32(
+            0x0289_7933,
+            OpcodeKind::M(MOpcode::REMU),
+            Some(18),
+            Some(18),
+            Some(8),
+            None,
+        );
+        test_32(
+            0x0289_5933,
+            OpcodeKind::M(MOpcode::DIVU),
+            Some(18),
+            Some(18),
+            Some(8),
+            None,
+        );
     }
 }

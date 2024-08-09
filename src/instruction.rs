@@ -419,6 +419,27 @@ pub enum InstFormat {
     Uncategorized,
 }
 
+/// Trait for `OpcodeKind`
+trait Opcode<Fmt> {
+    fn get_format(&self) -> InstFormat;
+}
+
+/// Opcode
+pub enum NewOpcodeKind {
+    /// Base Integer Instruction Set
+    BaseI(BaseIOpcode),
+    /// Integer Multiplication and Division
+    M(MOpcode),
+    /// Atomic Instructions
+    A(AOpcode),
+    /// Compressed Instructions
+    C(COpcode),
+    /// Control and Status Register Instructions
+    Zicsr(ZicsrOpcode),
+    /// Privileged Instructions
+    Priv(PrivOpcode),
+}
+
 /// Opcode
 #[allow(non_camel_case_types)]
 #[derive(Debug)]

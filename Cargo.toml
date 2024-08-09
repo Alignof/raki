@@ -8,6 +8,9 @@ keywords = ["risc-v", "decoder"]
 description = "RISC-V instruction decoder written in Rust."
 license = "MIT"
 
+[lints.clippy]
+pedantic = "warn"
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]

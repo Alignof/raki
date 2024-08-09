@@ -1,14 +1,13 @@
 //! Define instructions data structure.
 
-mod a_extension;
-mod base_i;
-mod c_extension;
-mod m_extension;
-mod opcode;
-mod priv_extension;
-mod zicsr_extension;
+pub mod a_extension;
+pub mod base_i;
+pub mod c_extension;
+pub mod m_extension;
+pub mod priv_extension;
+pub mod zicsr_extension;
 
-use std::fmt::{self, Display, Formatter};
+use core::fmt::{self, Display, Formatter};
 
 use a_extension::AOpcode;
 use base_i::BaseIOpcode;
@@ -30,8 +29,6 @@ pub struct Instruction {
     pub rs2: Option<usize>,
     /// Immediate
     pub imm: Option<i32>,
-    /// Instruction extension
-    pub extension: Extensions,
     /// Instruction format
     pub inst_format: InstFormat,
 }

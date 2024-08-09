@@ -29,9 +29,9 @@ impl Decode for u32 {
     }
 
     fn parse_extension(self) -> Result<Extensions, DecodingError> {
-        let opmap: u8 = self.slice(6, 0) as u8;
-        let funct3: u8 = self.slice(14, 12) as u8;
-        let funct7: u8 = self.slice(31, 25) as u8;
+        let opmap: u8 = u8::try_from(self.slice(6, 0)).unwrap();
+        let funct3: u8 = u8::try_from(self.slice(14, 12)).unwrap();
+        let funct7: u8 = u8::try_from(self.slice(31, 25)).unwrap();
 
         match opmap {
             0b010_1111 => Ok(Extensions::A),

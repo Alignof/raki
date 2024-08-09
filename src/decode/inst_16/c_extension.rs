@@ -14,10 +14,10 @@ fn quadrant0(_inst: u16, opmap: u8, isa: Isa) -> Result<COpcode, DecodingError> 
 }
 
 fn quadrant1(inst: u16, opmap: u8, isa: Isa) -> Result<COpcode, DecodingError> {
-    let sr_flag: u8 = inst.slice(11, 10) as u8;
-    let lo_flag: u8 = inst.slice(6, 5) as u8;
-    let mi_flag: u8 = inst.slice(11, 7) as u8;
-    let bit_12: u8 = inst.slice(12, 12) as u8;
+    let sr_flag: u8 = u8::try_from(inst.slice(11, 10)).unwrap();
+    let lo_flag: u8 = u8::try_from(inst.slice(6, 5)).unwrap();
+    let mi_flag: u8 = u8::try_from(inst.slice(11, 7)).unwrap();
+    let bit_12: u8 = u8::try_from(inst.slice(12, 12)).unwrap();
 
     match opmap {
         0b000 => match mi_flag {
@@ -62,9 +62,9 @@ fn quadrant1(inst: u16, opmap: u8, isa: Isa) -> Result<COpcode, DecodingError> {
 }
 
 fn quadrant2(inst: u16, opmap: u8, isa: Isa) -> Result<COpcode, DecodingError> {
-    let lo_flag: u8 = inst.slice(6, 2) as u8;
-    let mi_flag: u8 = inst.slice(11, 7) as u8;
-    let hi_flag: u8 = inst.slice(12, 12) as u8;
+    let lo_flag: u8 = u8::try_from(inst.slice(6, 2)).unwrap();
+    let mi_flag: u8 = u8::try_from(inst.slice(11, 7)).unwrap();
+    let hi_flag: u8 = u8::try_from(inst.slice(12, 12)).unwrap();
 
     match opmap {
         0b000 => Ok(COpcode::SLLI),
@@ -91,8 +91,8 @@ fn quadrant2(inst: u16, opmap: u8, isa: Isa) -> Result<COpcode, DecodingError> {
 }
 
 pub fn parse_opcode(inst: u16, isa: Isa) -> Result<COpcode, DecodingError> {
-    let opmap: u8 = inst.slice(15, 13) as u8;
-    let quadrant: u8 = inst.slice(1, 0) as u8;
+    let opmap: u8 = u8::try_from(inst.slice(15, 13)).unwrap();
+    let quadrant: u8 = u8::try_from(inst.slice(1, 0)).unwrap();
 
     if inst == 0b0000_0000_0000_0000 {
         return Err(DecodingError::InvalidOpcode);

@@ -72,18 +72,39 @@ pub enum DecodingError {
 /// ```
 pub trait Decode {
     /// Decode an instruction from u16/u32.
+    ///
+    /// # Errors
+    /// It will throws an error if target bytes is invalid for decoding.
     fn decode(&self, isa: Isa) -> Result<Instruction, DecodingError>;
     /// Parse extension from a u16/u32 value.
+    ///
+    /// # Errors
+    /// It will throws `UnknownExtension` if the extension is unsupported.
     fn parse_extension(self) -> Result<Extensions, DecodingError>;
     /// Parse opcode.
+    ///
+    /// # Errors
+    /// It will throws an error if opcode is unknown.
     fn parse_opcode(self, isa: Isa) -> Result<OpcodeKind, DecodingError>;
     /// Parse destination register.
+    ///
+    /// # Errors
+    /// It will throws an error if rd is invalid.
     fn parse_rd(self, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError>;
     /// Parse source register 1.
+    ///
+    /// # Errors
+    /// It will throws an error if rs1 is invalid.
     fn parse_rs1(self, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError>;
     /// Parse source register 2.
+    ///
+    /// # Errors
+    /// It will throws an error if rs2 is invalid.
     fn parse_rs2(self, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError>;
     /// Parse immediate.
+    ///
+    /// # Errors
+    /// It will throws an error if immediate is invalid.
     fn parse_imm(self, opkind: &OpcodeKind, isa: Isa) -> Result<Option<i32>, DecodingError>;
 }
 

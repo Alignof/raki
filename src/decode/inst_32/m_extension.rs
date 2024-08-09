@@ -3,8 +3,8 @@ use crate::instruction::m_extension::MOpcode;
 use crate::Isa;
 
 pub fn parse_opcode(inst: u32, isa: Isa) -> Result<MOpcode, DecodingError> {
-    let opmap: u8 = inst.slice(6, 0) as u8;
-    let funct3: u8 = inst.slice(14, 12) as u8;
+    let opmap: u8 = u8::try_from(inst.slice(6, 0)).unwrap();
+    let funct3: u8 = u8::try_from(inst.slice(14, 12)).unwrap();
 
     match opmap {
         0b011_0011 => match funct3 {

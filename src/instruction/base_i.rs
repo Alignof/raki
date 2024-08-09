@@ -4,7 +4,7 @@ use super::{InstFormat, Opcode};
 use core::fmt::{self, Display, Formatter};
 
 /// Insturctions in Base-I.
-#[allow(non_camel_case_types)]
+#[allow(non_camel_case_types, clippy::module_name_repetitions)]
 #[derive(Debug)]
 pub enum BaseIOpcode {
     LUI,

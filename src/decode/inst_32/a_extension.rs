@@ -3,9 +3,9 @@ use crate::instruction::a_extension::AOpcode;
 use crate::Isa;
 
 pub fn parse_opcode(inst: u32, isa: Isa) -> Result<AOpcode, DecodingError> {
-    let opmap: u8 = inst.slice(6, 0) as u8;
-    let funct3: u8 = inst.slice(14, 12) as u8;
-    let funct7: u8 = inst.slice(31, 27) as u8;
+    let opmap: u8 = u8::try_from(inst.slice(6, 0)).unwrap();
+    let funct3: u8 = u8::try_from(inst.slice(14, 12)).unwrap();
+    let funct7: u8 = u8::try_from(inst.slice(31, 27)).unwrap();
 
     match opmap {
         0b010_1111 => match funct3 {

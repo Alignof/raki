@@ -34,6 +34,7 @@ pub struct Instruction {
 }
 
 impl Display for Instruction {
+    #[allow(clippy::too_many_lines)]
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         match self.inst_format {
             InstFormat::Rformat | InstFormat::Mformat => {

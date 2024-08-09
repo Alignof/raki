@@ -87,12 +87,14 @@ impl Display for COpcode {
 }
 
 impl Opcode for COpcode {
+    #[allow(clippy::match_same_arms)]
     fn get_format(&self) -> InstFormat {
         match self {
             // Quadrant 0
             COpcode::LW | COpcode::LD => InstFormat::CLformat,
             COpcode::ADDI4SPN => InstFormat::CIWformat,
             COpcode::SW | COpcode::SD => InstFormat::CSformat,
+
             // Quadrant 1
             COpcode::JAL | COpcode::J => InstFormat::CJformat,
             COpcode::BEQZ | COpcode::ANDI | COpcode::SRLI | COpcode::SRAI | COpcode::BNEZ => {
@@ -108,6 +110,7 @@ impl Opcode for COpcode {
             | COpcode::AND
             | COpcode::SUBW
             | COpcode::ADDW => InstFormat::CAformat,
+
             // Quadrant 2
             COpcode::LDSP | COpcode::SLLI | COpcode::LWSP => InstFormat::CIformat,
             COpcode::SDSP | COpcode::SWSP => InstFormat::CSSformat,

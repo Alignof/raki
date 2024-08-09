@@ -2,12 +2,13 @@ use super::super::{only_rv64, DecodeUtil, DecodingError};
 use crate::instruction::base_i::BaseIOpcode;
 use crate::Isa;
 
+#[allow(clippy::too_many_lines)]
 pub fn parse_opcode(inst: u32, isa: Isa) -> Result<BaseIOpcode, DecodingError> {
-    let opmap: u8 = inst.slice(6, 0) as u8;
-    let funct3: u8 = inst.slice(14, 12) as u8;
-    let funct5: u8 = inst.slice(24, 20) as u8;
-    let funct6: u8 = inst.slice(31, 26) as u8;
-    let funct7: u8 = inst.slice(31, 25) as u8;
+    let opmap: u8 = u8::try_from(inst.slice(6, 0)).unwrap();
+    let funct3: u8 = u8::try_from(inst.slice(14, 12)).unwrap();
+    let funct5: u8 = u8::try_from(inst.slice(24, 20)).unwrap();
+    let funct6: u8 = u8::try_from(inst.slice(31, 26)).unwrap();
+    let funct7: u8 = u8::try_from(inst.slice(31, 25)).unwrap();
 
     match opmap {
         0b011_0111 => Ok(BaseIOpcode::LUI),

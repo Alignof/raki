@@ -43,6 +43,7 @@ pub fn parse_opcode(inst: u32, isa: Isa) -> Result<AOpcode, DecodingError> {
     }
 }
 
+#[allow(clippy::unnecessary_wraps)]
 pub fn parse_rd(inst: u32, opkind: &AOpcode) -> Option<usize> {
     let rd: usize = inst.slice(11, 7) as usize;
 
@@ -72,6 +73,7 @@ pub fn parse_rd(inst: u32, opkind: &AOpcode) -> Option<usize> {
     }
 }
 
+#[allow(clippy::unnecessary_wraps)]
 pub fn parse_rs1(inst: u32, opkind: &AOpcode) -> Option<usize> {
     let rs1: usize = inst.slice(19, 15) as usize;
 
@@ -129,6 +131,7 @@ pub fn parse_rs2(inst: u32, opkind: &AOpcode) -> Option<usize> {
     }
 }
 
+#[allow(clippy::unnecessary_wraps)]
 #[allow(non_snake_case)]
 pub fn parse_imm(inst: u32, opkind: &AOpcode) -> Option<i32> {
     let aq_and_rl = || inst.slice(26, 25) as i32;

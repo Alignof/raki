@@ -17,6 +17,7 @@ pub fn parse_opcode(inst: u32) -> Result<PrivOpcode, DecodingError> {
     }
 }
 
+#[allow(clippy::unnecessary_wraps)]
 pub fn parse_rd(_inst: u32, _opkind: &PrivOpcode) -> Option<usize> {
     None
 }
@@ -39,6 +40,7 @@ pub fn parse_rs2(inst: u32, opkind: &PrivOpcode) -> Option<usize> {
     }
 }
 
+#[allow(clippy::unnecessary_wraps)]
 pub fn parse_imm(_inst: u32, _opkind: &PrivOpcode) -> Option<i32> {
     None
 }

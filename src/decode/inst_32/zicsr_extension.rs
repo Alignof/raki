@@ -19,6 +19,7 @@ pub fn parse_opcode(inst: u32) -> Result<ZicsrOpcode, DecodingError> {
     }
 }
 
+#[allow(clippy::unnecessary_wraps)]
 pub fn parse_rd(inst: u32, opkind: &ZicsrOpcode) -> Option<usize> {
     let rd: usize = inst.slice(11, 7) as usize;
 
@@ -42,6 +43,7 @@ pub fn parse_rs1(inst: u32, opkind: &ZicsrOpcode) -> Option<usize> {
     }
 }
 
+#[allow(clippy::unnecessary_wraps)]
 pub fn parse_rs2(inst: u32, opkind: &ZicsrOpcode) -> Option<usize> {
     let csr: usize = inst.slice(31, 20) as usize;
 

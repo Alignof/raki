@@ -131,8 +131,8 @@ pub fn parse_rs2(inst: u32, opkind: &AOpcode) -> Option<usize> {
     }
 }
 
-#[allow(clippy::unnecessary_wraps)]
 #[allow(non_snake_case)]
+#[allow(clippy::unnecessary_wraps, clippy::cast_possible_wrap)]
 pub fn parse_imm(inst: u32, opkind: &AOpcode) -> Option<i32> {
     let aq_and_rl = || inst.slice(26, 25) as i32;
 

@@ -191,13 +191,13 @@ pub fn parse_rs2(inst: u16, opkind: &COpcode) -> Option<usize> {
     }
 }
 
+#[allow(clippy::cast_possible_wrap)]
 #[allow(clippy::similar_names)]
 pub fn parse_imm(inst: u16, opkind: &COpcode) -> Option<i32> {
-    let q0_uimm = || (inst.slice(12, 10).set(&[5, 4, 3]) | inst.slice(6, 5).set(&[2, 6])) as i32;
-    let q0_uimm_64 = || (inst.slice(12, 10).set(&[5, 4, 3]) | inst.slice(6, 5).set(&[7, 6])) as i32;
-    let q0_nzuimm = || inst.slice(12, 5).set(&[5, 4, 9, 8, 7, 6, 2, 3]) as i32;
-    let q1_nzuimm =
-        || (inst.slice(6, 2).set(&[4, 3, 2, 1, 0]) | inst.slice(12, 12).set(&[5])) as i32;
+    let q0_uimm = || (inst.slice(12, 10).set(&[5, 4, 3]) | inst.slice(6, 5).set(&[2, 6]));
+    let q0_uimm_64 = || (inst.slice(12, 10).set(&[5, 4, 3]) | inst.slice(6, 5).set(&[7, 6]));
+    let q0_nzuimm = || inst.slice(12, 5).set(&[5, 4, 9, 8, 7, 6, 2, 3]);
+    let q1_nzuimm = || (inst.slice(6, 2).set(&[4, 3, 2, 1, 0]) | inst.slice(12, 12).set(&[5]));
     let q1_nzimm = || {
         let imm16 = (inst.slice(6, 2).set(&[4, 3, 2, 1, 0]) | inst.slice(12, 12).set(&[5])) as i32;
         inst.to_signed_nbit(imm16, 6)
@@ -234,13 +234,13 @@ pub fn parse_imm(inst: u16, opkind: &COpcode) -> Option<i32> {
 
     match opkind {
         // Quadrant0
-        COpcode::ADDI4SPN => Some(q0_nzuimm()),
-        COpcode::LW | COpcode::SW => Some(q0_uimm()),
-        COpcode::LD | COpcode::SD => Some(q0_uimm_64()),
+        COpcode::ADDI4SPN => Some(q0_nzuimm() as i32),
+        COpcode::LW | COpcode::SW => Some(q0_uimm() as i32),
+        COpcode::LD | COpcode::SD => Some(q0_uimm_64() as i32),
         // Quadrant1
         COpcode::ADDIW | COpcode::LI | COpcode::ANDI => Some(q1_imm()),
         COpcode::NOP | COpcode::ADDI => Some(q1_nzimm()),
-        COpcode::SRLI | COpcode::SRAI => Some(q1_nzuimm()),
+        COpcode::SRLI | COpcode::SRAI => Some(q1_nzuimm() as i32),
         COpcode::JAL | COpcode::J => Some(q1_j_imm()),
         COpcode::BEQZ | COpcode::BNEZ => Some(q1_b_imm()),
         COpcode::LUI => Some(q1_lui_imm()),

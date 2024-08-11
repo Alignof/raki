@@ -270,6 +270,7 @@ pub fn parse_rs2(inst: u32, opkind: &BaseIOpcode) -> Option<usize> {
     }
 }
 
+#[allow(clippy::cast_possible_wrap)]
 #[allow(non_snake_case)]
 pub fn parse_imm(inst: u32, opkind: &BaseIOpcode, isa: Isa) -> Option<i32> {
     let U_type = || (inst.slice(31, 12) << 12) as i32;
@@ -293,8 +294,8 @@ pub fn parse_imm(inst: u32, opkind: &BaseIOpcode, isa: Isa) -> Option<i32> {
         ]) as i32;
         inst.to_signed_nbit(imm32, 21)
     };
-    let shamt5 = || inst.slice(24, 20) as i32;
-    let shamt6 = || inst.slice(25, 20) as i32;
+    let shamt5 = || inst.slice(24, 20); // shamt = SHift AMounT
+    let shamt6 = || inst.slice(25, 20);
 
     match opkind {
         // u-type
@@ -327,10 +328,10 @@ pub fn parse_imm(inst: u32, opkind: &BaseIOpcode, isa: Isa) -> Option<i32> {
         // s-type
         BaseIOpcode::SD | BaseIOpcode::SB | BaseIOpcode::SH | BaseIOpcode::SW => Some(S_type()),
         BaseIOpcode::SRAI | BaseIOpcode::SLLI | BaseIOpcode::SRLI => match isa {
-            Isa::Rv32 => Some(shamt5()), // shamt
-            Isa::Rv64 => Some(shamt6()),
+            Isa::Rv32 => Some(shamt5() as i32), // shamt
+            Isa::Rv64 => Some(shamt6() as i32),
         },
-        BaseIOpcode::SLLIW | BaseIOpcode::SRLIW | BaseIOpcode::SRAIW => Some(shamt5()),
+        BaseIOpcode::SLLIW | BaseIOpcode::SRLIW | BaseIOpcode::SRAIW => Some(shamt5() as i32),
         _ => None,
     }
 }

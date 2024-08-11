@@ -57,10 +57,11 @@ pub fn parse_rs2(inst: u32, opkind: &ZicsrOpcode) -> Option<usize> {
     }
 }
 
+#[allow(clippy::cast_possible_wrap)]
 pub fn parse_imm(inst: u32, opkind: &ZicsrOpcode) -> Option<i32> {
-    let uimm: i32 = inst.slice(19, 15) as i32;
+    let uimm: u32 = inst.slice(19, 15);
     match opkind {
-        ZicsrOpcode::CSRRWI | ZicsrOpcode::CSRRSI | ZicsrOpcode::CSRRCI => Some(uimm),
+        ZicsrOpcode::CSRRWI | ZicsrOpcode::CSRRSI | ZicsrOpcode::CSRRCI => Some(uimm as i32),
         _ => None,
     }
 }

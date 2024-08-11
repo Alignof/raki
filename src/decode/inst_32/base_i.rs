@@ -131,7 +131,7 @@ pub fn parse_opcode(inst: u32, isa: Isa) -> Result<BaseIOpcode, DecodingError> {
     }
 }
 
-pub fn parse_rd(inst: u32, opkind: &BaseIOpcode) -> Result<Option<usize>, DecodingError> {
+pub fn parse_rd(inst: u32, opkind: &BaseIOpcode) -> Option<usize> {
     let rd: usize = inst.slice(11, 7) as usize;
 
     // B(EQ|NE|LT|GE|LTU|GEU), S(B|H|W), ECALL, EBREAK
@@ -174,12 +174,12 @@ pub fn parse_rd(inst: u32, opkind: &BaseIOpcode) -> Result<Option<usize>, Decodi
         | BaseIOpcode::SUBW
         | BaseIOpcode::SLLW
         | BaseIOpcode::SRLW
-        | BaseIOpcode::SRAW => Ok(Some(rd)),
-        _ => Ok(None),
+        | BaseIOpcode::SRAW => Some(rd),
+        _ => None,
     }
 }
 
-pub fn parse_rs1(inst: u32, opkind: &BaseIOpcode) -> Result<Option<usize>, DecodingError> {
+pub fn parse_rs1(inst: u32, opkind: &BaseIOpcode) -> Option<usize> {
     let rs1: usize = inst.slice(19, 15) as usize;
 
     // LUI, AUIPC, JAL, FENCE, ECALL, EBREAK
@@ -229,12 +229,12 @@ pub fn parse_rs1(inst: u32, opkind: &BaseIOpcode) -> Result<Option<usize>, Decod
         | BaseIOpcode::SUBW
         | BaseIOpcode::SLLW
         | BaseIOpcode::SRLW
-        | BaseIOpcode::SRAW => Ok(Some(rs1)),
-        _ => Ok(None),
+        | BaseIOpcode::SRAW => Some(rs1),
+        _ => None,
     }
 }
 
-pub fn parse_rs2(inst: u32, opkind: &BaseIOpcode) -> Result<Option<usize>, DecodingError> {
+pub fn parse_rs2(inst: u32, opkind: &BaseIOpcode) -> Option<usize> {
     let rs2: usize = inst.slice(24, 20) as usize;
 
     // LUI, AUIPC, JAL, JALR L(B|H|W|BU|HU),
@@ -265,13 +265,13 @@ pub fn parse_rs2(inst: u32, opkind: &BaseIOpcode) -> Result<Option<usize>, Decod
         | BaseIOpcode::SUBW
         | BaseIOpcode::SLLW
         | BaseIOpcode::SRLW
-        | BaseIOpcode::SRAW => Ok(Some(rs2)),
-        _ => Ok(None),
+        | BaseIOpcode::SRAW => Some(rs2),
+        _ => None,
     }
 }
 
 #[allow(non_snake_case)]
-pub fn parse_imm(inst: u32, opkind: &BaseIOpcode, isa: Isa) -> Result<Option<i32>, DecodingError> {
+pub fn parse_imm(inst: u32, opkind: &BaseIOpcode, isa: Isa) -> Option<i32> {
     let U_type = || (inst.slice(31, 12) << 12) as i32;
     let I_type = || {
         let imm32 = inst.slice(31, 20) as i32;
@@ -298,16 +298,16 @@ pub fn parse_imm(inst: u32, opkind: &BaseIOpcode, isa: Isa) -> Result<Option<i32
 
     match opkind {
         // u-type
-        BaseIOpcode::LUI | BaseIOpcode::AUIPC => Ok(Some(U_type())),
+        BaseIOpcode::LUI | BaseIOpcode::AUIPC => Some(U_type()),
         // j-type
-        BaseIOpcode::JAL => Ok(Some(J_type())),
+        BaseIOpcode::JAL => Some(J_type()),
         // b-type
         BaseIOpcode::BEQ
         | BaseIOpcode::BNE
         | BaseIOpcode::BLT
         | BaseIOpcode::BGE
         | BaseIOpcode::BLTU
-        | BaseIOpcode::BGEU => Ok(Some(B_type())),
+        | BaseIOpcode::BGEU => Some(B_type()),
         // i-type
         BaseIOpcode::JALR
         | BaseIOpcode::LB
@@ -323,14 +323,14 @@ pub fn parse_imm(inst: u32, opkind: &BaseIOpcode, isa: Isa) -> Result<Option<i32
         | BaseIOpcode::ANDI
         | BaseIOpcode::LWU
         | BaseIOpcode::ADDIW
-        | BaseIOpcode::LD => Ok(Some(I_type())),
+        | BaseIOpcode::LD => Some(I_type()),
         // s-type
-        BaseIOpcode::SD | BaseIOpcode::SB | BaseIOpcode::SH | BaseIOpcode::SW => Ok(Some(S_type())),
+        BaseIOpcode::SD | BaseIOpcode::SB | BaseIOpcode::SH | BaseIOpcode::SW => Some(S_type()),
         BaseIOpcode::SRAI | BaseIOpcode::SLLI | BaseIOpcode::SRLI => match isa {
-            Isa::Rv32 => Ok(Some(shamt5())), // shamt
-            Isa::Rv64 => Ok(Some(shamt6())),
+            Isa::Rv32 => Some(shamt5()), // shamt
+            Isa::Rv64 => Some(shamt6()),
         },
-        BaseIOpcode::SLLIW | BaseIOpcode::SRLIW | BaseIOpcode::SRAIW => Ok(Some(shamt5())),
-        _ => Ok(None),
+        BaseIOpcode::SLLIW | BaseIOpcode::SRLIW | BaseIOpcode::SRAIW => Some(shamt5()),
+        _ => None,
     }
 }

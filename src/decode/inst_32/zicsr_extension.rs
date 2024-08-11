@@ -19,7 +19,7 @@ pub fn parse_opcode(inst: u32) -> Result<ZicsrOpcode, DecodingError> {
     }
 }
 
-pub fn parse_rd(inst: u32, opkind: &ZicsrOpcode) -> Result<Option<usize>, DecodingError> {
+pub fn parse_rd(inst: u32, opkind: &ZicsrOpcode) -> Option<usize> {
     let rd: usize = inst.slice(11, 7) as usize;
 
     match opkind {
@@ -28,21 +28,21 @@ pub fn parse_rd(inst: u32, opkind: &ZicsrOpcode) -> Result<Option<usize>, Decodi
         | ZicsrOpcode::CSRRC
         | ZicsrOpcode::CSRRWI
         | ZicsrOpcode::CSRRSI
-        | ZicsrOpcode::CSRRCI => Ok(Some(rd)),
+        | ZicsrOpcode::CSRRCI => Some(rd),
     }
 }
 
-pub fn parse_rs1(inst: u32, opkind: &ZicsrOpcode) -> Result<Option<usize>, DecodingError> {
+pub fn parse_rs1(inst: u32, opkind: &ZicsrOpcode) -> Option<usize> {
     let rs1: usize = inst.slice(19, 15) as usize;
 
     // LUI, AUIPC, JAL, FENCE, ECALL, EBREAK
     match opkind {
-        ZicsrOpcode::CSRRW | ZicsrOpcode::CSRRS | ZicsrOpcode::CSRRC => Ok(Some(rs1)),
-        _ => Ok(None),
+        ZicsrOpcode::CSRRW | ZicsrOpcode::CSRRS | ZicsrOpcode::CSRRC => Some(rs1),
+        _ => None,
     }
 }
 
-pub fn parse_rs2(inst: u32, opkind: &ZicsrOpcode) -> Result<Option<usize>, DecodingError> {
+pub fn parse_rs2(inst: u32, opkind: &ZicsrOpcode) -> Option<usize> {
     let csr: usize = inst.slice(31, 20) as usize;
 
     match opkind {
@@ -51,14 +51,14 @@ pub fn parse_rs2(inst: u32, opkind: &ZicsrOpcode) -> Result<Option<usize>, Decod
         | ZicsrOpcode::CSRRC
         | ZicsrOpcode::CSRRWI
         | ZicsrOpcode::CSRRSI
-        | ZicsrOpcode::CSRRCI => Ok(Some(csr)),
+        | ZicsrOpcode::CSRRCI => Some(csr),
     }
 }
 
-pub fn parse_imm(inst: u32, opkind: &ZicsrOpcode) -> Result<Option<i32>, DecodingError> {
+pub fn parse_imm(inst: u32, opkind: &ZicsrOpcode) -> Option<i32> {
     let uimm: i32 = inst.slice(19, 15) as i32;
     match opkind {
-        ZicsrOpcode::CSRRWI | ZicsrOpcode::CSRRSI | ZicsrOpcode::CSRRCI => Ok(Some(uimm)),
-        _ => Ok(None),
+        ZicsrOpcode::CSRRWI | ZicsrOpcode::CSRRSI | ZicsrOpcode::CSRRCI => Some(uimm),
+        _ => None,
     }
 }

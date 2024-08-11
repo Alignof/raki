@@ -30,7 +30,7 @@ pub fn parse_opcode(inst: u32, isa: Isa) -> Result<MOpcode, DecodingError> {
     }
 }
 
-pub fn parse_rd(inst: u32, opkind: &MOpcode) -> Result<Option<usize>, DecodingError> {
+pub fn parse_rd(inst: u32, opkind: &MOpcode) -> Option<usize> {
     let rd: usize = inst.slice(11, 7) as usize;
 
     match opkind {
@@ -46,11 +46,11 @@ pub fn parse_rd(inst: u32, opkind: &MOpcode) -> Result<Option<usize>, DecodingEr
         | MOpcode::DIVW
         | MOpcode::DIVUW
         | MOpcode::REMW
-        | MOpcode::REMUW => Ok(Some(rd)),
+        | MOpcode::REMUW => Some(rd),
     }
 }
 
-pub fn parse_rs1(inst: u32, opkind: &MOpcode) -> Result<Option<usize>, DecodingError> {
+pub fn parse_rs1(inst: u32, opkind: &MOpcode) -> Option<usize> {
     let rs1: usize = inst.slice(19, 15) as usize;
 
     match opkind {
@@ -66,11 +66,11 @@ pub fn parse_rs1(inst: u32, opkind: &MOpcode) -> Result<Option<usize>, DecodingE
         | MOpcode::DIVW
         | MOpcode::DIVUW
         | MOpcode::REMW
-        | MOpcode::REMUW => Ok(Some(rs1)),
+        | MOpcode::REMUW => Some(rs1),
     }
 }
 
-pub fn parse_rs2(inst: u32, opkind: &MOpcode) -> Result<Option<usize>, DecodingError> {
+pub fn parse_rs2(inst: u32, opkind: &MOpcode) -> Option<usize> {
     let rs2: usize = inst.slice(24, 20) as usize;
 
     match opkind {
@@ -86,11 +86,11 @@ pub fn parse_rs2(inst: u32, opkind: &MOpcode) -> Result<Option<usize>, DecodingE
         | MOpcode::DIVW
         | MOpcode::DIVUW
         | MOpcode::REMW
-        | MOpcode::REMUW => Ok(Some(rs2)),
+        | MOpcode::REMUW => Some(rs2),
     }
 }
 
 #[allow(non_snake_case)]
-pub fn parse_imm(_inst: u32, _opkind: &MOpcode) -> Result<Option<i32>, DecodingError> {
-    Ok(None)
+pub fn parse_imm(_inst: u32, _opkind: &MOpcode) -> Option<i32> {
+    None
 }

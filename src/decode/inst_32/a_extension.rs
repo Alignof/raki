@@ -43,7 +43,7 @@ pub fn parse_opcode(inst: u32, isa: Isa) -> Result<AOpcode, DecodingError> {
     }
 }
 
-pub fn parse_rd(inst: u32, opkind: &AOpcode) -> Result<Option<usize>, DecodingError> {
+pub fn parse_rd(inst: u32, opkind: &AOpcode) -> Option<usize> {
     let rd: usize = inst.slice(11, 7) as usize;
 
     match opkind {
@@ -68,11 +68,11 @@ pub fn parse_rd(inst: u32, opkind: &AOpcode) -> Result<Option<usize>, DecodingEr
         | AOpcode::AMOMIN_D
         | AOpcode::AMOMAX_D
         | AOpcode::AMOMINU_D
-        | AOpcode::AMOMAXU_D => Ok(Some(rd)),
+        | AOpcode::AMOMAXU_D => Some(rd),
     }
 }
 
-pub fn parse_rs1(inst: u32, opkind: &AOpcode) -> Result<Option<usize>, DecodingError> {
+pub fn parse_rs1(inst: u32, opkind: &AOpcode) -> Option<usize> {
     let rs1: usize = inst.slice(19, 15) as usize;
 
     match opkind {
@@ -97,11 +97,11 @@ pub fn parse_rs1(inst: u32, opkind: &AOpcode) -> Result<Option<usize>, DecodingE
         | AOpcode::AMOMIN_D
         | AOpcode::AMOMAX_D
         | AOpcode::AMOMINU_D
-        | AOpcode::AMOMAXU_D => Ok(Some(rs1)),
+        | AOpcode::AMOMAXU_D => Some(rs1),
     }
 }
 
-pub fn parse_rs2(inst: u32, opkind: &AOpcode) -> Result<Option<usize>, DecodingError> {
+pub fn parse_rs2(inst: u32, opkind: &AOpcode) -> Option<usize> {
     let rs2: usize = inst.slice(24, 20) as usize;
 
     match opkind {
@@ -124,13 +124,13 @@ pub fn parse_rs2(inst: u32, opkind: &AOpcode) -> Result<Option<usize>, DecodingE
         | AOpcode::AMOMIN_D
         | AOpcode::AMOMAX_D
         | AOpcode::AMOMINU_D
-        | AOpcode::AMOMAXU_D => Ok(Some(rs2)),
-        _ => Ok(None),
+        | AOpcode::AMOMAXU_D => Some(rs2),
+        _ => None,
     }
 }
 
 #[allow(non_snake_case)]
-pub fn parse_imm(inst: u32, opkind: &AOpcode) -> Result<Option<i32>, DecodingError> {
+pub fn parse_imm(inst: u32, opkind: &AOpcode) -> Option<i32> {
     let aq_and_rl = || inst.slice(26, 25) as i32;
 
     match opkind {
@@ -155,6 +155,6 @@ pub fn parse_imm(inst: u32, opkind: &AOpcode) -> Result<Option<i32>, DecodingErr
         | AOpcode::AMOMIN_D
         | AOpcode::AMOMAX_D
         | AOpcode::AMOMINU_D
-        | AOpcode::AMOMAXU_D => Ok(Some(aq_and_rl())),
+        | AOpcode::AMOMAXU_D => Some(aq_and_rl()),
     }
 }

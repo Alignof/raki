@@ -106,7 +106,7 @@ pub fn parse_opcode(inst: u16, isa: Isa) -> Result<COpcode, DecodingError> {
     }
 }
 
-pub fn parse_rd(inst: u16, opkind: &COpcode) -> Result<Option<usize>, DecodingError> {
+pub fn parse_rd(inst: u16, opkind: &COpcode) -> Option<usize> {
     // see riscv-spec-20191213.pdf, page 100, Table 16.2
     let q0_rd: usize = (inst.slice(4, 2) + 8) as usize;
     let q1_rd: usize = (inst.slice(9, 7) + 8) as usize;
@@ -115,7 +115,7 @@ pub fn parse_rd(inst: u16, opkind: &COpcode) -> Result<Option<usize>, DecodingEr
 
     match opkind {
         // Quadrant 0
-        COpcode::ADDI4SPN | COpcode::LW | COpcode::LD => Ok(Some(q0_rd)),
+        COpcode::ADDI4SPN | COpcode::LW | COpcode::LD => Some(q0_rd),
         // Quadrant 1
         COpcode::SRLI
         | COpcode::SRAI
@@ -125,19 +125,17 @@ pub fn parse_rd(inst: u16, opkind: &COpcode) -> Result<Option<usize>, DecodingEr
         | COpcode::OR
         | COpcode::AND
         | COpcode::ADDW
-        | COpcode::SUBW => Ok(Some(q1_rd)),
+        | COpcode::SUBW => Some(q1_rd),
         COpcode::LI | COpcode::LUI | COpcode::ADDI | COpcode::ADDIW | COpcode::ADDI16SP => {
-            Ok(Some(q1_wide_rd))
+            Some(q1_wide_rd)
         }
         // Quadrant 2
-        COpcode::SLLI | COpcode::LWSP | COpcode::LDSP | COpcode::MV | COpcode::ADD => {
-            Ok(Some(q2_rd))
-        }
-        _ => Ok(None),
+        COpcode::SLLI | COpcode::LWSP | COpcode::LDSP | COpcode::MV | COpcode::ADD => Some(q2_rd),
+        _ => None,
     }
 }
 
-pub fn parse_rs1(inst: u16, opkind: &COpcode) -> Result<Option<usize>, DecodingError> {
+pub fn parse_rs1(inst: u16, opkind: &COpcode) -> Option<usize> {
     // see riscv-spec-20191213.pdf, page 100, Table 16.2
     let q0_rs1: usize = (inst.slice(9, 7) + 8) as usize;
     let q1_rs1: usize = (inst.slice(9, 7) + 8) as usize;
@@ -146,9 +144,9 @@ pub fn parse_rs1(inst: u16, opkind: &COpcode) -> Result<Option<usize>, DecodingE
 
     match opkind {
         // Quadrant 0
-        COpcode::LW | COpcode::LD | COpcode::SW | COpcode::SD => Ok(Some(q0_rs1)),
+        COpcode::LW | COpcode::LD | COpcode::SW | COpcode::SD => Some(q0_rs1),
         // Quadrant 1
-        COpcode::ADDI | COpcode::ADDIW | COpcode::ADDI16SP => Ok(Some(q1_addi_rs1)),
+        COpcode::ADDI | COpcode::ADDIW | COpcode::ADDI16SP => Some(q1_addi_rs1),
         COpcode::SRLI
         | COpcode::SRAI
         | COpcode::ANDI
@@ -159,14 +157,14 @@ pub fn parse_rs1(inst: u16, opkind: &COpcode) -> Result<Option<usize>, DecodingE
         | COpcode::BEQZ
         | COpcode::BNEZ
         | COpcode::SUBW
-        | COpcode::ADDW => Ok(Some(q1_rs1)),
+        | COpcode::ADDW => Some(q1_rs1),
         // Quadrant 2
-        COpcode::SLLI | COpcode::JR | COpcode::JALR | COpcode::ADD => Ok(Some(q2_rs1)),
-        _ => Ok(None),
+        COpcode::SLLI | COpcode::JR | COpcode::JALR | COpcode::ADD => Some(q2_rs1),
+        _ => None,
     }
 }
 
-pub fn parse_rs2(inst: u16, opkind: &COpcode) -> Result<Option<usize>, DecodingError> {
+pub fn parse_rs2(inst: u16, opkind: &COpcode) -> Option<usize> {
     // see riscv-spec-20191213.pdf, page 100, Table 16.2
     let q0_rs2: usize = (inst.slice(4, 2) + 8) as usize;
     let q1_rs2: usize = (inst.slice(4, 2) + 8) as usize;
@@ -174,26 +172,26 @@ pub fn parse_rs2(inst: u16, opkind: &COpcode) -> Result<Option<usize>, DecodingE
 
     match opkind {
         // Quadrant 0
-        COpcode::SW | COpcode::SD => Ok(Some(q0_rs2)),
+        COpcode::SW | COpcode::SD => Some(q0_rs2),
         // Quadrant 1
         COpcode::SUB
         | COpcode::XOR
         | COpcode::OR
         | COpcode::AND
         | COpcode::SUBW
-        | COpcode::ADDW => Ok(Some(q1_rs2)),
+        | COpcode::ADDW => Some(q1_rs2),
         // Quadrant 2
         COpcode::JR
         | COpcode::JALR
         | COpcode::MV
         | COpcode::ADD
         | COpcode::SWSP
-        | COpcode::SDSP => Ok(Some(q2_rs2)),
-        _ => Ok(None),
+        | COpcode::SDSP => Some(q2_rs2),
+        _ => None,
     }
 }
 
-pub fn parse_imm(inst: u16, opkind: &COpcode) -> Result<Option<i32>, DecodingError> {
+pub fn parse_imm(inst: u16, opkind: &COpcode) -> Option<i32> {
     let q0_uimm = || (inst.slice(12, 10).set(&[5, 4, 3]) | inst.slice(6, 5).set(&[2, 6])) as i32;
     let q0_uimm_64 = || (inst.slice(12, 10).set(&[5, 4, 3]) | inst.slice(6, 5).set(&[7, 6])) as i32;
     let q0_nzuimm = || inst.slice(12, 5).set(&[5, 4, 9, 8, 7, 6, 2, 3]) as i32;
@@ -235,23 +233,23 @@ pub fn parse_imm(inst: u16, opkind: &COpcode) -> Result<Option<i32>, DecodingErr
 
     match opkind {
         // Quadrant0
-        COpcode::ADDI4SPN => Ok(Some(q0_nzuimm())),
-        COpcode::LW | COpcode::SW => Ok(Some(q0_uimm())),
-        COpcode::LD | COpcode::SD => Ok(Some(q0_uimm_64())),
+        COpcode::ADDI4SPN => Some(q0_nzuimm()),
+        COpcode::LW | COpcode::SW => Some(q0_uimm()),
+        COpcode::LD | COpcode::SD => Some(q0_uimm_64()),
         // Quadrant1
-        COpcode::ADDIW | COpcode::LI | COpcode::ANDI => Ok(Some(q1_imm())),
-        COpcode::NOP | COpcode::ADDI => Ok(Some(q1_nzimm())),
-        COpcode::SRLI | COpcode::SRAI => Ok(Some(q1_nzuimm())),
-        COpcode::JAL | COpcode::J => Ok(Some(q1_j_imm())),
-        COpcode::BEQZ | COpcode::BNEZ => Ok(Some(q1_b_imm())),
-        COpcode::LUI => Ok(Some(q1_lui_imm())),
-        COpcode::ADDI16SP => Ok(Some(q1_16sp_nzimm())),
+        COpcode::ADDIW | COpcode::LI | COpcode::ANDI => Some(q1_imm()),
+        COpcode::NOP | COpcode::ADDI => Some(q1_nzimm()),
+        COpcode::SRLI | COpcode::SRAI => Some(q1_nzuimm()),
+        COpcode::JAL | COpcode::J => Some(q1_j_imm()),
+        COpcode::BEQZ | COpcode::BNEZ => Some(q1_b_imm()),
+        COpcode::LUI => Some(q1_lui_imm()),
+        COpcode::ADDI16SP => Some(q1_16sp_nzimm()),
         // Quadrant2
-        COpcode::SLLI => Ok(Some(q2_imm())),
-        COpcode::LWSP => Ok(Some(q2_lwsp_imm())),
-        COpcode::LDSP => Ok(Some(q2_ldsp_imm())),
-        COpcode::SWSP => Ok(Some(q2_swsp_imm())),
-        COpcode::SDSP => Ok(Some(q2_sdsp_imm())),
-        _ => Ok(None),
+        COpcode::SLLI => Some(q2_imm()),
+        COpcode::LWSP => Some(q2_lwsp_imm()),
+        COpcode::LDSP => Some(q2_ldsp_imm()),
+        COpcode::SWSP => Some(q2_swsp_imm()),
+        COpcode::SDSP => Some(q2_sdsp_imm()),
+        _ => None,
     }
 }

@@ -191,6 +191,7 @@ pub fn parse_rs2(inst: u16, opkind: &COpcode) -> Option<usize> {
     }
 }
 
+#[allow(clippy::similar_names)]
 pub fn parse_imm(inst: u16, opkind: &COpcode) -> Option<i32> {
     let q0_uimm = || (inst.slice(12, 10).set(&[5, 4, 3]) | inst.slice(6, 5).set(&[2, 6])) as i32;
     let q0_uimm_64 = || (inst.slice(12, 10).set(&[5, 4, 3]) | inst.slice(6, 5).set(&[7, 6])) as i32;

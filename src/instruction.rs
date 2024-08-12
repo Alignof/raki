@@ -219,6 +219,7 @@ impl Display for Instruction {
     }
 }
 
+/// Convert register number to string.
 fn reg2str(rd_value: usize) -> &'static str {
     match rd_value {
         0 => "zero",

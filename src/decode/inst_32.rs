@@ -28,33 +28,6 @@ impl Decode for u32 {
         })
     }
 
-    fn parse_extension(self) -> Result<Extensions, DecodingError> {
-        let opmap: u8 = u8::try_from(self.slice(6, 0)).unwrap();
-        let funct3: u8 = u8::try_from(self.slice(14, 12)).unwrap();
-        let funct7: u8 = u8::try_from(self.slice(31, 25)).unwrap();
-
-        match opmap {
-            0b010_1111 => Ok(Extensions::A),
-            0b011_0011 => match funct7 {
-                0b000_0001 => Ok(Extensions::M),
-                _ => Ok(Extensions::BaseI),
-            },
-            0b011_1011 => match funct7 {
-                0b000_0000 | 0b010_0000 => Ok(Extensions::BaseI),
-                0b000_0001 => Ok(Extensions::M),
-                _ => Err(DecodingError::UnknownExtension),
-            },
-            0b111_0011 => match funct3 {
-                0b000 => match funct7 {
-                    0b000_0000 => Ok(Extensions::BaseI),
-                    _ => Ok(Extensions::Priv),
-                },
-                _ => Ok(Extensions::Zicsr),
-            },
-            _ => Ok(Extensions::BaseI),
-        }
-    }
-
     fn parse_opcode(self, isa: Isa) -> Result<OpcodeKind, DecodingError> {
         let extension = self.parse_extension();
 
@@ -117,6 +90,33 @@ impl Decode for u32 {
 impl DecodeUtil for u32 {
     fn slice(self, end: u32, start: u32) -> Self {
         (self >> start) & (2_u32.pow(end - start + 1) - 1)
+    }
+
+    fn parse_extension(self) -> Result<Extensions, DecodingError> {
+        let opmap: u8 = u8::try_from(self.slice(6, 0)).unwrap();
+        let funct3: u8 = u8::try_from(self.slice(14, 12)).unwrap();
+        let funct7: u8 = u8::try_from(self.slice(31, 25)).unwrap();
+
+        match opmap {
+            0b010_1111 => Ok(Extensions::A),
+            0b011_0011 => match funct7 {
+                0b000_0001 => Ok(Extensions::M),
+                _ => Ok(Extensions::BaseI),
+            },
+            0b011_1011 => match funct7 {
+                0b000_0000 | 0b010_0000 => Ok(Extensions::BaseI),
+                0b000_0001 => Ok(Extensions::M),
+                _ => Err(DecodingError::UnknownExtension),
+            },
+            0b111_0011 => match funct3 {
+                0b000 => match funct7 {
+                    0b000_0000 => Ok(Extensions::BaseI),
+                    _ => Ok(Extensions::Priv),
+                },
+                _ => Ok(Extensions::Zicsr),
+            },
+            _ => Ok(Extensions::BaseI),
+        }
     }
 
     fn set(self, mask: &[u32]) -> u32 {

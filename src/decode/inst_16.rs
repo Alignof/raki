@@ -28,10 +28,6 @@ impl Decode for u16 {
         })
     }
 
-    fn parse_extension(self) -> Result<Extensions, DecodingError> {
-        Ok(Extensions::C)
-    }
-
     fn parse_opcode(self, isa: Isa) -> Result<OpcodeKind, DecodingError> {
         let extension = self.parse_extension();
 
@@ -73,6 +69,10 @@ impl Decode for u16 {
 impl DecodeUtil for u16 {
     fn slice(self, end: u32, start: u32) -> Self {
         (self >> start) & (2_u16.pow(end - start + 1) - 1)
+    }
+
+    fn parse_extension(self) -> Result<Extensions, DecodingError> {
+        Ok(Extensions::C)
     }
 
     fn set(self, mask: &[u32]) -> u32 {

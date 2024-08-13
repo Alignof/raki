@@ -59,6 +59,7 @@ pub enum DecodingError {
 }
 
 /// A trait to decode an instruction from u16/u32.
+/// This trait provides public api.
 ///
 /// # Usage
 /// `decode` method is implemented for u16/u32.
@@ -76,31 +77,31 @@ pub trait Decode {
     /// # Errors
     /// It will throws an error if target bytes is invalid for decoding.
     fn decode(&self, isa: Isa) -> Result<Instruction, DecodingError>;
-    /// Parse extension from a u16/u32 value.
-    ///
-    /// # Errors
-    /// It will throws `UnknownExtension` if the extension is unsupported.
-    fn parse_extension(self) -> Result<Extensions, DecodingError>;
+
     /// Parse opcode.
     ///
     /// # Errors
     /// It will throws an error if opcode is unknown.
     fn parse_opcode(self, isa: Isa) -> Result<OpcodeKind, DecodingError>;
+
     /// Parse destination register.
     ///
     /// # Errors
     /// It will throws an error if rd is invalid.
     fn parse_rd(self, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError>;
+
     /// Parse source register 1.
     ///
     /// # Errors
     /// It will throws an error if rs1 is invalid.
     fn parse_rs1(self, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError>;
+
     /// Parse source register 2.
     ///
     /// # Errors
     /// It will throws an error if rs2 is invalid.
     fn parse_rs2(self, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError>;
+
     /// Parse immediate.
     ///
     /// # Errors
@@ -109,6 +110,7 @@ pub trait Decode {
 }
 
 /// A trait to help decoding.
+/// This trait provides private api.
 trait DecodeUtil {
     /// Obtains bits in a specified range.
     /// The range is `[end, start]`.
@@ -133,6 +135,12 @@ trait DecodeUtil {
     /// # Arguments
     /// * `mask` - It contain the bit order.
     fn set(self, mask: &[u32]) -> u32;
+
+    /// Parse extension from a u16/u32 value.
+    ///
+    /// # Errors
+    /// It will throws `UnknownExtension` if the extension is unsupported.
+    fn parse_extension(self) -> Result<Extensions, DecodingError>;
 
     /// Convert i32 to a sign-extended any size number.
     /// # Arguments

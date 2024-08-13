@@ -9,10 +9,7 @@
 //! # Usage
 //! Call the `decode` as u16/u32 method.
 //! ```
-//! use raki::Isa;
-//! use raki::decode::Decode;
-//! use raki::instruction::base_i::BaseIOpcode;
-//! use raki::instruction::{Instruction, OpcodeKind};
+//! use raki::{BaseIOpcode, Decode, Instruction, Isa, OpcodeKind};
 //!
 //! fn main() {
 //!     let inst_bytes: u32 = 0b1110_1110_1100_0010_1000_0010_1001_0011;
@@ -28,8 +25,15 @@
 //! // addi t0, t0, -276
 //! ```
 
-pub mod decode;
-pub mod instruction;
+mod decode;
+mod instruction;
+
+// re-export
+pub use crate::decode::{Decode, DecodingError};
+pub use crate::instruction::{
+    a_extension::AOpcode, base_i::BaseIOpcode, c_extension::COpcode, priv_extension::PrivOpcode,
+    zicsr_extension::ZicsrOpcode, InstFormat, Instruction, OpcodeKind,
+};
 
 /// Target isa.
 #[derive(Copy, Clone)]

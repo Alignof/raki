@@ -2,6 +2,7 @@ mod a_extension;
 mod base_i;
 mod m_extension;
 mod priv_extension;
+mod zicntr_extension;
 mod zicsr_extension;
 mod zifencei_extension;
 

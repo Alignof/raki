@@ -5,8 +5,8 @@ mod priv_extension;
 mod zicsr_extension;
 
 use super::{Decode, DecodeUtil, DecodingError};
-use crate::instruction::{Extensions, InstFormat, Instruction, OpcodeKind};
-use crate::Isa;
+use crate::instruction::{InstFormat, Instruction, OpcodeKind};
+use crate::{Extensions, Isa};
 
 #[allow(non_snake_case)]
 impl Decode for u32 {

@@ -44,6 +44,23 @@ pub enum Isa {
     Rv64,
 }
 
+/// RISC-V extensions
+#[derive(Debug)]
+enum Extensions {
+    /// Base Integer Instruction Set
+    BaseI,
+    /// Integer Multiplication and Division
+    M,
+    /// Atomic Instructions
+    A,
+    /// Compressed Instructions
+    C,
+    /// Control and Status Register Instructions
+    Zicsr,
+    /// Privileged Instructions
+    Priv,
+}
+
 #[cfg(test)]
 mod tests {
     #[test]

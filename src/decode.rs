@@ -3,8 +3,8 @@
 mod inst_16;
 mod inst_32;
 
-use crate::instruction::{Extensions, Instruction, Opcode, OpcodeKind};
-use crate::Isa;
+use crate::instruction::{Instruction, Opcode, OpcodeKind};
+use crate::{Extensions, Isa};
 
 /// Return Err if given opcode is only available on Rv64.
 fn only_rv64<T: Opcode>(opcode: T, isa: Isa) -> Result<T, DecodingError> {

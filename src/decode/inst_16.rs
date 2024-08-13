@@ -2,8 +2,8 @@
 mod c_extension;
 
 use super::{Decode, DecodeUtil, DecodingError};
-use crate::instruction::{Extensions, InstFormat, Instruction, OpcodeKind};
-use crate::Isa;
+use crate::instruction::{InstFormat, Instruction, OpcodeKind};
+use crate::{Extensions, Isa};
 
 impl Decode for u16 {
     fn decode(&self, isa: Isa) -> Result<Instruction, DecodingError> {

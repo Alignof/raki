@@ -258,23 +258,6 @@ fn reg2str(rd_value: usize) -> &'static str {
     }
 }
 
-/// RISC-V extensions
-#[derive(Debug)]
-pub enum Extensions {
-    /// Base Integer Instruction Set
-    BaseI,
-    /// Integer Multiplication and Division
-    M,
-    /// Atomic Instructions
-    A,
-    /// Compressed Instructions
-    C,
-    /// Control and Status Register Instructions
-    Zicsr,
-    /// Privileged Instructions
-    Priv,
-}
-
 /// Instruction format
 #[allow(non_camel_case_types)]
 #[derive(Debug, PartialEq)]

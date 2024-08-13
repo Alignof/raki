@@ -18,9 +18,7 @@ fn only_rv64<T: Opcode>(opcode: T, isa: Isa) -> Result<T, DecodingError> {
 ///
 /// # Example
 /// ```
-/// use raki::Isa;
-/// use raki::decode::{Decode, DecodingError};
-/// use raki::instruction::Instruction;
+/// use raki::{Isa, Decode, DecodingError, Instruction};
 ///
 /// // try to decode illegal instruction.
 /// let illegal_inst: u32 = 0b0000_0000_0000_0000_0000_0000_0000_0000;
@@ -65,8 +63,7 @@ pub enum DecodingError {
 /// `decode` method is implemented for u16/u32.
 /// thus, just call `decode` as method of u16/u32.
 /// ```
-/// use raki::Isa;
-/// use raki::decode::Decode;
+/// use raki::{Isa, Decode};
 ///
 /// let inst: u32 = 0b1110_1110_1100_0010_1000_0010_1001_0011;
 /// println!("{:?}", inst.decode(Isa::Rv64));

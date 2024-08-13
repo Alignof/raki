@@ -3,6 +3,7 @@ mod base_i;
 mod m_extension;
 mod priv_extension;
 mod zicsr_extension;
+mod zifencei_extension;
 
 use super::{Decode, DecodeUtil, DecodingError};
 use crate::instruction::{InstFormat, Instruction, OpcodeKind};
@@ -35,6 +36,9 @@ impl Decode for u32 {
             Ok(Extensions::BaseI) => Ok(OpcodeKind::BaseI(base_i::parse_opcode(self, isa)?)),
             Ok(Extensions::M) => Ok(OpcodeKind::M(m_extension::parse_opcode(self, isa)?)),
             Ok(Extensions::A) => Ok(OpcodeKind::A(a_extension::parse_opcode(self, isa)?)),
+            Ok(Extensions::Zifencei) => Ok(OpcodeKind::Zifencei(zifencei_extension::parse_opcode(
+                self,
+            )?)),
             Ok(Extensions::Zicsr) => Ok(OpcodeKind::Zicsr(zicsr_extension::parse_opcode(self)?)),
             Ok(Extensions::Priv) => Ok(OpcodeKind::Priv(priv_extension::parse_opcode(self)?)),
             Ok(Extensions::C) => Err(DecodingError::Not32BitInst),
@@ -47,6 +51,7 @@ impl Decode for u32 {
             OpcodeKind::BaseI(opc) => Ok(base_i::parse_rd(self, opc)),
             OpcodeKind::M(opc) => Ok(m_extension::parse_rd(self, opc)),
             OpcodeKind::A(opc) => Ok(a_extension::parse_rd(self, opc)),
+            OpcodeKind::Zifencei(opc) => Ok(zifencei_extension::parse_rd(self, opc)),
             OpcodeKind::Zicsr(opc) => Ok(zicsr_extension::parse_rd(self, opc)),
             OpcodeKind::Priv(opc) => Ok(priv_extension::parse_rd(self, opc)),
             OpcodeKind::C(_) => Err(DecodingError::Not32BitInst),
@@ -58,6 +63,7 @@ impl Decode for u32 {
             OpcodeKind::BaseI(opc) => Ok(base_i::parse_rs1(self, opc)),
             OpcodeKind::M(opc) => Ok(m_extension::parse_rs1(self, opc)),
             OpcodeKind::A(opc) => Ok(a_extension::parse_rs1(self, opc)),
+            OpcodeKind::Zifencei(opc) => Ok(zifencei_extension::parse_rs1(self, opc)),
             OpcodeKind::Zicsr(opc) => Ok(zicsr_extension::parse_rs1(self, opc)),
             OpcodeKind::Priv(opc) => Ok(priv_extension::parse_rs1(self, opc)),
             OpcodeKind::C(_) => Err(DecodingError::Not32BitInst),
@@ -69,6 +75,7 @@ impl Decode for u32 {
             OpcodeKind::BaseI(opc) => Ok(base_i::parse_rs2(self, opc)),
             OpcodeKind::M(opc) => Ok(m_extension::parse_rs2(self, opc)),
             OpcodeKind::A(opc) => Ok(a_extension::parse_rs2(self, opc)),
+            OpcodeKind::Zifencei(opc) => Ok(zifencei_extension::parse_rs2(self, opc)),
             OpcodeKind::Zicsr(opc) => Ok(zicsr_extension::parse_rs2(self, opc)),
             OpcodeKind::Priv(opc) => Ok(priv_extension::parse_rs2(self, opc)),
             OpcodeKind::C(_) => Err(DecodingError::Not32BitInst),
@@ -80,6 +87,7 @@ impl Decode for u32 {
             OpcodeKind::BaseI(opc) => Ok(base_i::parse_imm(self, opc, isa)),
             OpcodeKind::M(opc) => Ok(m_extension::parse_imm(self, opc)),
             OpcodeKind::A(opc) => Ok(a_extension::parse_imm(self, opc)),
+            OpcodeKind::Zifencei(opc) => Ok(zifencei_extension::parse_imm(self, opc)),
             OpcodeKind::Zicsr(opc) => Ok(zicsr_extension::parse_imm(self, opc)),
             OpcodeKind::Priv(opc) => Ok(priv_extension::parse_imm(self, opc)),
             OpcodeKind::C(_) => Err(DecodingError::Not32BitInst),
@@ -98,6 +106,7 @@ impl DecodeUtil for u32 {
         let funct7: u8 = u8::try_from(self.slice(31, 25)).unwrap();
 
         match opmap {
+            0b000_1111 => Ok(Extensions::Zifencei),
             0b010_1111 => Ok(Extensions::A),
             0b011_0011 => match funct7 {
                 0b000_0001 => Ok(Extensions::M),
@@ -136,7 +145,7 @@ mod decode_32 {
     #[allow(overflowing_literals)]
     fn decoding_32bit_inst_test() {
         use super::*;
-        use crate::instruction::{a_extension::AOpcode, base_i::BaseIOpcode, m_extension::MOpcode};
+        use crate::{AOpcode, BaseIOpcode, MOpcode, ZifenceiOpcode};
 
         let test_32 = |inst_32: u32,
                        op: OpcodeKind,
@@ -288,5 +297,13 @@ mod decode_32 {
             Some(8),
             None,
         );
+        test_32(
+            0b0000_0011_0011_0000_0000_0000_0000_1111,
+            OpcodeKind::Zifencei(ZifenceiOpcode::FENCE),
+            Some(0),
+            Some(0),
+            None,
+            Some(0x033),
+        )
     }
 }

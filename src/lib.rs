@@ -31,8 +31,9 @@ mod instruction;
 // re-export
 pub use crate::decode::{Decode, DecodingError};
 pub use crate::instruction::{
-    a_extension::AOpcode, base_i::BaseIOpcode, c_extension::COpcode, priv_extension::PrivOpcode,
-    zicsr_extension::ZicsrOpcode, InstFormat, Instruction, OpcodeKind,
+    a_extension::AOpcode, base_i::BaseIOpcode, c_extension::COpcode, m_extension::MOpcode,
+    priv_extension::PrivOpcode, zicsr_extension::ZicsrOpcode, zifencei_extension::ZifenceiOpcode,
+    InstFormat, Instruction, OpcodeKind,
 };
 
 /// Target isa.
@@ -55,6 +56,8 @@ enum Extensions {
     A,
     /// Compressed Instructions
     C,
+    /// Instruction-Fetch Fence
+    Zifencei,
     /// Control and Status Register Instructions
     Zicsr,
     /// Privileged Instructions

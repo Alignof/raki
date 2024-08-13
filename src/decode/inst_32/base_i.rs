@@ -91,7 +91,6 @@ pub fn parse_opcode(inst: u32, isa: Isa) -> Result<BaseIOpcode, DecodingError> {
             0b111 => Ok(BaseIOpcode::AND),
             _ => Err(DecodingError::InvalidFunct3),
         },
-        0b000_1111 => Ok(BaseIOpcode::FENCE),
         0b111_0011 => match funct3 {
             0b000 => match funct7 {
                 0b000_0000 => match funct5 {

@@ -97,3 +97,53 @@ pub fn parse_rs2(inst: u32, opkind: &MOpcode) -> Option<usize> {
 pub fn parse_imm(_inst: u32, _opkind: &MOpcode) -> Option<i32> {
     None
 }
+
+#[cfg(test)]
+#[allow(unused_variables)]
+mod test_m {
+    #[test]
+    #[allow(overflowing_literals)]
+    fn m_decode_test() {
+        use super::*;
+        use crate::{Decode, Isa, OpcodeKind};
+
+        let test_32 = |inst_32: u32,
+                       op: OpcodeKind,
+                       rd: Option<usize>,
+                       rs1: Option<usize>,
+                       rs2: Option<usize>,
+                       imm: Option<i32>| {
+            let op_32 = inst_32.parse_opcode(Isa::Rv64).unwrap();
+            assert!(matches!(&op_32, op));
+            assert_eq!(inst_32.parse_rd(&op_32).unwrap(), rd);
+            assert_eq!(inst_32.parse_rs1(&op_32).unwrap(), rs1);
+            assert_eq!(inst_32.parse_rs2(&op_32).unwrap(), rs2);
+            assert_eq!(inst_32.parse_imm(&op_32, Isa::Rv64).unwrap(), imm);
+        };
+
+        test_32(
+            0x02d706b3,
+            OpcodeKind::M(MOpcode::MUL),
+            Some(13),
+            Some(14),
+            Some(13),
+            None,
+        );
+        test_32(
+            0x0289_7933,
+            OpcodeKind::M(MOpcode::REMU),
+            Some(18),
+            Some(18),
+            Some(8),
+            None,
+        );
+        test_32(
+            0x0289_5933,
+            OpcodeKind::M(MOpcode::DIVU),
+            Some(18),
+            Some(18),
+            Some(8),
+            None,
+        );
+    }
+}

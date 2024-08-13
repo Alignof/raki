@@ -23,6 +23,22 @@ println!("{inst}");
 // addi t0, t0, -276
 ```
 
+## Support
+- [x] BaseI (RV32I, RV64I)
+- [x] M
+- [x] A
+- [ ] D
+- [ ] G
+- [ ] Q
+- [x] C
+- [ ] B
+- [ ] P
+- [ ] V
+- [ ] H
+- [x] Zicsr
+- [x] Zifencei
+- [ ] Priv (Now only supports `mret`, `sret`, `wfi`, `sfence.vma`)
+
 ## License
 This crate is licensed under MIT.  
 See `LICENSE` for details.

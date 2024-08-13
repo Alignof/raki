@@ -3,7 +3,7 @@
 use super::{InstFormat, Opcode};
 use core::fmt::{self, Display, Formatter};
 
-/// Insturctions in Zicsr Extension.
+/// Insturctions in Zifencei Extension.
 #[allow(non_camel_case_types)]
 #[derive(Debug, PartialEq)]
 pub enum ZifenceiOpcode {

@@ -254,3 +254,123 @@ pub fn parse_imm(inst: u16, opkind: &COpcode) -> Option<i32> {
         _ => None,
     }
 }
+
+#[cfg(test)]
+#[allow(unused_variables)]
+mod test_c {
+    #[test]
+    fn c_decode_test() {
+        use super::*;
+        use crate::{Decode, Isa, OpcodeKind};
+        let test_16 = |inst_16: u16,
+                       op: OpcodeKind,
+                       rd: Option<usize>,
+                       rs1: Option<usize>,
+                       rs2: Option<usize>,
+                       imm: Option<i32>| {
+            let op_16 = inst_16.parse_opcode(Isa::Rv64).unwrap();
+            assert!(matches!(&op_16, op));
+            assert_eq!(inst_16.parse_rd(&op_16).unwrap(), rd);
+            assert_eq!(inst_16.parse_rs1(&op_16).unwrap(), rs1);
+            assert_eq!(inst_16.parse_rs2(&op_16).unwrap(), rs2);
+            assert_eq!(inst_16.parse_imm(&op_16, Isa::Rv64).unwrap(), imm);
+        };
+
+        test_16(
+            0b0000_0000_0000_0001,
+            OpcodeKind::C(COpcode::NOP),
+            None,
+            None,
+            None,
+            Some(0),
+        );
+        test_16(
+            0b0110_0011_1000_0001,
+            OpcodeKind::C(COpcode::LUI),
+            Some(7),
+            None,
+            None,
+            Some(0),
+        );
+        test_16(
+            0b1000_0010_1100_0001,
+            OpcodeKind::C(COpcode::SRAI),
+            Some(13),
+            Some(13),
+            None,
+            Some(16),
+        );
+        test_16(
+            0x4521,
+            OpcodeKind::C(COpcode::LI),
+            Some(10),
+            None,
+            None,
+            Some(8),
+        );
+        test_16(
+            0xb5e5,
+            OpcodeKind::C(COpcode::J),
+            None,
+            None,
+            None,
+            Some(-280),
+        );
+        test_16(
+            0x6105,
+            OpcodeKind::C(COpcode::ADDI),
+            Some(2),
+            Some(2),
+            None,
+            Some(32),
+        );
+        test_16(
+            0x8082,
+            OpcodeKind::C(COpcode::JR),
+            None,
+            Some(1),
+            Some(0),
+            None,
+        );
+        test_16(
+            0xe29d,
+            OpcodeKind::C(COpcode::BNEZ),
+            None,
+            Some(13),
+            None,
+            Some(38),
+        );
+        test_16(
+            0xc05c,
+            OpcodeKind::C(COpcode::SW),
+            None,
+            Some(8),
+            Some(15),
+            Some(4),
+        );
+        test_16(
+            0x9002,
+            OpcodeKind::C(COpcode::EBREAK),
+            None,
+            None,
+            None,
+            None,
+        );
+        test_16(
+            0x880a,
+            OpcodeKind::C(COpcode::MV),
+            Some(16),
+            None,
+            Some(2),
+            None,
+        );
+        test_16(
+            0x8585,
+            OpcodeKind::C(COpcode::SRAI),
+            Some(11),
+            Some(11),
+            None,
+            Some(1),
+        );
+    }
+}

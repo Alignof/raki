@@ -128,7 +128,7 @@ impl Opcode for BaseIOpcode {
             | BaseIOpcode::BLT
             | BaseIOpcode::BGE
             | BaseIOpcode::BLTU
-            | BaseIOpcode::BGEU => InstFormat::Bformat,
+            | BaseIOpcode::BGEU => InstFormat::BFormat,
             BaseIOpcode::JALR
             | BaseIOpcode::LB
             | BaseIOpcode::LH
@@ -143,13 +143,13 @@ impl Opcode for BaseIOpcode {
             | BaseIOpcode::ANDI
             | BaseIOpcode::LWU
             | BaseIOpcode::LD
-            | BaseIOpcode::ADDIW => InstFormat::Iformat,
+            | BaseIOpcode::ADDIW => InstFormat::IFormat,
             BaseIOpcode::SLLI
             | BaseIOpcode::SRLI
             | BaseIOpcode::SRAI
             | BaseIOpcode::SLLIW
             | BaseIOpcode::SRLIW
-            | BaseIOpcode::SRAIW => InstFormat::R_SHAMTformat,
+            | BaseIOpcode::SRAIW => InstFormat::RShamtFormat,
             BaseIOpcode::ADD
             | BaseIOpcode::SUB
             | BaseIOpcode::SLL
@@ -164,12 +164,12 @@ impl Opcode for BaseIOpcode {
             | BaseIOpcode::SUBW
             | BaseIOpcode::SLLW
             | BaseIOpcode::SRLW
-            | BaseIOpcode::SRAW => InstFormat::Rformat,
+            | BaseIOpcode::SRAW => InstFormat::RFormat,
             BaseIOpcode::SB | BaseIOpcode::SH | BaseIOpcode::SW | BaseIOpcode::SD => {
-                InstFormat::Sformat
+                InstFormat::SFormat
             }
-            BaseIOpcode::JAL => InstFormat::Jformat,
-            BaseIOpcode::LUI | BaseIOpcode::AUIPC => InstFormat::Uformat,
+            BaseIOpcode::JAL => InstFormat::JFormat,
+            BaseIOpcode::LUI | BaseIOpcode::AUIPC => InstFormat::UFormat,
             BaseIOpcode::ECALL | BaseIOpcode::EBREAK => InstFormat::Uncategorized,
         }
     }

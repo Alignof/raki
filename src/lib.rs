@@ -60,6 +60,8 @@ enum Extensions {
     Zifencei,
     /// Control and Status Register Instructions
     Zicsr,
+    /// Base Counters and Timers
+    Zicntr,
     /// Privileged Instructions
     Priv,
 }
@@ -134,7 +136,7 @@ mod tests {
                 rs1: None,
                 rs2: None,
                 imm: Some(-8),
-                inst_format: InstFormat::Jformat,
+                inst_format: InstFormat::JFormat,
             })
         );
 

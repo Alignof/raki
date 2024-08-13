@@ -161,3 +161,53 @@ pub fn parse_imm(inst: u32, opkind: &AOpcode) -> Option<i32> {
         | AOpcode::AMOMAXU_D => Some(aq_and_rl()),
     }
 }
+
+#[cfg(test)]
+#[allow(unused_variables)]
+mod test_a {
+    #[test]
+    #[allow(overflowing_literals)]
+    fn a_decode_test() {
+        use super::*;
+        use crate::{Decode, Isa, OpcodeKind};
+
+        let test_32 = |inst_32: u32,
+                       op: OpcodeKind,
+                       rd: Option<usize>,
+                       rs1: Option<usize>,
+                       rs2: Option<usize>,
+                       imm: Option<i32>| {
+            let op_32 = inst_32.parse_opcode(Isa::Rv64).unwrap();
+            assert!(matches!(&op_32, op));
+            assert_eq!(inst_32.parse_rd(&op_32).unwrap(), rd);
+            assert_eq!(inst_32.parse_rs1(&op_32).unwrap(), rs1);
+            assert_eq!(inst_32.parse_rs2(&op_32).unwrap(), rs2);
+            assert_eq!(inst_32.parse_imm(&op_32, Isa::Rv64).unwrap(), imm);
+        };
+
+        test_32(
+            0x04d7_27af,
+            OpcodeKind::A(AOpcode::AMOADD_W),
+            Some(15),
+            Some(14),
+            Some(13),
+            Some(2),
+        );
+        test_32(
+            0x1007b62f,
+            OpcodeKind::A(AOpcode::LR_D),
+            Some(12),
+            Some(15),
+            None,
+            Some(0),
+        );
+        test_32(
+            0x60f6302f,
+            OpcodeKind::A(AOpcode::AMOAND_D),
+            Some(0),
+            Some(12),
+            Some(15),
+            Some(0),
+        );
+    }
+}

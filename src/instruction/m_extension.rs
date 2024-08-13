@@ -59,7 +59,7 @@ impl Opcode for MOpcode {
             | MOpcode::DIVW
             | MOpcode::DIVUW
             | MOpcode::REMW
-            | MOpcode::REMUW => InstFormat::Mformat,
+            | MOpcode::REMUW => InstFormat::MFormat,
         }
     }
 }

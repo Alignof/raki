@@ -44,3 +44,7 @@ fn main() {
 ## License
 This crate is licensed under MIT.  
 See `LICENSE` for details.
+
+## Contribution
+All contributions are welcome, including issues, pull requests, questions, etc...
+See `CONTRIBUTING.md` for details.

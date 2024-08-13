@@ -11,14 +11,19 @@
 //! ```
 //! use raki::Isa;
 //! use raki::decode::Decode;
-//! use raki::instruction::Instruction;
+//! use raki::instruction::base_i::BaseIOpcode;
+//! use raki::instruction::{Instruction, OpcodeKind};
 //!
-//! let inst: u32 = 0b1110_1110_1100_0010_1000_0010_1001_0011;
-//! let inst: Instruction = match inst.decode(Isa::Rv32) {
-//!     Ok(inst) => inst,
-//!     Err(e) => panic!("decoding failed due to {e:?}"),
-//! };
-//! println!("{inst}");
+//! fn main() {
+//!     let inst_bytes: u32 = 0b1110_1110_1100_0010_1000_0010_1001_0011;
+//!     let inst: Instruction = match inst_bytes.decode(Isa::Rv32) {
+//!         Ok(inst) => inst,
+//!         Err(e) => panic!("decoding failed due to {e:?}"),
+//!     };
+//!
+//!     assert_eq!(inst.opc, OpcodeKind::BaseI(BaseIOpcode::ADDI));
+//!     println!("{inst}");
+//! }
 //! // --output--
 //! // addi t0, t0, -276
 //! ```

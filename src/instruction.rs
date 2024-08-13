@@ -16,6 +16,7 @@ use base_i::BaseIOpcode;
 use c_extension::COpcode;
 use m_extension::MOpcode;
 use priv_extension::PrivOpcode;
+use zicntr_extension::ZicntrOpcode;
 use zicsr_extension::ZicsrOpcode;
 use zifencei_extension::ZifenceiOpcode;
 
@@ -438,6 +439,8 @@ pub enum OpcodeKind {
     Zifencei(ZifenceiOpcode),
     /// Control and Status Register Instructions
     Zicsr(ZicsrOpcode),
+    /// Base Counters and Timers
+    Zicntr(ZicntrOpcode),
     /// Privileged Instructions
     Priv(PrivOpcode),
 }
@@ -451,6 +454,7 @@ impl Display for OpcodeKind {
             Self::C(opc) => write!(f, "{opc}"),
             Self::Zifencei(opc) => write!(f, "{opc}"),
             Self::Zicsr(opc) => write!(f, "{opc}"),
+            Self::Zicntr(opc) => write!(f, "{opc}"),
             Self::Priv(opc) => write!(f, "{opc}"),
         }
     }
@@ -466,6 +470,7 @@ impl OpcodeKind {
             Self::C(opc) => opc.get_format(),
             Self::Zifencei(opc) => opc.get_format(),
             Self::Zicsr(opc) => opc.get_format(),
+            Self::Zicntr(opc) => opc.get_format(),
             Self::Priv(opc) => opc.get_format(),
         }
     }

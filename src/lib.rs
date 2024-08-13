@@ -60,6 +60,8 @@ enum Extensions {
     Zifencei,
     /// Control and Status Register Instructions
     Zicsr,
+    /// Base Counters and Timers
+    Zicntr,
     /// Privileged Instructions
     Priv,
 }

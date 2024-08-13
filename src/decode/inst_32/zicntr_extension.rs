@@ -71,3 +71,37 @@ pub fn parse_imm(_inst: u32, opkind: &ZicntrOpcode) -> Option<i32> {
         | ZicntrOpcode::RDINSTRET_H => None,
     }
 }
+
+#[cfg(test)]
+#[allow(unused_variables)]
+mod test_zicntr {
+    #[test]
+    #[allow(overflowing_literals)]
+    fn zicntr_decode_test() {
+        use super::*;
+        use crate::{Decode, Isa, OpcodeKind};
+
+        let test_32 = |inst_32: u32,
+                       op: OpcodeKind,
+                       rd: Option<usize>,
+                       rs1: Option<usize>,
+                       rs2: Option<usize>,
+                       imm: Option<i32>| {
+            let op_32 = inst_32.parse_opcode(Isa::Rv64).unwrap();
+            assert!(matches!(&op_32, op));
+            assert_eq!(inst_32.parse_rd(&op_32).unwrap(), rd);
+            assert_eq!(inst_32.parse_rs1(&op_32).unwrap(), rs1);
+            assert_eq!(inst_32.parse_rs2(&op_32).unwrap(), rs2);
+            assert_eq!(inst_32.parse_imm(&op_32, Isa::Rv64).unwrap(), imm);
+        };
+
+        test_32(
+            0b1100_0000_0001_0000_0010_0111_1111_0011,
+            OpcodeKind::Zicntr(ZicntrOpcode::RDTIME),
+            Some(15),
+            None,
+            None,
+            None,
+        )
+    }
+}

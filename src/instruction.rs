@@ -266,6 +266,7 @@ fn reg2str(rd_value: usize) -> &'static str {
 }
 
 /// Instruction format
+/// See: [The RISC-V Instruction Set Manual: Volume II Version 20240411](https://github.com/riscv/riscv-isa-manual/releases/download/20240411/priv-isa-asciidoc.pdf) p.23,141
 #[derive(Debug, PartialEq)]
 pub enum InstFormat {
     /// Regular format

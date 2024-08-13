@@ -4,7 +4,7 @@ use super::{InstFormat, Opcode};
 use core::fmt::{self, Display, Formatter};
 
 /// Insturctions in M Extension.
-#[allow(non_camel_case_types)]
+#[allow(non_camel_case_types, clippy::upper_case_acronyms)]
 #[derive(Debug, PartialEq)]
 pub enum MOpcode {
     MUL,

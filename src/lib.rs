@@ -11,7 +11,7 @@
 //! ```
 //! use raki::{BaseIOpcode, Decode, Instruction, Isa, OpcodeKind};
 //!
-//! fn main() {
+//! fn test() {
 //!     let inst_bytes: u32 = 0b1110_1110_1100_0010_1000_0010_1001_0011;
 //!     let inst: Instruction = match inst_bytes.decode(Isa::Rv32) {
 //!         Ok(inst) => inst,

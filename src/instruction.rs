@@ -41,7 +41,7 @@ impl Display for Instruction {
     #[allow(clippy::too_many_lines)]
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         match self.inst_format {
-            InstFormat::Rformat | InstFormat::Mformat => {
+            InstFormat::RFormat | InstFormat::MFormat => {
                 write!(
                     f,
                     "{} {}, {}, {}",
@@ -51,7 +51,7 @@ impl Display for Instruction {
                     reg2str(self.rs2.unwrap())
                 )
             }
-            InstFormat::Aformat => match self.opc {
+            InstFormat::AFormat => match self.opc {
                 OpcodeKind::A(AOpcode::LR_W | AOpcode::LR_D) => write!(
                     f,
                     "{} {}, {}",
@@ -68,7 +68,7 @@ impl Display for Instruction {
                     reg2str(self.rs2.unwrap())
                 ),
             },
-            InstFormat::R_SHAMTformat => {
+            InstFormat::RShamtFormat => {
                 write!(
                     f,
                     "{} {}, {}",
@@ -77,7 +77,7 @@ impl Display for Instruction {
                     reg2str(self.rs1.unwrap()),
                 )
             }
-            InstFormat::CLformat | InstFormat::A_LRformat | InstFormat::Iformat => write!(
+            InstFormat::ClFormat | InstFormat::ALrFormat | InstFormat::IFormat => write!(
                 f,
                 "{} {}, {}, {}",
                 self.opc,
@@ -85,7 +85,7 @@ impl Display for Instruction {
                 reg2str(self.rs1.unwrap()),
                 self.imm.unwrap()
             ),
-            InstFormat::CSformat | InstFormat::Sformat | InstFormat::Bformat => write!(
+            InstFormat::CsFormat | InstFormat::SFormat | InstFormat::BFormat => write!(
                 f,
                 "{} {}, {}({})",
                 self.opc,
@@ -93,7 +93,7 @@ impl Display for Instruction {
                 self.imm.unwrap(),
                 reg2str(self.rs2.unwrap()),
             ),
-            InstFormat::CIWformat => {
+            InstFormat::CiwFormat => {
                 write!(
                     f,
                     "{} {}, sp, {:x}",
@@ -102,7 +102,7 @@ impl Display for Instruction {
                     self.imm.unwrap()
                 )
             }
-            InstFormat::CSSformat => {
+            InstFormat::CssFormat => {
                 write!(
                     f,
                     "{} {}, {}(sp)",
@@ -111,7 +111,7 @@ impl Display for Instruction {
                     self.imm.unwrap()
                 )
             }
-            InstFormat::Uformat | InstFormat::Jformat => {
+            InstFormat::UFormat | InstFormat::JFormat => {
                 write!(
                     f,
                     "{} {}, {:#x}",
@@ -120,10 +120,10 @@ impl Display for Instruction {
                     self.imm.unwrap()
                 )
             }
-            InstFormat::CJformat => {
+            InstFormat::CjFormat => {
                 write!(f, "{} {}", self.opc, self.imm.unwrap())
             }
-            InstFormat::CIformat => {
+            InstFormat::CiFormat => {
                 write!(
                     f,
                     "{} {}, {}, {}",
@@ -133,7 +133,7 @@ impl Display for Instruction {
                     self.imm.unwrap()
                 )
             }
-            InstFormat::CRformat => match self.opc {
+            InstFormat::CrFormat => match self.opc {
                 OpcodeKind::C(COpcode::JR) => {
                     write!(f, "{} zero, 0({})", self.opc, reg2str(self.rs1.unwrap()),)
                 }
@@ -157,7 +157,7 @@ impl Display for Instruction {
                 ),
                 _ => unreachable!(),
             },
-            InstFormat::CAformat => {
+            InstFormat::CaFormat => {
                 write!(
                     f,
                     "{} {}, {}, {}",
@@ -167,7 +167,7 @@ impl Display for Instruction {
                     reg2str(self.rs2.unwrap())
                 )
             }
-            InstFormat::CBformat => {
+            InstFormat::CbFormat => {
                 write!(
                     f,
                     "{} {}, {}",
@@ -176,7 +176,7 @@ impl Display for Instruction {
                     self.imm.unwrap(),
                 )
             }
-            InstFormat::CSRformat => {
+            InstFormat::CsrFormat => {
                 write!(
                     f,
                     "{} {}, {:#x}, {}",
@@ -186,7 +186,7 @@ impl Display for Instruction {
                     reg2str(self.rs1.unwrap()),
                 )
             }
-            InstFormat::CSRuiformat => {
+            InstFormat::CsrUiFormat => {
                 write!(
                     f,
                     "{} {}, {}, {}",
@@ -196,7 +196,7 @@ impl Display for Instruction {
                     self.imm.unwrap(),
                 )
             }
-            InstFormat::CSRcntrformat => {
+            InstFormat::CsrCntrFormat => {
                 write!(f, "{} {}", self.opc, reg2str(self.rd.unwrap()),)
             }
             InstFormat::Uncategorized => {
@@ -266,57 +266,56 @@ fn reg2str(rd_value: usize) -> &'static str {
 }
 
 /// Instruction format
-#[allow(non_camel_case_types)]
 #[derive(Debug, PartialEq)]
 pub enum InstFormat {
     /// Regular format
     /// ```ignore
     /// add rd, rs1, rs2
     /// ```
-    Rformat,
+    RFormat,
 
     /// Regular format with shamt
     /// ```ignore
     /// srai rd, rs1
     /// ```
-    R_SHAMTformat,
+    RShamtFormat,
 
     /// Immediate format
     /// ```ignore
     /// lw rd, imm(rs1)
     /// ```
-    Iformat,
+    IFormat,
 
     /// Store format
     /// ```ignore
     /// sw rs2, imm(rs1)
     /// ```
-    Sformat,
+    SFormat,
 
     /// Branch format
     /// ```ignore
     /// beq rs1, rs2, imm
     /// ```
-    Bformat,
+    BFormat,
 
     /// Upper immediate format
     /// ```ignore
     /// lui rd, imm
     /// ```
-    Uformat,
+    UFormat,
 
     /// Jump format
     /// ```ignore
     /// jal rd, imm
     /// ```
-    Jformat,
+    JFormat,
 
     /// Compressed Register format
     /// ```ignore
     /// c.mv rd, rs2
     /// c.add rd, rd, rs2
     /// ```
-    CRformat,
+    CrFormat,
 
     /// Compressed Immediate format
     /// ```ignore
@@ -324,88 +323,88 @@ pub enum InstFormat {
     /// c.addi rd, rd, imm
     /// c.addi16sp x2, x2, nzimm
     /// ```
-    CIformat,
+    CiFormat,
 
     /// Compressed Stack-relative Store format
     /// ```ignore
     /// c.swsp rs2, imm
     /// -> sw rs2, imm[8:3](x2)
     /// ```
-    CSSformat,
+    CssFormat,
 
     /// Compressed Wide Immediate Store format
     /// ```ignore
     /// c.addi4spn rd, x2, nzuimm
     /// ```
-    CIWformat,
+    CiwFormat,
 
     /// Compressed Load format
     /// ```ignore
     /// c.lw rd imm(rs1)
     /// ```
-    CLformat,
+    ClFormat,
 
     /// Compressed Store format
     /// ```ignore
     /// c.sw rs2, imm(rs1)
     /// ```
-    CSformat,
+    CsFormat,
 
     /// Compressed Arithmetic format
     /// ```ignore
     /// c.and rd, rd, rs2
     /// ```
-    CAformat,
+    CaFormat,
 
     /// Compressed Branch format
     /// ```ignore
     /// c.beqz rs1, imm
     /// c.srai rd, rd, shamt
     /// ```
-    CBformat,
+    CbFormat,
 
     /// Compressed Jump format
     /// ```ignore
     /// c.j imm
     /// ```
-    CJformat,
+    CjFormat,
 
     /// Compressed Csr format
     /// ```ignore
     /// csrrw rd, csr, rs1
     /// csrrwi rd, csr, imm
     /// ```
-    CSRformat,
+    CsrFormat,
 
     /// Csr with uimm format
     /// ```ignore
     /// csrrwi rd, csr, imm
     /// ```
-    CSRuiformat,
+    CsrUiFormat,
 
     /// Zicntr extension format
     /// ```ignore
     /// rdtime rd
     /// ```
-    CSRcntrformat,
+    CsrCntrFormat,
 
     /// M-extension instruction format
     /// ```ignore
     /// mul rd, rs1, rs2
     /// ```
-    Mformat,
+    MFormat,
 
     /// A-extension instruction format
     /// ```ignore
     /// sc.w rd, rs2, (rs1)
     /// ```
-    Aformat,
+    AFormat,
 
     /// lr.w instruction format in A-extension
     /// ```ignore
     /// lr.w rd, (rs1)
     /// ```
-    A_LRformat,
+    ALrFormat,
 
     /// Uncategorized format
     /// ```ignore

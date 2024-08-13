@@ -31,9 +31,9 @@ impl Display for ZicsrOpcode {
 impl Opcode for ZicsrOpcode {
     fn get_format(&self) -> InstFormat {
         match self {
-            ZicsrOpcode::CSRRW | ZicsrOpcode::CSRRS | ZicsrOpcode::CSRRC => InstFormat::CSRformat,
+            ZicsrOpcode::CSRRW | ZicsrOpcode::CSRRS | ZicsrOpcode::CSRRC => InstFormat::CsrFormat,
             ZicsrOpcode::CSRRWI | ZicsrOpcode::CSRRSI | ZicsrOpcode::CSRRCI => {
-                InstFormat::CSRuiformat
+                InstFormat::CsrUiFormat
             }
         }
     }

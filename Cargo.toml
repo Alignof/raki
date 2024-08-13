@@ -1,12 +1,14 @@
 [package]
 name = "raki"
-version = "0.1.3"
+version = "1.0.0-beta.1"
 edition = "2021"
 authors = ["Norimasa Takana <alignof@outlook.com>"]
 repository = "https://github.com/Alignof/raki"
 keywords = ["risc-v", "decoder"]
+categories = ["encoding", "embedded", "hardware-support", "no-std", "parsing"]
 description = "RISC-V instruction decoder written in Rust."
 license = "MIT"
+readme = "README.md"
 
 [lints.clippy]
 pedantic = "warn"

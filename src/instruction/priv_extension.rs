@@ -5,10 +5,10 @@ use core::fmt::{self, Display, Formatter};
 
 /// Privileged Insturctions.
 #[allow(non_camel_case_types)]
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum PrivOpcode {
-    SRET,
     MRET,
+    SRET,
     WFI,
     SFENCE_VMA,
 }

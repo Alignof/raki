@@ -2,8 +2,8 @@
 mod c_extension;
 
 use super::{Decode, DecodeUtil, DecodingError};
-use crate::instruction::{Extensions, InstFormat, Instruction, OpcodeKind};
-use crate::Isa;
+use crate::instruction::{InstFormat, Instruction, OpcodeKind};
+use crate::{Extensions, Isa};
 
 impl Decode for u16 {
     fn decode(&self, isa: Isa) -> Result<Instruction, DecodingError> {
@@ -26,10 +26,6 @@ impl Decode for u16 {
             imm: new_imm,
             inst_format: new_fmt,
         })
-    }
-
-    fn parse_extension(self) -> Result<Extensions, DecodingError> {
-        Ok(Extensions::C)
     }
 
     fn parse_opcode(self, isa: Isa) -> Result<OpcodeKind, DecodingError> {
@@ -73,6 +69,10 @@ impl Decode for u16 {
 impl DecodeUtil for u16 {
     fn slice(self, end: u32, start: u32) -> Self {
         (self >> start) & (2_u16.pow(end - start + 1) - 1)
+    }
+
+    fn parse_extension(self) -> Result<Extensions, DecodingError> {
+        Ok(Extensions::C)
     }
 
     fn set(self, mask: &[u32]) -> u32 {

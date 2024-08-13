@@ -5,7 +5,7 @@ use core::fmt::{self, Display, Formatter};
 
 /// Insturctions in A Extension.
 #[allow(non_camel_case_types)]
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum AOpcode {
     LR_W,
     SC_W,

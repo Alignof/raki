@@ -3,10 +3,11 @@ mod base_i;
 mod m_extension;
 mod priv_extension;
 mod zicsr_extension;
+mod zifencei_extension;
 
 use super::{Decode, DecodeUtil, DecodingError};
-use crate::instruction::{Extensions, InstFormat, Instruction, OpcodeKind};
-use crate::Isa;
+use crate::instruction::{InstFormat, Instruction, OpcodeKind};
+use crate::{Extensions, Isa};
 
 #[allow(non_snake_case)]
 impl Decode for u32 {
@@ -28,12 +29,84 @@ impl Decode for u32 {
         })
     }
 
+    fn parse_opcode(self, isa: Isa) -> Result<OpcodeKind, DecodingError> {
+        let extension = self.parse_extension();
+
+        match extension {
+            Ok(Extensions::BaseI) => Ok(OpcodeKind::BaseI(base_i::parse_opcode(self, isa)?)),
+            Ok(Extensions::M) => Ok(OpcodeKind::M(m_extension::parse_opcode(self, isa)?)),
+            Ok(Extensions::A) => Ok(OpcodeKind::A(a_extension::parse_opcode(self, isa)?)),
+            Ok(Extensions::Zifencei) => Ok(OpcodeKind::Zifencei(zifencei_extension::parse_opcode(
+                self,
+            )?)),
+            Ok(Extensions::Zicsr) => Ok(OpcodeKind::Zicsr(zicsr_extension::parse_opcode(self)?)),
+            Ok(Extensions::Priv) => Ok(OpcodeKind::Priv(priv_extension::parse_opcode(self)?)),
+            Ok(Extensions::C) => Err(DecodingError::Not32BitInst),
+            Err(decoding_err) => Err(decoding_err),
+        }
+    }
+
+    fn parse_rd(self, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError> {
+        match opkind {
+            OpcodeKind::BaseI(opc) => Ok(base_i::parse_rd(self, opc)),
+            OpcodeKind::M(opc) => Ok(m_extension::parse_rd(self, opc)),
+            OpcodeKind::A(opc) => Ok(a_extension::parse_rd(self, opc)),
+            OpcodeKind::Zifencei(opc) => Ok(zifencei_extension::parse_rd(self, opc)),
+            OpcodeKind::Zicsr(opc) => Ok(zicsr_extension::parse_rd(self, opc)),
+            OpcodeKind::Priv(opc) => Ok(priv_extension::parse_rd(self, opc)),
+            OpcodeKind::C(_) => Err(DecodingError::Not32BitInst),
+        }
+    }
+
+    fn parse_rs1(self, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError> {
+        match opkind {
+            OpcodeKind::BaseI(opc) => Ok(base_i::parse_rs1(self, opc)),
+            OpcodeKind::M(opc) => Ok(m_extension::parse_rs1(self, opc)),
+            OpcodeKind::A(opc) => Ok(a_extension::parse_rs1(self, opc)),
+            OpcodeKind::Zifencei(opc) => Ok(zifencei_extension::parse_rs1(self, opc)),
+            OpcodeKind::Zicsr(opc) => Ok(zicsr_extension::parse_rs1(self, opc)),
+            OpcodeKind::Priv(opc) => Ok(priv_extension::parse_rs1(self, opc)),
+            OpcodeKind::C(_) => Err(DecodingError::Not32BitInst),
+        }
+    }
+
+    fn parse_rs2(self, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError> {
+        match opkind {
+            OpcodeKind::BaseI(opc) => Ok(base_i::parse_rs2(self, opc)),
+            OpcodeKind::M(opc) => Ok(m_extension::parse_rs2(self, opc)),
+            OpcodeKind::A(opc) => Ok(a_extension::parse_rs2(self, opc)),
+            OpcodeKind::Zifencei(opc) => Ok(zifencei_extension::parse_rs2(self, opc)),
+            OpcodeKind::Zicsr(opc) => Ok(zicsr_extension::parse_rs2(self, opc)),
+            OpcodeKind::Priv(opc) => Ok(priv_extension::parse_rs2(self, opc)),
+            OpcodeKind::C(_) => Err(DecodingError::Not32BitInst),
+        }
+    }
+
+    fn parse_imm(self, opkind: &OpcodeKind, isa: Isa) -> Result<Option<i32>, DecodingError> {
+        match opkind {
+            OpcodeKind::BaseI(opc) => Ok(base_i::parse_imm(self, opc, isa)),
+            OpcodeKind::M(opc) => Ok(m_extension::parse_imm(self, opc)),
+            OpcodeKind::A(opc) => Ok(a_extension::parse_imm(self, opc)),
+            OpcodeKind::Zifencei(opc) => Ok(zifencei_extension::parse_imm(self, opc)),
+            OpcodeKind::Zicsr(opc) => Ok(zicsr_extension::parse_imm(self, opc)),
+            OpcodeKind::Priv(opc) => Ok(priv_extension::parse_imm(self, opc)),
+            OpcodeKind::C(_) => Err(DecodingError::Not32BitInst),
+        }
+    }
+}
+
+impl DecodeUtil for u32 {
+    fn slice(self, end: u32, start: u32) -> Self {
+        (self >> start) & (2_u32.pow(end - start + 1) - 1)
+    }
+
     fn parse_extension(self) -> Result<Extensions, DecodingError> {
         let opmap: u8 = u8::try_from(self.slice(6, 0)).unwrap();
         let funct3: u8 = u8::try_from(self.slice(14, 12)).unwrap();
         let funct7: u8 = u8::try_from(self.slice(31, 25)).unwrap();
 
         match opmap {
+            0b000_1111 => Ok(Extensions::Zifencei),
             0b010_1111 => Ok(Extensions::A),
             0b011_0011 => match funct7 {
                 0b000_0001 => Ok(Extensions::M),
@@ -55,70 +128,6 @@ impl Decode for u32 {
         }
     }
 
-    fn parse_opcode(self, isa: Isa) -> Result<OpcodeKind, DecodingError> {
-        let extension = self.parse_extension();
-
-        match extension {
-            Ok(Extensions::BaseI) => Ok(OpcodeKind::BaseI(base_i::parse_opcode(self, isa)?)),
-            Ok(Extensions::M) => Ok(OpcodeKind::M(m_extension::parse_opcode(self, isa)?)),
-            Ok(Extensions::A) => Ok(OpcodeKind::A(a_extension::parse_opcode(self, isa)?)),
-            Ok(Extensions::Zicsr) => Ok(OpcodeKind::Zicsr(zicsr_extension::parse_opcode(self)?)),
-            Ok(Extensions::Priv) => Ok(OpcodeKind::Priv(priv_extension::parse_opcode(self)?)),
-            Ok(Extensions::C) => Err(DecodingError::Not32BitInst),
-            Err(decoding_err) => Err(decoding_err),
-        }
-    }
-
-    fn parse_rd(self, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError> {
-        match opkind {
-            OpcodeKind::BaseI(opc) => Ok(base_i::parse_rd(self, opc)),
-            OpcodeKind::M(opc) => Ok(m_extension::parse_rd(self, opc)),
-            OpcodeKind::A(opc) => Ok(a_extension::parse_rd(self, opc)),
-            OpcodeKind::Zicsr(opc) => Ok(zicsr_extension::parse_rd(self, opc)),
-            OpcodeKind::Priv(opc) => Ok(priv_extension::parse_rd(self, opc)),
-            OpcodeKind::C(_) => Err(DecodingError::Not32BitInst),
-        }
-    }
-
-    fn parse_rs1(self, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError> {
-        match opkind {
-            OpcodeKind::BaseI(opc) => Ok(base_i::parse_rs1(self, opc)),
-            OpcodeKind::M(opc) => Ok(m_extension::parse_rs1(self, opc)),
-            OpcodeKind::A(opc) => Ok(a_extension::parse_rs1(self, opc)),
-            OpcodeKind::Zicsr(opc) => Ok(zicsr_extension::parse_rs1(self, opc)),
-            OpcodeKind::Priv(opc) => Ok(priv_extension::parse_rs1(self, opc)),
-            OpcodeKind::C(_) => Err(DecodingError::Not32BitInst),
-        }
-    }
-
-    fn parse_rs2(self, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError> {
-        match opkind {
-            OpcodeKind::BaseI(opc) => Ok(base_i::parse_rs2(self, opc)),
-            OpcodeKind::M(opc) => Ok(m_extension::parse_rs2(self, opc)),
-            OpcodeKind::A(opc) => Ok(a_extension::parse_rs2(self, opc)),
-            OpcodeKind::Zicsr(opc) => Ok(zicsr_extension::parse_rs2(self, opc)),
-            OpcodeKind::Priv(opc) => Ok(priv_extension::parse_rs2(self, opc)),
-            OpcodeKind::C(_) => Err(DecodingError::Not32BitInst),
-        }
-    }
-
-    fn parse_imm(self, opkind: &OpcodeKind, isa: Isa) -> Result<Option<i32>, DecodingError> {
-        match opkind {
-            OpcodeKind::BaseI(opc) => Ok(base_i::parse_imm(self, opc, isa)),
-            OpcodeKind::M(opc) => Ok(m_extension::parse_imm(self, opc)),
-            OpcodeKind::A(opc) => Ok(a_extension::parse_imm(self, opc)),
-            OpcodeKind::Zicsr(opc) => Ok(zicsr_extension::parse_imm(self, opc)),
-            OpcodeKind::Priv(opc) => Ok(priv_extension::parse_imm(self, opc)),
-            OpcodeKind::C(_) => Err(DecodingError::Not32BitInst),
-        }
-    }
-}
-
-impl DecodeUtil for u32 {
-    fn slice(self, end: u32, start: u32) -> Self {
-        (self >> start) & (2_u32.pow(end - start + 1) - 1)
-    }
-
     fn set(self, mask: &[u32]) -> u32 {
         let mut inst: u32 = 0;
         for (i, m) in mask.iter().rev().enumerate() {
@@ -136,7 +145,7 @@ mod decode_32 {
     #[allow(overflowing_literals)]
     fn decoding_32bit_inst_test() {
         use super::*;
-        use crate::instruction::{a_extension::AOpcode, base_i::BaseIOpcode, m_extension::MOpcode};
+        use crate::{AOpcode, BaseIOpcode, MOpcode, ZifenceiOpcode};
 
         let test_32 = |inst_32: u32,
                        op: OpcodeKind,
@@ -288,5 +297,13 @@ mod decode_32 {
             Some(8),
             None,
         );
+        test_32(
+            0b0000_0011_0011_0000_0000_0000_0000_1111,
+            OpcodeKind::Zifencei(ZifenceiOpcode::FENCE),
+            Some(0),
+            Some(0),
+            None,
+            Some(0x033),
+        )
     }
 }

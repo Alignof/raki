@@ -5,7 +5,7 @@ use core::fmt::{self, Display, Formatter};
 
 /// Insturctions in Base-I.
 #[allow(non_camel_case_types, clippy::module_name_repetitions)]
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum BaseIOpcode {
     LUI,
     AUIPC,
@@ -44,7 +44,6 @@ pub enum BaseIOpcode {
     SRA,
     OR,
     AND,
-    FENCE,
     ECALL,
     EBREAK,
 
@@ -103,7 +102,6 @@ impl Display for BaseIOpcode {
             BaseIOpcode::SRA => write!(f, "sra"),
             BaseIOpcode::OR => write!(f, "or"),
             BaseIOpcode::AND => write!(f, "and"),
-            BaseIOpcode::FENCE => write!(f, "fence"),
             BaseIOpcode::ECALL => write!(f, "ecall"),
             BaseIOpcode::EBREAK => write!(f, "ebreak"),
             BaseIOpcode::LWU => write!(f, "lwu"),
@@ -172,9 +170,7 @@ impl Opcode for BaseIOpcode {
             }
             BaseIOpcode::JAL => InstFormat::Jformat,
             BaseIOpcode::LUI | BaseIOpcode::AUIPC => InstFormat::Uformat,
-            BaseIOpcode::ECALL | BaseIOpcode::FENCE | BaseIOpcode::EBREAK => {
-                InstFormat::Uncategorized
-            }
+            BaseIOpcode::ECALL | BaseIOpcode::EBREAK => InstFormat::Uncategorized,
         }
     }
 }

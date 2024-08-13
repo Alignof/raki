@@ -41,7 +41,7 @@ impl Opcode for ZicntrOpcode {
             | ZicntrOpcode::RDINSTRET_H
             | ZicntrOpcode::RDCYCLE
             | ZicntrOpcode::RDTIME
-            | ZicntrOpcode::RDINSTRET => InstFormat::CSRcntrformat,
+            | ZicntrOpcode::RDINSTRET => InstFormat::CsrCntrFormat,
         }
     }
 }

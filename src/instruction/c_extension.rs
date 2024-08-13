@@ -91,17 +91,17 @@ impl Opcode for COpcode {
     fn get_format(&self) -> InstFormat {
         match self {
             // Quadrant 0
-            COpcode::LW | COpcode::LD => InstFormat::CLformat,
-            COpcode::ADDI4SPN => InstFormat::CIWformat,
-            COpcode::SW | COpcode::SD => InstFormat::CSformat,
+            COpcode::LW | COpcode::LD => InstFormat::ClFormat,
+            COpcode::ADDI4SPN => InstFormat::CiwFormat,
+            COpcode::SW | COpcode::SD => InstFormat::CsFormat,
 
             // Quadrant 1
-            COpcode::JAL | COpcode::J => InstFormat::CJformat,
+            COpcode::JAL | COpcode::J => InstFormat::CjFormat,
             COpcode::BEQZ | COpcode::ANDI | COpcode::SRLI | COpcode::SRAI | COpcode::BNEZ => {
-                InstFormat::CBformat
+                InstFormat::CbFormat
             }
             COpcode::LI | COpcode::ADDI | COpcode::ADDIW | COpcode::ADDI16SP | COpcode::LUI => {
-                InstFormat::CIformat
+                InstFormat::CiFormat
             }
             COpcode::NOP => InstFormat::Uncategorized,
             COpcode::SUB
@@ -109,12 +109,12 @@ impl Opcode for COpcode {
             | COpcode::OR
             | COpcode::AND
             | COpcode::SUBW
-            | COpcode::ADDW => InstFormat::CAformat,
+            | COpcode::ADDW => InstFormat::CaFormat,
 
             // Quadrant 2
-            COpcode::LDSP | COpcode::SLLI | COpcode::LWSP => InstFormat::CIformat,
-            COpcode::SDSP | COpcode::SWSP => InstFormat::CSSformat,
-            COpcode::JR | COpcode::JALR | COpcode::MV | COpcode::ADD => InstFormat::CRformat,
+            COpcode::LDSP | COpcode::SLLI | COpcode::LWSP => InstFormat::CiFormat,
+            COpcode::SDSP | COpcode::SWSP => InstFormat::CssFormat,
+            COpcode::JR | COpcode::JALR | COpcode::MV | COpcode::ADD => InstFormat::CrFormat,
             COpcode::EBREAK => InstFormat::Uncategorized,
         }
     }

@@ -65,7 +65,7 @@ impl Display for AOpcode {
 impl Opcode for AOpcode {
     fn get_format(&self) -> InstFormat {
         match self {
-            AOpcode::LR_W => InstFormat::A_LRformat,
+            AOpcode::LR_W => InstFormat::ALrFormat,
             AOpcode::SC_W
             | AOpcode::AMOSWAP_W
             | AOpcode::AMOADD_W
@@ -86,7 +86,7 @@ impl Opcode for AOpcode {
             | AOpcode::AMOMIN_D
             | AOpcode::AMOMAX_D
             | AOpcode::AMOMINU_D
-            | AOpcode::AMOMAXU_D => InstFormat::Aformat,
+            | AOpcode::AMOMAXU_D => InstFormat::AFormat,
         }
     }
 }

@@ -136,7 +136,7 @@ mod tests {
                 rs1: None,
                 rs2: None,
                 imm: Some(-8),
-                inst_format: InstFormat::Jformat,
+                inst_format: InstFormat::JFormat,
             })
         );
 

@@ -5,6 +5,7 @@ pub mod base_i;
 pub mod c_extension;
 pub mod m_extension;
 pub mod priv_extension;
+pub mod zicntr_extension;
 pub mod zicsr_extension;
 pub mod zifencei_extension;
 
@@ -15,6 +16,7 @@ use base_i::BaseIOpcode;
 use c_extension::COpcode;
 use m_extension::MOpcode;
 use priv_extension::PrivOpcode;
+use zicntr_extension::ZicntrOpcode;
 use zicsr_extension::ZicsrOpcode;
 use zifencei_extension::ZifenceiOpcode;
 
@@ -193,6 +195,9 @@ impl Display for Instruction {
                     self.rs2.unwrap(),
                     self.imm.unwrap(),
                 )
+            }
+            InstFormat::CSRcntrformat => {
+                write!(f, "{} {}", self.opc, reg2str(self.rd.unwrap()),)
             }
             InstFormat::Uncategorized => {
                 write!(
@@ -378,6 +383,12 @@ pub enum InstFormat {
     /// ```
     CSRuiformat,
 
+    /// Zicntr extension format
+    /// ```ignore
+    /// rdtime rd
+    /// ```
+    CSRcntrformat,
+
     /// M-extension instruction format
     /// ```ignore
     /// mul rd, rs1, rs2
@@ -428,6 +439,8 @@ pub enum OpcodeKind {
     Zifencei(ZifenceiOpcode),
     /// Control and Status Register Instructions
     Zicsr(ZicsrOpcode),
+    /// Base Counters and Timers
+    Zicntr(ZicntrOpcode),
     /// Privileged Instructions
     Priv(PrivOpcode),
 }
@@ -441,6 +454,7 @@ impl Display for OpcodeKind {
             Self::C(opc) => write!(f, "{opc}"),
             Self::Zifencei(opc) => write!(f, "{opc}"),
             Self::Zicsr(opc) => write!(f, "{opc}"),
+            Self::Zicntr(opc) => write!(f, "{opc}"),
             Self::Priv(opc) => write!(f, "{opc}"),
         }
     }
@@ -456,6 +470,7 @@ impl OpcodeKind {
             Self::C(opc) => opc.get_format(),
             Self::Zifencei(opc) => opc.get_format(),
             Self::Zicsr(opc) => opc.get_format(),
+            Self::Zicntr(opc) => opc.get_format(),
             Self::Priv(opc) => opc.get_format(),
         }
     }

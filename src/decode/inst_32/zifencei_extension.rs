@@ -19,6 +19,7 @@ pub fn parse_rd(inst: u32, opkind: &ZifenceiOpcode) -> Option<usize> {
     }
 }
 
+#[allow(clippy::unnecessary_wraps)]
 pub fn parse_rs1(inst: u32, opkind: &ZifenceiOpcode) -> Option<usize> {
     let rs1: usize = inst.slice(19, 15) as usize;
 
@@ -34,7 +35,7 @@ pub fn parse_rs2(_inst: u32, opkind: &ZifenceiOpcode) -> Option<usize> {
     }
 }
 
-#[allow(clippy::cast_possible_wrap)]
+#[allow(clippy::cast_possible_wrap, clippy::unnecessary_wraps)]
 pub fn parse_imm(inst: u32, opkind: &ZifenceiOpcode) -> Option<i32> {
     let fm_pred_succ: u32 = inst.slice(31, 20);
     match opkind {

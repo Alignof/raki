@@ -68,6 +68,7 @@ impl Decode for u16 {
 
 impl DecodeUtil for u16 {
     fn slice(self, end: u32, start: u32) -> Self {
+        assert!(end >= start);
         (self >> start) & (2_u16.pow(end - start + 1) - 1)
     }
 

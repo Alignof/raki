@@ -195,6 +195,9 @@ impl Display for Instruction {
                     self.imm.unwrap(),
                 )
             }
+            InstFormat::CSRcntrformat => {
+                write!(f, "{} {}", self.opc, reg2str(self.rd.unwrap()),)
+            }
             InstFormat::Uncategorized => {
                 write!(
                     f,
@@ -378,6 +381,12 @@ pub enum InstFormat {
     /// csrrwi rd, csr, imm
     /// ```
     CSRuiformat,
+
+    /// Zicntr extension format
+    /// ```ignore
+    /// rdtime rd
+    /// ```
+    CSRcntrformat,
 
     /// M-extension instruction format
     /// ```ignore

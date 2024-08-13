@@ -5,7 +5,7 @@ use core::fmt::{self, Display, Formatter};
 
 /// Insturctions in Base-I.
 #[allow(non_camel_case_types, clippy::module_name_repetitions)]
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum BaseIOpcode {
     LUI,
     AUIPC,

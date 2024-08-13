@@ -17,7 +17,7 @@ use priv_extension::PrivOpcode;
 use zicsr_extension::ZicsrOpcode;
 
 /// Instruction
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct Instruction {
     /// Opcode
     pub opc: OpcodeKind,
@@ -277,7 +277,7 @@ pub enum Extensions {
 
 /// Instruction format
 #[allow(non_camel_case_types)]
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum InstFormat {
     /// Regular format
     /// ```ignore
@@ -429,7 +429,7 @@ pub trait Opcode {
 }
 
 /// Extension type and Instruction name.
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum OpcodeKind {
     /// Base Integer Instruction Set
     BaseI(BaseIOpcode),

@@ -34,7 +34,7 @@ fn only_rv64<T: Opcode>(opcode: T, isa: Isa) -> Result<T, DecodingError> {
 ///     assert!(matches!(error, DecodingError::OnlyRv64Inst));
 /// }
 /// ```
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum DecodingError {
     /// 32bit instructions are expected, but it is compressed instruction.
     Not16BitInst,

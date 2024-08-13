@@ -90,4 +90,31 @@ mod tests {
             println!("{inst}");
         }
     }
+
+    #[test]
+    fn inst_eq_test() {
+        use crate::decode::Decode;
+        use crate::instruction::{base_i::BaseIOpcode, InstFormat, Instruction, OpcodeKind};
+        use crate::Isa;
+
+        assert_eq!(
+            0b1111_1111_1001_1111_1111_0000_0110_1111_u32.decode(Isa::Rv64),
+            Ok(Instruction {
+                opc: OpcodeKind::BaseI(BaseIOpcode::JAL),
+                rd: Some(0),
+                rs1: None,
+                rs2: None,
+                imm: Some(-8),
+                inst_format: InstFormat::Jformat,
+            })
+        );
+
+        assert_eq!(
+            0b1111_1111_1001_1111_1111_0000_0110_1111_u32
+                .decode(Isa::Rv64)
+                .unwrap()
+                .opc,
+            OpcodeKind::BaseI(BaseIOpcode::JAL),
+        )
+    }
 }

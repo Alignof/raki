@@ -103,6 +103,7 @@ impl Decode for u32 {
 
 impl DecodeUtil for u32 {
     fn slice(self, end: u32, start: u32) -> Self {
+        assert!(end >= start);
         (self >> start) & (2_u32.pow(end - start + 1) - 1)
     }
 

@@ -5,6 +5,7 @@ pub mod base_i;
 pub mod c_extension;
 pub mod m_extension;
 pub mod priv_extension;
+pub mod zicntr_extension;
 pub mod zicsr_extension;
 pub mod zifencei_extension;
 

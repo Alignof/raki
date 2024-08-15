@@ -25,6 +25,8 @@
 //! // addi t0, t0, -276
 //! ```
 
+#![no_std]
+
 mod decode;
 mod instruction;
 

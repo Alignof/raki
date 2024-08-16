@@ -199,29 +199,15 @@ impl Display for Instruction {
             InstFormat::CsrCntrFormat => {
                 write!(f, "{} {}", self.opc, reg2str(self.rd.unwrap()),)
             }
-            InstFormat::Uncategorized => {
-                write!(
-                    f,
-                    "{}{}{}{}{}",
-                    self.opc,
-                    match self.rd {
-                        Some(rd) => format!(" {}", reg2str(rd)),
-                        None => String::new(),
-                    },
-                    match self.rs1 {
-                        Some(rs1) => format!(" {rs1}"),
-                        None => String::new(),
-                    },
-                    match self.rs2 {
-                        Some(rs2) => format!(" {rs2}"),
-                        None => String::new(),
-                    },
-                    match self.imm {
-                        Some(imm) => format!(" {imm}"),
-                        None => String::new(),
-                    },
-                )
-            }
+            InstFormat::Uncategorized => match self.opc {
+                OpcodeKind::BaseI(BaseIOpcode::ECALL | BaseIOpcode::EBREAK)
+                | OpcodeKind::Zifencei(ZifenceiOpcode::FENCE)
+                | OpcodeKind::C(COpcode::NOP | COpcode::EBREAK)
+                | OpcodeKind::Priv(
+                    PrivOpcode::MRET | PrivOpcode::SRET | PrivOpcode::WFI | PrivOpcode::SFENCE_VMA,
+                ) => write!(f, "{}", self.opc),
+                _ => unreachable!(),
+            },
         }
     }
 }

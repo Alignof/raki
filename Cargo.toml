@@ -1,6 +1,6 @@
 [package]
 name = "raki"
-version = "1.0.0-beta.2"
+version = "1.0.0-beta.3"
 edition = "2021"
 authors = ["Norimasa Takana <alignof@outlook.com>"]
 repository = "https://github.com/Alignof/raki"

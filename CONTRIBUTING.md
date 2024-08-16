@@ -198,7 +198,7 @@ fn parse_extension(self) -> Result<Extensions, DecodingError> {
 ```
 
 ### Re-export
-Re-export the definition in lib.rs.
+Don't forget to re-export the definition in lib.rs (I forgot to include it to example branch).
 ```rust
 // re-export definition
 pub use crate::instruction::{

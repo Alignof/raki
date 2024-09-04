@@ -68,8 +68,73 @@ enum Extensions {
     Priv,
 }
 
+impl TryFrom<usize> for Instruction {
+    type Error = DecodingError;
+    fn try_from(inst: usize) -> Result<Self, Self::Error> {
+        if inst & 0b11 == 0b11 {
+            u32::try_from(inst)
+                .expect("Truncation of usize to u32 failed.")
+                .decode(Isa::Rv64)
+        } else {
+            u16::try_from(inst)
+                .expect("Truncation of usize to u16 failed.")
+                .decode(Isa::Rv64)
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn usize_try_from_test() {
+        use crate::instruction::{
+            base_i::BaseIOpcode, c_extension::COpcode, InstFormat, Instruction, OpcodeKind,
+        };
+
+        assert_eq!(
+            Instruction::try_from(0b1111_1111_1001_1111_1111_0000_0110_1111_usize),
+            Ok(Instruction {
+                opc: OpcodeKind::BaseI(BaseIOpcode::JAL),
+                rd: Some(0),
+                rs1: None,
+                rs2: None,
+                imm: Some(-8),
+                inst_format: InstFormat::JFormat,
+            })
+        );
+
+        assert_eq!(
+            Instruction::try_from(0x880ausize),
+            Ok(Instruction {
+                opc: OpcodeKind::C(COpcode::MV),
+                rd: Some(16),
+                rs1: None,
+                rs2: Some(2),
+                imm: None,
+                inst_format: InstFormat::CrFormat,
+            })
+        );
+
+        assert_ne!(
+            Instruction::try_from(0x880busize),
+            Ok(Instruction {
+                opc: OpcodeKind::C(COpcode::MV),
+                rd: Some(16),
+                rs1: None,
+                rs2: Some(2),
+                imm: None,
+                inst_format: InstFormat::CrFormat,
+            })
+        );
+
+        assert_eq!(
+            Instruction::try_from(0b1111_1111_1001_1111_1111_0000_0110_1111_usize)
+                .unwrap()
+                .opc,
+            OpcodeKind::BaseI(BaseIOpcode::JAL),
+        )
+    }
+
     #[test]
     fn inst_eq_test() {
         use crate::decode::Decode;

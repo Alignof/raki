@@ -5,6 +5,7 @@ pub mod base_i;
 pub mod c_extension;
 pub mod m_extension;
 pub mod priv_extension;
+pub mod zicfiss_extension;
 pub mod zicntr_extension;
 pub mod zicsr_extension;
 pub mod zifencei_extension;
@@ -401,6 +402,25 @@ pub enum InstFormat {
     /// c.ebreak
     /// ```
     Uncategorized,
+
+    /// Only rd name
+    /// ```ignore
+    /// rdtime rd
+    /// ssrdp rd
+    /// ```
+    OnlyRd,
+
+    /// Only rs1 name
+    /// ```ignore
+    /// sspush ra
+    /// ```
+    OnlyRs1,
+
+    /// Only rs2 name
+    /// ```ignore
+    /// sspopchk t0
+    /// ```
+    OnlyRs2,
 }
 
 /// Trait for `OpcodeKind`

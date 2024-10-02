@@ -2,6 +2,7 @@ mod a_extension;
 mod base_i;
 mod m_extension;
 mod priv_extension;
+mod zicfiss_extension;
 mod zicntr_extension;
 mod zicsr_extension;
 mod zifencei_extension;
@@ -41,6 +42,9 @@ impl Decode for u32 {
                 self,
             )?)),
             Ok(Extensions::Zicsr) => Ok(OpcodeKind::Zicsr(zicsr_extension::parse_opcode(self)?)),
+            Ok(Extensions::Zicfiss) => {
+                Ok(OpcodeKind::Zicfiss(zicfiss_extension::parse_opcode(self)?))
+            }
             Ok(Extensions::Zicntr) => Ok(OpcodeKind::Zicntr(zicntr_extension::parse_opcode(self)?)),
             Ok(Extensions::Priv) => Ok(OpcodeKind::Priv(priv_extension::parse_opcode(self)?)),
             Ok(Extensions::C) => Err(DecodingError::Not32BitInst),
@@ -55,6 +59,7 @@ impl Decode for u32 {
             OpcodeKind::A(opc) => Ok(a_extension::parse_rd(self, opc)),
             OpcodeKind::Zifencei(opc) => Ok(zifencei_extension::parse_rd(self, opc)),
             OpcodeKind::Zicsr(opc) => Ok(zicsr_extension::parse_rd(self, opc)),
+            OpcodeKind::Zicfiss(opc) => Ok(zicfiss_extension::parse_rd(self, opc)),
             OpcodeKind::Zicntr(opc) => Ok(zicntr_extension::parse_rd(self, opc)),
             OpcodeKind::Priv(opc) => Ok(priv_extension::parse_rd(self, opc)),
             OpcodeKind::C(_) => Err(DecodingError::Not32BitInst),
@@ -68,6 +73,7 @@ impl Decode for u32 {
             OpcodeKind::A(opc) => Ok(a_extension::parse_rs1(self, opc)),
             OpcodeKind::Zifencei(opc) => Ok(zifencei_extension::parse_rs1(self, opc)),
             OpcodeKind::Zicsr(opc) => Ok(zicsr_extension::parse_rs1(self, opc)),
+            OpcodeKind::Zicfiss(opc) => Ok(zicfiss_extension::parse_rs1(self, opc)),
             OpcodeKind::Zicntr(opc) => Ok(zicntr_extension::parse_rs1(self, opc)),
             OpcodeKind::Priv(opc) => Ok(priv_extension::parse_rs1(self, opc)),
             OpcodeKind::C(_) => Err(DecodingError::Not32BitInst),
@@ -81,6 +87,7 @@ impl Decode for u32 {
             OpcodeKind::A(opc) => Ok(a_extension::parse_rs2(self, opc)),
             OpcodeKind::Zifencei(opc) => Ok(zifencei_extension::parse_rs2(self, opc)),
             OpcodeKind::Zicsr(opc) => Ok(zicsr_extension::parse_rs2(self, opc)),
+            OpcodeKind::Zicfiss(opc) => Ok(zicfiss_extension::parse_rs2(self, opc)),
             OpcodeKind::Zicntr(opc) => Ok(zicntr_extension::parse_rs2(self, opc)),
             OpcodeKind::Priv(opc) => Ok(priv_extension::parse_rs2(self, opc)),
             OpcodeKind::C(_) => Err(DecodingError::Not32BitInst),
@@ -94,6 +101,7 @@ impl Decode for u32 {
             OpcodeKind::A(opc) => Ok(a_extension::parse_imm(self, opc)),
             OpcodeKind::Zifencei(opc) => Ok(zifencei_extension::parse_imm(self, opc)),
             OpcodeKind::Zicsr(opc) => Ok(zicsr_extension::parse_imm(self, opc)),
+            OpcodeKind::Zicfiss(opc) => Ok(zicfiss_extension::parse_imm(self, opc)),
             OpcodeKind::Zicntr(opc) => Ok(zicntr_extension::parse_imm(self, opc)),
             OpcodeKind::Priv(opc) => Ok(priv_extension::parse_imm(self, opc)),
             OpcodeKind::C(_) => Err(DecodingError::Not32BitInst),
@@ -110,12 +118,18 @@ impl DecodeUtil for u32 {
     fn parse_extension(self) -> Result<Extensions, DecodingError> {
         let opmap: u8 = u8::try_from(self.slice(6, 0)).unwrap();
         let funct3: u8 = u8::try_from(self.slice(14, 12)).unwrap();
+        let funct5: u8 = u8::try_from(self.slice(31, 27)).unwrap();
         let funct7: u8 = u8::try_from(self.slice(31, 25)).unwrap();
         let csr: u16 = u16::try_from(self.slice(31, 20)).unwrap();
 
         match opmap {
             0b000_1111 => Ok(Extensions::Zifencei),
-            0b010_1111 => Ok(Extensions::A),
+            0b010_1111 => match funct5 {
+                0b00000 | 0b00001 | 0b00010 | 0b00011 | 0b00100 | 0b01000 | 0b01100 | 0b10000
+                | 0b10100 | 0b11000 | 0b11100 => Ok(Extensions::A),
+                0b01001 => Ok(Extensions::Zicfiss),
+                _ => Err(DecodingError::UnknownExtension),
+            },
             0b011_0011 => match funct7 {
                 0b000_0001 => Ok(Extensions::M),
                 _ => Ok(Extensions::BaseI),
@@ -135,6 +149,7 @@ impl DecodeUtil for u32 {
                     0xc00..=0xc02 | 0xc80..=0xc82 => Ok(Extensions::Zicntr),
                     _ => Ok(Extensions::Zicsr),
                 },
+                0b100 => Ok(Extensions::Zicfiss),
                 _ => Ok(Extensions::Zicsr),
             },
             _ => Ok(Extensions::BaseI),

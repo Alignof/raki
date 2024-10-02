@@ -1,5 +1,6 @@
 #[allow(non_snake_case)]
 mod c_extension;
+mod zicfiss_extension;
 
 use super::{Decode, DecodeUtil, DecodingError};
 use crate::instruction::{InstFormat, Instruction, OpcodeKind};
@@ -33,6 +34,9 @@ impl Decode for u16 {
 
         match extension {
             Ok(Extensions::C) => Ok(OpcodeKind::C(c_extension::parse_opcode(self, isa)?)),
+            Ok(Extensions::Zicfiss) => Ok(OpcodeKind::Zicfiss(zicfiss_extension::parse_opcode(
+                self, isa,
+            )?)),
             _ => Err(DecodingError::Not16BitInst),
         }
     }
@@ -40,6 +44,7 @@ impl Decode for u16 {
     fn parse_rd(self, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError> {
         match opkind {
             OpcodeKind::C(opc) => Ok(c_extension::parse_rd(self, opc)),
+            OpcodeKind::Zicfiss(opc) => Ok(zicfiss_extension::parse_rd(self, opc)),
             _ => Err(DecodingError::Not16BitInst),
         }
     }
@@ -47,6 +52,7 @@ impl Decode for u16 {
     fn parse_rs1(self, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError> {
         match opkind {
             OpcodeKind::C(opc) => Ok(c_extension::parse_rs1(self, opc)),
+            OpcodeKind::Zicfiss(opc) => Ok(zicfiss_extension::parse_rs1(self, opc)),
             _ => Err(DecodingError::Not16BitInst),
         }
     }
@@ -54,6 +60,7 @@ impl Decode for u16 {
     fn parse_rs2(self, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError> {
         match opkind {
             OpcodeKind::C(opc) => Ok(c_extension::parse_rs2(self, opc)),
+            OpcodeKind::Zicfiss(opc) => Ok(zicfiss_extension::parse_rs2(self, opc)),
             _ => Err(DecodingError::Not16BitInst),
         }
     }
@@ -61,6 +68,7 @@ impl Decode for u16 {
     fn parse_imm(self, opkind: &OpcodeKind, _isa: Isa) -> Result<Option<i32>, DecodingError> {
         match opkind {
             OpcodeKind::C(opc) => Ok(c_extension::parse_imm(self, opc)),
+            OpcodeKind::Zicfiss(opc) => Ok(zicfiss_extension::parse_imm(self, opc)),
             _ => Err(DecodingError::Not16BitInst),
         }
     }
@@ -73,7 +81,10 @@ impl DecodeUtil for u16 {
     }
 
     fn parse_extension(self) -> Result<Extensions, DecodingError> {
-        Ok(Extensions::C)
+        match self {
+            0b0110_0000_1000_0001 | 0b0110_0010_1000_0001 => Ok(Extensions::Zicfiss),
+            _ => Ok(Extensions::C),
+        }
     }
 
     fn set(self, mask: &[u32]) -> u32 {

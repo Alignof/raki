@@ -53,14 +53,14 @@ impl OpcodeKind {
             }
             OpcodeKind::JAL => InstFormat::Jformat,
             OpcodeKind::LUI | OpcodeKind::AUIPC => InstFormat::Uformat,
-            OpcodeKind::ECALL | OpcodeKind::FENCE | OpcodeKind::EBREAK => InstFormat::Uncategorized,
+            OpcodeKind::ECALL | OpcodeKind::FENCE | OpcodeKind::EBREAK => InstFormat::NoOperand,
 
             // Zicsr
             OpcodeKind::CSRRW | OpcodeKind::CSRRS | OpcodeKind::CSRRC => InstFormat::CSRformat,
             OpcodeKind::CSRRWI | OpcodeKind::CSRRSI | OpcodeKind::CSRRCI => InstFormat::CSRuiformat,
 
             // Privileged
-            OpcodeKind::SRET | OpcodeKind::MRET | OpcodeKind::WFI => InstFormat::Uncategorized,
+            OpcodeKind::SRET | OpcodeKind::MRET | OpcodeKind::WFI => InstFormat::NoOperand,
             OpcodeKind::SFENCE_VMA => InstFormat::Rformat,
 
             // Multiplication and Division
@@ -119,7 +119,7 @@ impl OpcodeKind {
             | OpcodeKind::C_ADDIW
             | OpcodeKind::C_ADDI16SP
             | OpcodeKind::C_LUI => InstFormat::CIformat,
-            OpcodeKind::C_NOP => InstFormat::Uncategorized,
+            OpcodeKind::C_NOP => InstFormat::NoOperand,
             OpcodeKind::C_SUB
             | OpcodeKind::C_XOR
             | OpcodeKind::C_OR
@@ -132,7 +132,7 @@ impl OpcodeKind {
             OpcodeKind::C_JR | OpcodeKind::C_JALR | OpcodeKind::C_MV | OpcodeKind::C_ADD => {
                 InstFormat::CRformat
             }
-            OpcodeKind::C_EBREAK => InstFormat::Uncategorized,
+            OpcodeKind::C_EBREAK => InstFormat::NoOperand,
         }
     }
 

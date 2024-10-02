@@ -21,7 +21,7 @@ pub fn parse_opcode(inst: u32) -> Result<ZicfissOpcode, DecodingError> {
         },
         0b010_1111 => match funct3 {
             0b010 => Ok(ZicfissOpcode::SSAMOSWAP_W),
-            0b011 => Ok(ZicfissOpcode::SSAMOSWAP_W),
+            0b011 => Ok(ZicfissOpcode::SSAMOSWAP_D),
             _ => Err(DecodingError::InvalidFunct3),
         },
         _ => Err(DecodingError::InvalidOpcode),
@@ -139,6 +139,15 @@ mod test_zicfiss {
             OpcodeKind::Zicfiss(ZicfissOpcode::SSAMOSWAP_W),
             Some(3),
             Some(5),
+            Some(12),
+            None,
+        );
+
+        test_32(
+            0b0100_1000_1100_0111_0011_0001_1010_1111,
+            OpcodeKind::Zicfiss(ZicfissOpcode::SSAMOSWAP_D),
+            Some(3),
+            Some(14),
             Some(12),
             None,
         );

@@ -27,7 +27,7 @@ impl Display for PrivOpcode {
 impl Opcode for PrivOpcode {
     fn get_format(&self) -> InstFormat {
         match self {
-            PrivOpcode::SRET | PrivOpcode::MRET | PrivOpcode::WFI => InstFormat::Uncategorized,
+            PrivOpcode::SRET | PrivOpcode::MRET | PrivOpcode::WFI => InstFormat::NoOperand,
             PrivOpcode::SFENCE_VMA => InstFormat::RFormat,
         }
     }

@@ -170,7 +170,7 @@ impl Opcode for BaseIOpcode {
             }
             BaseIOpcode::JAL => InstFormat::JFormat,
             BaseIOpcode::LUI | BaseIOpcode::AUIPC => InstFormat::UFormat,
-            BaseIOpcode::ECALL | BaseIOpcode::EBREAK => InstFormat::Uncategorized,
+            BaseIOpcode::ECALL | BaseIOpcode::EBREAK => InstFormat::NoOperand,
         }
     }
 }

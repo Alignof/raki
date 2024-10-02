@@ -207,7 +207,7 @@ impl Display for Instruction {
             InstFormat::OnlyRs2 => {
                 write!(f, "{} {}", self.opc, reg2str(self.rs2.unwrap()),)
             }
-            InstFormat::Uncategorized => match self.opc {
+            InstFormat::NoOperand => match self.opc {
                 OpcodeKind::BaseI(BaseIOpcode::ECALL | BaseIOpcode::EBREAK)
                 | OpcodeKind::Zifencei(ZifenceiOpcode::FENCE)
                 | OpcodeKind::C(COpcode::NOP | COpcode::EBREAK)
@@ -395,14 +395,14 @@ pub enum InstFormat {
     /// ```
     ALrFormat,
 
-    /// Uncategorized format
+    /// NoOperand format
     /// ```ignore
     /// ecall
     /// wfi
     /// mret
     /// c.ebreak
     /// ```
-    Uncategorized,
+    NoOperand,
 
     /// Only rd name
     /// ```ignore

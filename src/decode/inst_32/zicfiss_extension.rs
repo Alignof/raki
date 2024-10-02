@@ -142,5 +142,14 @@ mod test_zicfiss {
             Some(12),
             None,
         );
+
+        test_32(
+            0xcdc0c073,
+            OpcodeKind::Zicfiss(ZicfissOpcode::SSPOPCHK),
+            Some(0),
+            Some(1),
+            None,
+            None,
+        );
     }
 }

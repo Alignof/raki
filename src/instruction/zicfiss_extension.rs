@@ -44,7 +44,7 @@ impl Opcode for ZicfissOpcode {
             ZicfissOpcode::SSPOPCHK => InstFormat::OnlyRs2,
             ZicfissOpcode::SSRDP => InstFormat::OnlyRd,
             ZicfissOpcode::SSAMOSWAP_W | ZicfissOpcode::SSAMOSWAP_D => InstFormat::AFormat,
-            ZicfissOpcode::C_SSPUSH | ZicfissOpcode::C_SSPOPCHK => InstFormat::Uncategorized,
+            ZicfissOpcode::C_SSPUSH | ZicfissOpcode::C_SSPOPCHK => InstFormat::NoOperand,
         }
     }
 }

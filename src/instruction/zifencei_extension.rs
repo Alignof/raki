@@ -21,7 +21,7 @@ impl Display for ZifenceiOpcode {
 impl Opcode for ZifenceiOpcode {
     fn get_format(&self) -> InstFormat {
         match self {
-            ZifenceiOpcode::FENCE => InstFormat::Uncategorized,
+            ZifenceiOpcode::FENCE => InstFormat::NoOperand,
         }
     }
 }

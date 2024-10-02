@@ -103,7 +103,7 @@ impl Opcode for COpcode {
             COpcode::LI | COpcode::ADDI | COpcode::ADDIW | COpcode::ADDI16SP | COpcode::LUI => {
                 InstFormat::CiFormat
             }
-            COpcode::NOP => InstFormat::Uncategorized,
+            COpcode::NOP => InstFormat::NoOperand,
             COpcode::SUB
             | COpcode::XOR
             | COpcode::OR
@@ -115,7 +115,7 @@ impl Opcode for COpcode {
             COpcode::LDSP | COpcode::SLLI | COpcode::LWSP => InstFormat::CiFormat,
             COpcode::SDSP | COpcode::SWSP => InstFormat::CssFormat,
             COpcode::JR | COpcode::JALR | COpcode::MV | COpcode::ADD => InstFormat::CrFormat,
-            COpcode::EBREAK => InstFormat::Uncategorized,
+            COpcode::EBREAK => InstFormat::NoOperand,
         }
     }
 }

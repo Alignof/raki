@@ -198,7 +198,7 @@ impl Display for Instruction {
                     self.imm.unwrap(),
                 )
             }
-            InstFormat::CsrCntrFormat | InstFormat::OnlyRd => {
+            InstFormat::OnlyRd => {
                 write!(f, "{} {}", self.opc, reg2str(self.rd.unwrap()),)
             }
             InstFormat::OnlyRs1 => {
@@ -207,7 +207,7 @@ impl Display for Instruction {
             InstFormat::OnlyRs2 => {
                 write!(f, "{} {}", self.opc, reg2str(self.rs2.unwrap()),)
             }
-            InstFormat::Uncategorized => match self.opc {
+            InstFormat::NoOperand => match self.opc {
                 OpcodeKind::BaseI(BaseIOpcode::ECALL | BaseIOpcode::EBREAK)
                 | OpcodeKind::Zifencei(ZifenceiOpcode::FENCE)
                 | OpcodeKind::C(COpcode::NOP | COpcode::EBREAK)
@@ -377,12 +377,6 @@ pub enum InstFormat {
     /// ```
     CsrUiFormat,
 
-    /// Zicntr extension format
-    /// ```ignore
-    /// rdtime rd
-    /// ```
-    CsrCntrFormat,
-
     /// M-extension instruction format
     /// ```ignore
     /// mul rd, rs1, rs2
@@ -401,14 +395,14 @@ pub enum InstFormat {
     /// ```
     ALrFormat,
 
-    /// Uncategorized format
+    /// No operand
     /// ```ignore
     /// ecall
     /// wfi
     /// mret
     /// c.ebreak
     /// ```
-    Uncategorized,
+    NoOperand,
 
     /// Only rd name
     /// ```ignore

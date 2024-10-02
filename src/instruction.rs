@@ -198,10 +198,7 @@ impl Display for Instruction {
                     self.imm.unwrap(),
                 )
             }
-            InstFormat::CsrCntrFormat => {
-                write!(f, "{} {}", self.opc, reg2str(self.rd.unwrap()),)
-            }
-            InstFormat::OnlyRd => {
+            InstFormat::CsrCntrFormat | InstFormat::OnlyRd => {
                 write!(f, "{} {}", self.opc, reg2str(self.rd.unwrap()),)
             }
             InstFormat::OnlyRs1 => {

@@ -395,7 +395,7 @@ pub enum InstFormat {
     /// ```
     ALrFormat,
 
-    /// NoOperand format
+    /// No operand
     /// ```ignore
     /// ecall
     /// wfi

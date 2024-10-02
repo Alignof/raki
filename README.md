@@ -30,7 +30,6 @@ fn main() {
 - [x] M
 - [x] A
 - [ ] D
-- [ ] G
 - [ ] Q
 - [x] C
 - [ ] B
@@ -39,6 +38,8 @@ fn main() {
 - [ ] H
 - [x] Zicsr
 - [x] Zifencei
+- [x] Zicntr
+- [x] Zicfiss
 - [ ] Priv (Now only supports `mret`, `sret`, `wfi`, `sfence.vma`)
 
 ## License

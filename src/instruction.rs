@@ -5,6 +5,7 @@ pub mod base_i;
 pub mod c_extension;
 pub mod m_extension;
 pub mod priv_extension;
+pub mod zicfiss_extension;
 pub mod zicntr_extension;
 pub mod zicsr_extension;
 pub mod zifencei_extension;
@@ -16,6 +17,7 @@ use base_i::BaseIOpcode;
 use c_extension::COpcode;
 use m_extension::MOpcode;
 use priv_extension::PrivOpcode;
+use zicfiss_extension::ZicfissOpcode;
 use zicntr_extension::ZicntrOpcode;
 use zicsr_extension::ZicsrOpcode;
 use zifencei_extension::ZifenceiOpcode;
@@ -196,8 +198,14 @@ impl Display for Instruction {
                     self.imm.unwrap(),
                 )
             }
-            InstFormat::CsrCntrFormat => {
+            InstFormat::CsrCntrFormat | InstFormat::OnlyRd => {
                 write!(f, "{} {}", self.opc, reg2str(self.rd.unwrap()),)
+            }
+            InstFormat::OnlyRs1 => {
+                write!(f, "{} {}", self.opc, reg2str(self.rs1.unwrap()),)
+            }
+            InstFormat::OnlyRs2 => {
+                write!(f, "{} {}", self.opc, reg2str(self.rs2.unwrap()),)
             }
             InstFormat::Uncategorized => match self.opc {
                 OpcodeKind::BaseI(BaseIOpcode::ECALL | BaseIOpcode::EBREAK)
@@ -401,6 +409,25 @@ pub enum InstFormat {
     /// c.ebreak
     /// ```
     Uncategorized,
+
+    /// Only rd name
+    /// ```ignore
+    /// rdtime rd
+    /// ssrdp rd
+    /// ```
+    OnlyRd,
+
+    /// Only rs1 name
+    /// ```ignore
+    /// sspush ra
+    /// ```
+    OnlyRs1,
+
+    /// Only rs2 name
+    /// ```ignore
+    /// sspopchk t0
+    /// ```
+    OnlyRs2,
 }
 
 /// Trait for `OpcodeKind`
@@ -425,6 +452,8 @@ pub enum OpcodeKind {
     Zifencei(ZifenceiOpcode),
     /// Control and Status Register Instructions
     Zicsr(ZicsrOpcode),
+    /// CFI Shadow Stack
+    Zicfiss(ZicfissOpcode),
     /// Base Counters and Timers
     Zicntr(ZicntrOpcode),
     /// Privileged Instructions
@@ -440,6 +469,7 @@ impl Display for OpcodeKind {
             Self::C(opc) => write!(f, "{opc}"),
             Self::Zifencei(opc) => write!(f, "{opc}"),
             Self::Zicsr(opc) => write!(f, "{opc}"),
+            Self::Zicfiss(opc) => write!(f, "{opc}"),
             Self::Zicntr(opc) => write!(f, "{opc}"),
             Self::Priv(opc) => write!(f, "{opc}"),
         }
@@ -456,6 +486,7 @@ impl OpcodeKind {
             Self::C(opc) => opc.get_format(),
             Self::Zifencei(opc) => opc.get_format(),
             Self::Zicsr(opc) => opc.get_format(),
+            Self::Zicfiss(opc) => opc.get_format(),
             Self::Zicntr(opc) => opc.get_format(),
             Self::Priv(opc) => opc.get_format(),
         }

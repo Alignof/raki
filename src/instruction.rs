@@ -37,6 +37,8 @@ pub struct Instruction {
     pub imm: Option<i32>,
     /// Instruction format
     pub inst_format: InstFormat,
+    /// Is compressed instruction?
+    pub is_compressed: bool,
 }
 
 impl Display for Instruction {

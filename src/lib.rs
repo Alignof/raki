@@ -102,6 +102,7 @@ mod tests {
                 rs2: None,
                 imm: Some(-8),
                 inst_format: InstFormat::JFormat,
+                is_compressed: false,
             })
         );
 
@@ -114,6 +115,7 @@ mod tests {
                 rs2: Some(2),
                 imm: None,
                 inst_format: InstFormat::CrFormat,
+                is_compressed: true,
             })
         );
 
@@ -126,6 +128,7 @@ mod tests {
                 rs2: Some(2),
                 imm: None,
                 inst_format: InstFormat::CrFormat,
+                is_compressed: true,
             })
         );
 
@@ -152,6 +155,7 @@ mod tests {
                 rs2: None,
                 imm: Some(-8),
                 inst_format: InstFormat::JFormat,
+                is_compressed: false,
             })
         );
 

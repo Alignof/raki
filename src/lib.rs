@@ -33,8 +33,9 @@ mod instruction;
 pub use crate::decode::{Decode, DecodingError};
 pub use crate::instruction::{
     a_extension::AOpcode, base_i::BaseIOpcode, c_extension::COpcode, m_extension::MOpcode,
-    priv_extension::PrivOpcode, zicntr_extension::ZicntrOpcode, zicsr_extension::ZicsrOpcode,
-    zifencei_extension::ZifenceiOpcode, InstFormat, Instruction, OpcodeKind,
+    priv_extension::PrivOpcode, zicfiss_extension::ZicfissOpcode, zicntr_extension::ZicntrOpcode,
+    zicsr_extension::ZicsrOpcode, zifencei_extension::ZifenceiOpcode, InstFormat, Instruction,
+    OpcodeKind,
 };
 
 /// Target isa.
@@ -101,6 +102,7 @@ mod tests {
                 rs2: None,
                 imm: Some(-8),
                 inst_format: InstFormat::JFormat,
+                is_compressed: false,
             })
         );
 
@@ -113,6 +115,7 @@ mod tests {
                 rs2: Some(2),
                 imm: None,
                 inst_format: InstFormat::CrFormat,
+                is_compressed: true,
             })
         );
 
@@ -125,6 +128,7 @@ mod tests {
                 rs2: Some(2),
                 imm: None,
                 inst_format: InstFormat::CrFormat,
+                is_compressed: true,
             })
         );
 
@@ -151,6 +155,7 @@ mod tests {
                 rs2: None,
                 imm: Some(-8),
                 inst_format: InstFormat::JFormat,
+                is_compressed: false,
             })
         );
 

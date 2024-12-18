@@ -1,12 +1,7 @@
-mod a_extension;
-mod base_i;
-mod m_extension;
-mod priv_extension;
-mod zicfiss_extension;
-mod zicntr_extension;
-mod zicsr_extension;
-mod zifencei_extension;
-
+use super::{
+    a_extension, base_i, m_extension, priv_extension, zicfiss_extension, zicntr_extension,
+    zicsr_extension, zifencei_extension,
+};
 use super::{Decode, DecodeUtil, DecodingError};
 use crate::instruction::{InstFormat, Instruction, OpcodeKind};
 use crate::{Extensions, Isa};
@@ -36,18 +31,26 @@ impl Decode for u32 {
         let extension = self.parse_extension();
 
         match extension {
-            Ok(Extensions::BaseI) => Ok(OpcodeKind::BaseI(base_i::parse_opcode(self, isa)?)),
-            Ok(Extensions::M) => Ok(OpcodeKind::M(m_extension::parse_opcode(self, isa)?)),
-            Ok(Extensions::A) => Ok(OpcodeKind::A(a_extension::parse_opcode(self, isa)?)),
-            Ok(Extensions::Zifencei) => Ok(OpcodeKind::Zifencei(zifencei_extension::parse_opcode(
+            Ok(Extensions::BaseI) => {
+                Ok(OpcodeKind::BaseI(base_i::bit_32::parse_opcode(self, isa)?))
+            }
+            Ok(Extensions::M) => Ok(OpcodeKind::M(m_extension::bit_32::parse_opcode(self, isa)?)),
+            Ok(Extensions::A) => Ok(OpcodeKind::A(a_extension::bit_32::parse_opcode(self, isa)?)),
+            Ok(Extensions::Zifencei) => Ok(OpcodeKind::Zifencei(
+                zifencei_extension::bit_32::parse_opcode(self)?,
+            )),
+            Ok(Extensions::Zicsr) => Ok(OpcodeKind::Zicsr(zicsr_extension::bit_32::parse_opcode(
                 self,
             )?)),
-            Ok(Extensions::Zicsr) => Ok(OpcodeKind::Zicsr(zicsr_extension::parse_opcode(self)?)),
-            Ok(Extensions::Zicfiss) => {
-                Ok(OpcodeKind::Zicfiss(zicfiss_extension::parse_opcode(self)?))
-            }
-            Ok(Extensions::Zicntr) => Ok(OpcodeKind::Zicntr(zicntr_extension::parse_opcode(self)?)),
-            Ok(Extensions::Priv) => Ok(OpcodeKind::Priv(priv_extension::parse_opcode(self)?)),
+            Ok(Extensions::Zicfiss) => Ok(OpcodeKind::Zicfiss(
+                zicfiss_extension::bit_32::parse_opcode(self)?,
+            )),
+            Ok(Extensions::Zicntr) => Ok(OpcodeKind::Zicntr(
+                zicntr_extension::bit_32::parse_opcode(self)?,
+            )),
+            Ok(Extensions::Priv) => Ok(OpcodeKind::Priv(priv_extension::bit_32::parse_opcode(
+                self,
+            )?)),
             Ok(Extensions::C) => Err(DecodingError::Not32BitInst),
             Err(decoding_err) => Err(decoding_err),
         }
@@ -55,56 +58,56 @@ impl Decode for u32 {
 
     fn parse_rd(self, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError> {
         match opkind {
-            OpcodeKind::BaseI(opc) => Ok(base_i::parse_rd(self, opc)),
-            OpcodeKind::M(opc) => Ok(m_extension::parse_rd(self, opc)),
-            OpcodeKind::A(opc) => Ok(a_extension::parse_rd(self, opc)),
-            OpcodeKind::Zifencei(opc) => Ok(zifencei_extension::parse_rd(self, opc)),
-            OpcodeKind::Zicsr(opc) => Ok(zicsr_extension::parse_rd(self, opc)),
-            OpcodeKind::Zicfiss(opc) => Ok(zicfiss_extension::parse_rd(self, opc)),
-            OpcodeKind::Zicntr(opc) => Ok(zicntr_extension::parse_rd(self, opc)),
-            OpcodeKind::Priv(opc) => Ok(priv_extension::parse_rd(self, opc)),
+            OpcodeKind::BaseI(opc) => Ok(base_i::bit_32::parse_rd(self, opc)),
+            OpcodeKind::M(opc) => Ok(m_extension::bit_32::parse_rd(self, opc)),
+            OpcodeKind::A(opc) => Ok(a_extension::bit_32::parse_rd(self, opc)),
+            OpcodeKind::Zifencei(opc) => Ok(zifencei_extension::bit_32::parse_rd(self, opc)),
+            OpcodeKind::Zicsr(opc) => Ok(zicsr_extension::bit_32::parse_rd(self, opc)),
+            OpcodeKind::Zicfiss(opc) => Ok(zicfiss_extension::bit_32::parse_rd(self, opc)),
+            OpcodeKind::Zicntr(opc) => Ok(zicntr_extension::bit_32::parse_rd(self, opc)),
+            OpcodeKind::Priv(opc) => Ok(priv_extension::bit_32::parse_rd(self, opc)),
             OpcodeKind::C(_) => Err(DecodingError::Not32BitInst),
         }
     }
 
     fn parse_rs1(self, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError> {
         match opkind {
-            OpcodeKind::BaseI(opc) => Ok(base_i::parse_rs1(self, opc)),
-            OpcodeKind::M(opc) => Ok(m_extension::parse_rs1(self, opc)),
-            OpcodeKind::A(opc) => Ok(a_extension::parse_rs1(self, opc)),
-            OpcodeKind::Zifencei(opc) => Ok(zifencei_extension::parse_rs1(self, opc)),
-            OpcodeKind::Zicsr(opc) => Ok(zicsr_extension::parse_rs1(self, opc)),
-            OpcodeKind::Zicfiss(opc) => Ok(zicfiss_extension::parse_rs1(self, opc)),
-            OpcodeKind::Zicntr(opc) => Ok(zicntr_extension::parse_rs1(self, opc)),
-            OpcodeKind::Priv(opc) => Ok(priv_extension::parse_rs1(self, opc)),
+            OpcodeKind::BaseI(opc) => Ok(base_i::bit_32::parse_rs1(self, opc)),
+            OpcodeKind::M(opc) => Ok(m_extension::bit_32::parse_rs1(self, opc)),
+            OpcodeKind::A(opc) => Ok(a_extension::bit_32::parse_rs1(self, opc)),
+            OpcodeKind::Zifencei(opc) => Ok(zifencei_extension::bit_32::parse_rs1(self, opc)),
+            OpcodeKind::Zicsr(opc) => Ok(zicsr_extension::bit_32::parse_rs1(self, opc)),
+            OpcodeKind::Zicfiss(opc) => Ok(zicfiss_extension::bit_32::parse_rs1(self, opc)),
+            OpcodeKind::Zicntr(opc) => Ok(zicntr_extension::bit_32::parse_rs1(self, opc)),
+            OpcodeKind::Priv(opc) => Ok(priv_extension::bit_32::parse_rs1(self, opc)),
             OpcodeKind::C(_) => Err(DecodingError::Not32BitInst),
         }
     }
 
     fn parse_rs2(self, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError> {
         match opkind {
-            OpcodeKind::BaseI(opc) => Ok(base_i::parse_rs2(self, opc)),
-            OpcodeKind::M(opc) => Ok(m_extension::parse_rs2(self, opc)),
-            OpcodeKind::A(opc) => Ok(a_extension::parse_rs2(self, opc)),
-            OpcodeKind::Zifencei(opc) => Ok(zifencei_extension::parse_rs2(self, opc)),
-            OpcodeKind::Zicsr(opc) => Ok(zicsr_extension::parse_rs2(self, opc)),
-            OpcodeKind::Zicfiss(opc) => Ok(zicfiss_extension::parse_rs2(self, opc)),
-            OpcodeKind::Zicntr(opc) => Ok(zicntr_extension::parse_rs2(self, opc)),
-            OpcodeKind::Priv(opc) => Ok(priv_extension::parse_rs2(self, opc)),
+            OpcodeKind::BaseI(opc) => Ok(base_i::bit_32::parse_rs2(self, opc)),
+            OpcodeKind::M(opc) => Ok(m_extension::bit_32::parse_rs2(self, opc)),
+            OpcodeKind::A(opc) => Ok(a_extension::bit_32::parse_rs2(self, opc)),
+            OpcodeKind::Zifencei(opc) => Ok(zifencei_extension::bit_32::parse_rs2(self, opc)),
+            OpcodeKind::Zicsr(opc) => Ok(zicsr_extension::bit_32::parse_rs2(self, opc)),
+            OpcodeKind::Zicfiss(opc) => Ok(zicfiss_extension::bit_32::parse_rs2(self, opc)),
+            OpcodeKind::Zicntr(opc) => Ok(zicntr_extension::bit_32::parse_rs2(self, opc)),
+            OpcodeKind::Priv(opc) => Ok(priv_extension::bit_32::parse_rs2(self, opc)),
             OpcodeKind::C(_) => Err(DecodingError::Not32BitInst),
         }
     }
 
     fn parse_imm(self, opkind: &OpcodeKind, isa: Isa) -> Result<Option<i32>, DecodingError> {
         match opkind {
-            OpcodeKind::BaseI(opc) => Ok(base_i::parse_imm(self, opc, isa)),
-            OpcodeKind::M(opc) => Ok(m_extension::parse_imm(self, opc)),
-            OpcodeKind::A(opc) => Ok(a_extension::parse_imm(self, opc)),
-            OpcodeKind::Zifencei(opc) => Ok(zifencei_extension::parse_imm(self, opc)),
-            OpcodeKind::Zicsr(opc) => Ok(zicsr_extension::parse_imm(self, opc)),
-            OpcodeKind::Zicfiss(opc) => Ok(zicfiss_extension::parse_imm(self, opc)),
-            OpcodeKind::Zicntr(opc) => Ok(zicntr_extension::parse_imm(self, opc)),
-            OpcodeKind::Priv(opc) => Ok(priv_extension::parse_imm(self, opc)),
+            OpcodeKind::BaseI(opc) => Ok(base_i::bit_32::parse_imm(self, opc, isa)),
+            OpcodeKind::M(opc) => Ok(m_extension::bit_32::parse_imm(self, opc)),
+            OpcodeKind::A(opc) => Ok(a_extension::bit_32::parse_imm(self, opc)),
+            OpcodeKind::Zifencei(opc) => Ok(zifencei_extension::bit_32::parse_imm(self, opc)),
+            OpcodeKind::Zicsr(opc) => Ok(zicsr_extension::bit_32::parse_imm(self, opc)),
+            OpcodeKind::Zicfiss(opc) => Ok(zicfiss_extension::bit_32::parse_imm(self, opc)),
+            OpcodeKind::Zicntr(opc) => Ok(zicntr_extension::bit_32::parse_imm(self, opc)),
+            OpcodeKind::Priv(opc) => Ok(priv_extension::bit_32::parse_imm(self, opc)),
             OpcodeKind::C(_) => Err(DecodingError::Not32BitInst),
         }
     }

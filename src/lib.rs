@@ -33,9 +33,9 @@ mod instruction;
 pub use crate::decode::{Decode, DecodingError};
 pub use crate::instruction::{
     a_extension::AOpcode, base_i::BaseIOpcode, c_extension::COpcode, m_extension::MOpcode,
-    priv_extension::PrivOpcode, zicfiss_extension::ZicfissOpcode, zicntr_extension::ZicntrOpcode,
-    zicsr_extension::ZicsrOpcode, zifencei_extension::ZifenceiOpcode, InstFormat, Instruction,
-    OpcodeKind,
+    priv_extension::PrivOpcode, zicboz_extension::ZicbozOpcode, zicfiss_extension::ZicfissOpcode,
+    zicntr_extension::ZicntrOpcode, zicsr_extension::ZicsrOpcode,
+    zifencei_extension::ZifenceiOpcode, InstFormat, Instruction, OpcodeKind,
 };
 
 /// Target isa.

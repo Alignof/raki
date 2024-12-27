@@ -104,6 +104,6 @@ mod test_zicntr {
             None,
             None,
             None,
-        )
+        );
     }
 }

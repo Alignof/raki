@@ -8,6 +8,7 @@ mod base_i;
 mod c_extension;
 mod m_extension;
 mod priv_extension;
+mod zicboz_extension;
 mod zicfiss_extension;
 mod zicntr_extension;
 mod zicsr_extension;

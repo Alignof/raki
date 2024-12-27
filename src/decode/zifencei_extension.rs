@@ -75,6 +75,6 @@ mod test_zifenci {
             Some(0),
             None,
             Some(0b0011_0011),
-        )
+        );
     }
 }

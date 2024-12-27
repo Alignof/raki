@@ -60,6 +60,8 @@ enum Extensions {
     C,
     /// Instruction-Fetch Fence
     Zifencei,
+    /// Cache-Block Zero Instructions
+    Zicboz,
     /// Control and Status Register Instructions
     Zicsr,
     /// Shadow Stack
@@ -137,7 +139,7 @@ mod tests {
                 .unwrap()
                 .opc,
             OpcodeKind::BaseI(BaseIOpcode::JAL),
-        )
+        );
     }
 
     #[test]
@@ -165,6 +167,6 @@ mod tests {
                 .unwrap()
                 .opc,
             OpcodeKind::BaseI(BaseIOpcode::JAL),
-        )
+        );
     }
 }

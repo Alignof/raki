@@ -139,7 +139,7 @@ mod tests {
                 .unwrap()
                 .opc,
             OpcodeKind::BaseI(BaseIOpcode::JAL),
-        )
+        );
     }
 
     #[test]
@@ -167,6 +167,6 @@ mod tests {
                 .unwrap()
                 .opc,
             OpcodeKind::BaseI(BaseIOpcode::JAL),
-        )
+        );
     }
 }

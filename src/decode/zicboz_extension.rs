@@ -71,12 +71,21 @@ mod test_zicboz {
         };
 
         test_32(
-            0b00000000010010101010000000001111,
+            0b0000_0000_0100_1010_1010_0000_0000_1111,
             OpcodeKind::Zicboz(ZicbozOpcode::CBO_ZERO),
             None,
             Some(21),
             None,
             None,
-        )
+        );
+
+        test_32(
+            0b0000_0000_0100_1000_0010_0000_0000_1111,
+            OpcodeKind::Zicboz(ZicbozOpcode::CBO_ZERO),
+            None,
+            Some(16),
+            None,
+            None,
+        );
     }
 }

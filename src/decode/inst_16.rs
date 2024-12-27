@@ -1,8 +1,6 @@
-#[allow(non_snake_case)]
-mod c_extension;
-mod zicfiss_extension;
-
+use super::{c_extension, zicfiss_extension};
 use super::{Decode, DecodeUtil, DecodingError};
+
 use crate::instruction::{InstFormat, Instruction, OpcodeKind};
 use crate::{Extensions, Isa};
 
@@ -34,42 +32,42 @@ impl Decode for u16 {
         let extension = self.parse_extension();
 
         match extension {
-            Ok(Extensions::C) => Ok(OpcodeKind::C(c_extension::parse_opcode(self, isa)?)),
-            Ok(Extensions::Zicfiss) => Ok(OpcodeKind::Zicfiss(zicfiss_extension::parse_opcode(
-                self, isa,
-            )?)),
+            Ok(Extensions::C) => Ok(OpcodeKind::C(c_extension::bit_16::parse_opcode(self, isa)?)),
+            Ok(Extensions::Zicfiss) => Ok(OpcodeKind::Zicfiss(
+                zicfiss_extension::bit_16::parse_opcode(self, isa)?,
+            )),
             _ => Err(DecodingError::Not16BitInst),
         }
     }
 
     fn parse_rd(self, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError> {
         match opkind {
-            OpcodeKind::C(opc) => Ok(c_extension::parse_rd(self, opc)),
-            OpcodeKind::Zicfiss(opc) => Ok(zicfiss_extension::parse_rd(self, opc)),
+            OpcodeKind::C(opc) => Ok(c_extension::bit_16::parse_rd(self, opc)),
+            OpcodeKind::Zicfiss(opc) => Ok(zicfiss_extension::bit_16::parse_rd(self, opc)),
             _ => Err(DecodingError::Not16BitInst),
         }
     }
 
     fn parse_rs1(self, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError> {
         match opkind {
-            OpcodeKind::C(opc) => Ok(c_extension::parse_rs1(self, opc)),
-            OpcodeKind::Zicfiss(opc) => Ok(zicfiss_extension::parse_rs1(self, opc)),
+            OpcodeKind::C(opc) => Ok(c_extension::bit_16::parse_rs1(self, opc)),
+            OpcodeKind::Zicfiss(opc) => Ok(zicfiss_extension::bit_16::parse_rs1(self, opc)),
             _ => Err(DecodingError::Not16BitInst),
         }
     }
 
     fn parse_rs2(self, opkind: &OpcodeKind) -> Result<Option<usize>, DecodingError> {
         match opkind {
-            OpcodeKind::C(opc) => Ok(c_extension::parse_rs2(self, opc)),
-            OpcodeKind::Zicfiss(opc) => Ok(zicfiss_extension::parse_rs2(self, opc)),
+            OpcodeKind::C(opc) => Ok(c_extension::bit_16::parse_rs2(self, opc)),
+            OpcodeKind::Zicfiss(opc) => Ok(zicfiss_extension::bit_16::parse_rs2(self, opc)),
             _ => Err(DecodingError::Not16BitInst),
         }
     }
 
     fn parse_imm(self, opkind: &OpcodeKind, _isa: Isa) -> Result<Option<i32>, DecodingError> {
         match opkind {
-            OpcodeKind::C(opc) => Ok(c_extension::parse_imm(self, opc)),
-            OpcodeKind::Zicfiss(opc) => Ok(zicfiss_extension::parse_imm(self, opc)),
+            OpcodeKind::C(opc) => Ok(c_extension::bit_16::parse_imm(self, opc)),
+            OpcodeKind::Zicfiss(opc) => Ok(zicfiss_extension::bit_16::parse_imm(self, opc)),
             _ => Err(DecodingError::Not16BitInst),
         }
     }

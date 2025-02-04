@@ -5,6 +5,7 @@ pub mod base_i;
 pub mod c_extension;
 pub mod m_extension;
 pub mod priv_extension;
+pub mod zbb_extension;
 pub mod zicboz_extension;
 pub mod zicfiss_extension;
 pub mod zicntr_extension;
@@ -18,6 +19,7 @@ use base_i::BaseIOpcode;
 use c_extension::COpcode;
 use m_extension::MOpcode;
 use priv_extension::PrivOpcode;
+use zbb_extension::ZbbOpcode;
 use zicboz_extension::ZicbozOpcode;
 use zicfiss_extension::ZicfissOpcode;
 use zicntr_extension::ZicntrOpcode;
@@ -446,6 +448,8 @@ pub enum OpcodeKind {
     A(AOpcode),
     /// Compressed Instructions
     C(COpcode),
+    /// Basic bit manipulation
+    Zbb(ZbbOpcode),
     /// Instruction-Fetch Fence,
     Zifencei(ZifenceiOpcode),
     /// Cache-Block Zero Instructions
@@ -467,6 +471,7 @@ impl Display for OpcodeKind {
             Self::M(opc) => write!(f, "{opc}"),
             Self::A(opc) => write!(f, "{opc}"),
             Self::C(opc) => write!(f, "{opc}"),
+            Self::Zbb(opc) => write!(f, "{opc}"),
             Self::Zifencei(opc) => write!(f, "{opc}"),
             Self::Zicboz(opc) => write!(f, "{opc}"),
             Self::Zicsr(opc) => write!(f, "{opc}"),
@@ -485,6 +490,7 @@ impl OpcodeKind {
             Self::M(opc) => opc.get_format(),
             Self::A(opc) => opc.get_format(),
             Self::C(opc) => opc.get_format(),
+            Self::Zbb(opc) => opc.get_format(),
             Self::Zifencei(opc) => opc.get_format(),
             Self::Zicboz(opc) => opc.get_format(),
             Self::Zicsr(opc) => opc.get_format(),

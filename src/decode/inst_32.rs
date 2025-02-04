@@ -1,6 +1,6 @@
 use super::{
-    a_extension, base_i, m_extension, priv_extension, zicboz_extension, zicfiss_extension,
-    zicntr_extension, zicsr_extension, zifencei_extension,
+    a_extension, base_i, m_extension, priv_extension, zbb_extension, zicboz_extension,
+    zicfiss_extension, zicntr_extension, zicsr_extension, zifencei_extension,
 };
 use super::{Decode, DecodeUtil, DecodingError};
 use crate::instruction::{InstFormat, Instruction, OpcodeKind};
@@ -42,6 +42,7 @@ impl Decode for u32 {
             Ok(Extensions::Zicsr) => Ok(OpcodeKind::Zicsr(zicsr_extension::bit_32::parse_opcode(
                 self,
             )?)),
+            Ok(Extensions::Zbb) => Ok(OpcodeKind::Zbb(zbb_extension::bit_32::parse_opcode(self)?)),
             Ok(Extensions::Zicfiss) => Ok(OpcodeKind::Zicfiss(
                 zicfiss_extension::bit_32::parse_opcode(self)?,
             )),
@@ -64,6 +65,7 @@ impl Decode for u32 {
             OpcodeKind::BaseI(opc) => Ok(base_i::bit_32::parse_rd(self, opc)),
             OpcodeKind::M(opc) => Ok(m_extension::bit_32::parse_rd(self, opc)),
             OpcodeKind::A(opc) => Ok(a_extension::bit_32::parse_rd(self, opc)),
+            OpcodeKind::Zbb(opc) => Ok(zbb_extension::bit_32::parse_rd(self, opc)),
             OpcodeKind::Zifencei(opc) => Ok(zifencei_extension::bit_32::parse_rd(self, opc)),
             OpcodeKind::Zicsr(opc) => Ok(zicsr_extension::bit_32::parse_rd(self, opc)),
             OpcodeKind::Zicfiss(opc) => Ok(zicfiss_extension::bit_32::parse_rd(self, opc)),
@@ -79,6 +81,7 @@ impl Decode for u32 {
             OpcodeKind::BaseI(opc) => Ok(base_i::bit_32::parse_rs1(self, opc)),
             OpcodeKind::M(opc) => Ok(m_extension::bit_32::parse_rs1(self, opc)),
             OpcodeKind::A(opc) => Ok(a_extension::bit_32::parse_rs1(self, opc)),
+            OpcodeKind::Zbb(opc) => Ok(zbb_extension::bit_32::parse_rs1(self, opc)),
             OpcodeKind::Zifencei(opc) => Ok(zifencei_extension::bit_32::parse_rs1(self, opc)),
             OpcodeKind::Zicsr(opc) => Ok(zicsr_extension::bit_32::parse_rs1(self, opc)),
             OpcodeKind::Zicfiss(opc) => Ok(zicfiss_extension::bit_32::parse_rs1(self, opc)),
@@ -94,6 +97,7 @@ impl Decode for u32 {
             OpcodeKind::BaseI(opc) => Ok(base_i::bit_32::parse_rs2(self, opc)),
             OpcodeKind::M(opc) => Ok(m_extension::bit_32::parse_rs2(self, opc)),
             OpcodeKind::A(opc) => Ok(a_extension::bit_32::parse_rs2(self, opc)),
+            OpcodeKind::Zbb(opc) => Ok(zbb_extension::bit_32::parse_rs2(self, opc)),
             OpcodeKind::Zifencei(opc) => Ok(zifencei_extension::bit_32::parse_rs2(self, opc)),
             OpcodeKind::Zicsr(opc) => Ok(zicsr_extension::bit_32::parse_rs2(self, opc)),
             OpcodeKind::Zicfiss(opc) => Ok(zicfiss_extension::bit_32::parse_rs2(self, opc)),
@@ -109,6 +113,7 @@ impl Decode for u32 {
             OpcodeKind::BaseI(opc) => Ok(base_i::bit_32::parse_imm(self, opc, isa)),
             OpcodeKind::M(opc) => Ok(m_extension::bit_32::parse_imm(self, opc)),
             OpcodeKind::A(opc) => Ok(a_extension::bit_32::parse_imm(self, opc)),
+            OpcodeKind::Zbb(opc) => Ok(zbb_extension::bit_32::parse_imm(self, opc)),
             OpcodeKind::Zifencei(opc) => Ok(zifencei_extension::bit_32::parse_imm(self, opc)),
             OpcodeKind::Zicsr(opc) => Ok(zicsr_extension::bit_32::parse_imm(self, opc)),
             OpcodeKind::Zicfiss(opc) => Ok(zicfiss_extension::bit_32::parse_imm(self, opc)),
@@ -139,6 +144,8 @@ impl DecodeUtil for u32 {
                 0b010 => Ok(Extensions::Zicboz),
                 _ => Err(DecodingError::UnknownExtension),
             },
+            0b001_0011 => Ok(Extensions::Zbb),
+            0b001_1011 => Ok(Extensions::Zbb),
             0b010_1111 => match funct5 {
                 0b00000 | 0b00001 | 0b00010 | 0b00011 | 0b00100 | 0b01000 | 0b01100 | 0b10000
                 | 0b10100 | 0b11000 | 0b11100 => Ok(Extensions::A),
@@ -147,11 +154,13 @@ impl DecodeUtil for u32 {
             },
             0b011_0011 => match funct7 {
                 0b000_0001 => Ok(Extensions::M),
+                0b010_0000 | 0b000_0101 | 0b011_0000 => Ok(Extensions::Zbb),
                 _ => Ok(Extensions::BaseI),
             },
             0b011_1011 => match funct7 {
                 0b000_0000 | 0b010_0000 => Ok(Extensions::BaseI),
                 0b000_0001 => Ok(Extensions::M),
+                0b011_0000 => Ok(Extensions::Zbb),
                 _ => Err(DecodingError::UnknownExtension),
             },
             0b111_0011 => match funct3 {

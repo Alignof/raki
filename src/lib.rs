@@ -33,8 +33,8 @@ mod instruction;
 pub use crate::decode::{Decode, DecodingError};
 pub use crate::instruction::{
     a_extension::AOpcode, base_i::BaseIOpcode, c_extension::COpcode, m_extension::MOpcode,
-    priv_extension::PrivOpcode, zicboz_extension::ZicbozOpcode, zicfiss_extension::ZicfissOpcode,
-    zicntr_extension::ZicntrOpcode, zicsr_extension::ZicsrOpcode,
+    priv_extension::PrivOpcode, zbb_extension::ZbbOpcode, zicboz_extension::ZicbozOpcode,
+    zicfiss_extension::ZicfissOpcode, zicntr_extension::ZicntrOpcode, zicsr_extension::ZicsrOpcode,
     zifencei_extension::ZifenceiOpcode, InstFormat, Instruction, OpcodeKind,
 };
 
@@ -58,6 +58,8 @@ enum Extensions {
     A,
     /// Compressed Instructions
     C,
+    /// Basic bit manipulation
+    Zbb,
     /// Instruction-Fetch Fence
     Zifencei,
     /// Cache-Block Zero Instructions

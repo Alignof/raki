@@ -144,8 +144,14 @@ impl DecodeUtil for u32 {
                 0b010 => Ok(Extensions::Zicboz),
                 _ => Err(DecodingError::UnknownExtension),
             },
-            0b001_0011 => Ok(Extensions::Zbb),
-            0b001_1011 => Ok(Extensions::Zbb),
+            0b001_0011 => match funct3 {
+                0b001 | 0b101 => Ok(Extensions::Zbb),
+                _ => Ok(Extensions::BaseI),
+            },
+            0b001_1011 => match funct3 {
+                0b001 | 0b101 => Ok(Extensions::Zbb),
+                _ => Ok(Extensions::BaseI),
+            },
             0b010_1111 => match funct5 {
                 0b00000 | 0b00001 | 0b00010 | 0b00011 | 0b00100 | 0b01000 | 0b01100 | 0b10000
                 | 0b10100 | 0b11000 | 0b11100 => Ok(Extensions::A),
@@ -154,12 +160,36 @@ impl DecodeUtil for u32 {
             },
             0b011_0011 => match funct7 {
                 0b000_0001 => Ok(Extensions::M),
-                0b010_0000 | 0b000_0101 | 0b011_0000 => Ok(Extensions::Zbb),
+                0b000_0100 => match funct3 {
+                    0b001 | 0b100 | 0b101 | 0b110 | 0b111 => Ok(Extensions::Zbb),
+                    _ => Ok(Extensions::BaseI),
+                },
+                0b000_0101 => match funct3 {
+                    0b001 | 0b010 | 0b100 | 0b101 | 0b110 | 0b011 | 0b111 => Ok(Extensions::Zbb),
+                    _ => Ok(Extensions::BaseI),
+                },
+                0b001_0100 => match funct3 {
+                    0b001 => Ok(Extensions::Zbb),
+                    _ => Ok(Extensions::BaseI),
+                },
+                0b010_0000 => match funct3 {
+                    0b100 | 0b110 | 0b111 => Ok(Extensions::Zbb),
+                    _ => Ok(Extensions::BaseI),
+                },
+                0b011_0100 => match funct3 {
+                    0b001 => Ok(Extensions::Zbb),
+                    _ => Ok(Extensions::BaseI),
+                },
+                0b011_0000 => match funct3 {
+                    0b001 | 0b101 => Ok(Extensions::Zbb),
+                    _ => Ok(Extensions::BaseI),
+                },
                 _ => Ok(Extensions::BaseI),
             },
             0b011_1011 => match funct7 {
                 0b000_0000 | 0b010_0000 => Ok(Extensions::BaseI),
                 0b000_0001 => Ok(Extensions::M),
+                0b000_0100 => Ok(Extensions::Zbb),
                 0b011_0000 => Ok(Extensions::Zbb),
                 _ => Err(DecodingError::UnknownExtension),
             },

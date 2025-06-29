@@ -266,6 +266,7 @@ pub fn test_32(
 
 #[cfg(test)]
 #[track_caller]
+#[allow(dead_code)]
 pub fn test_32_in_rv32(
     inst_32: u32,
     op: OpcodeKind,

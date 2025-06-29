@@ -178,10 +178,10 @@ pub fn test_16(
         location.line()
     );
 }
-
 #[cfg(test)]
 #[track_caller]
-pub fn test_16_in_rv16(
+#[allow(dead_code)]
+pub fn test_16_in_rv32(
     inst_16: u16,
     op: OpcodeKind,
     rd: Option<usize>,

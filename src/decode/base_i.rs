@@ -273,7 +273,7 @@ pub mod bit_32 {
     #[allow(clippy::cast_possible_wrap)]
     #[allow(non_snake_case)]
     pub fn parse_imm(inst: u32, opkind: &BaseIOpcode, isa: Isa) -> Option<i32> {
-        let U_type = || (inst.slice(31, 12) << 12) as i32;
+        let U_type = || inst.slice(31, 12) as i32;
         let I_type = || {
             let imm32 = inst.slice(31, 20) as i32;
             inst.to_signed_nbit(imm32, 12)

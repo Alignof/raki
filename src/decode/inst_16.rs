@@ -95,3 +95,114 @@ impl DecodeUtil for u16 {
         inst
     }
 }
+
+#[cfg(test)]
+pub fn test_16(
+    isa: Isa,
+    location: &std::panic::Location,
+    inst_16: u16,
+    op: OpcodeKind,
+    rd: Option<usize>,
+    rs1: Option<usize>,
+    rs2: Option<usize>,
+    imm: Option<i32>,
+) {
+    let op_16 = inst_16.parse_opcode(isa).unwrap_or_else(|e| {
+        panic!(
+            "{e:?}: failed to decode {inst_16:016b} ({}: line {})",
+            location.file(),
+            location.line()
+        );
+    });
+    assert_eq!(
+        op_16,
+        op,
+        "Opecode does not match: {op_16} != {op} ({}: line {})",
+        location.file(),
+        location.line()
+    );
+    assert_eq!(
+        inst_16.parse_rd(&op_16).unwrap_or_else(|e| {
+            panic!(
+                "{e:?}: failed to parse rd in {op}({inst_16:016b}) ({}: line {})",
+                location.file(),
+                location.line()
+            );
+        }),
+        rd,
+        "rd does not match: {:x?} != {rd:x?} ({}: line {})",
+        inst_16.parse_rd(&op_16),
+        location.file(),
+        location.line()
+    );
+    assert_eq!(
+        inst_16.parse_rs1(&op_16).unwrap_or_else(|e| {
+            panic!(
+                "{e:?}: failed to parse rs1 in {op}({inst_16:016b}) ({}: line {})",
+                location.file(),
+                location.line()
+            );
+        }),
+        rs1,
+        "rs1 does not match: {:x?} != {rs1:x?} ({}: line {})",
+        inst_16.parse_rs1(&op_16),
+        location.file(),
+        location.line()
+    );
+    assert_eq!(
+        inst_16.parse_rs2(&op_16).unwrap_or_else(|e| {
+            panic!(
+                "{e:?}: failed to parse rs2 in {op}({inst_16:016b}) ({}: line {})",
+                location.file(),
+                location.line()
+            );
+        }),
+        rs2,
+        "rs2 does not match: {:x?} != {rs2:x?} ({}: line {})",
+        inst_16.parse_rs2(&op_16),
+        location.file(),
+        location.line()
+    );
+    assert_eq!(
+        inst_16.parse_imm(&op_16, isa).unwrap_or_else(|e| {
+            panic!(
+                "{e:?}: failed to parse imm in {op}({inst_16:016b}) ({}: line {})",
+                location.file(),
+                location.line()
+            );
+        }),
+        imm,
+        "imm does not match: {:x?} != {imm:x?} ({}: line {})",
+        inst_16.parse_imm(&op_16, isa),
+        location.file(),
+        location.line()
+    );
+}
+
+#[cfg(test)]
+#[track_caller]
+pub fn test_16_in_rv16(
+    inst_16: u16,
+    op: OpcodeKind,
+    rd: Option<usize>,
+    rs1: Option<usize>,
+    rs2: Option<usize>,
+    imm: Option<i32>,
+) {
+    let location = std::panic::Location::caller();
+    test_16(Isa::Rv32, location, inst_16, op, rd, rs1, rs2, imm);
+}
+
+#[cfg(test)]
+#[track_caller]
+pub fn test_16_in_rv64(
+    inst_16: u16,
+    op: OpcodeKind,
+    rd: Option<usize>,
+    rs1: Option<usize>,
+    rs2: Option<usize>,
+    imm: Option<i32>,
+) {
+    let location = std::panic::Location::caller();
+    test_16(Isa::Rv64, location, inst_16, op, rd, rs1, rs2, imm);
+}

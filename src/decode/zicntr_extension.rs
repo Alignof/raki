@@ -80,24 +80,11 @@ mod test_zicntr {
     #[test]
     #[allow(overflowing_literals)]
     fn zicntr_decode_test() {
+        use crate::decode::inst_32::test_32_in_rv64;
         use crate::instruction::zicntr_extension::ZicntrOpcode;
-        use crate::{Decode, Isa, OpcodeKind};
+        use crate::OpcodeKind;
 
-        let test_32 = |inst_32: u32,
-                       op: OpcodeKind,
-                       rd: Option<usize>,
-                       rs1: Option<usize>,
-                       rs2: Option<usize>,
-                       imm: Option<i32>| {
-            let op_32 = inst_32.parse_opcode(Isa::Rv64).unwrap();
-            assert!(matches!(&op_32, op));
-            assert_eq!(inst_32.parse_rd(&op_32).unwrap(), rd);
-            assert_eq!(inst_32.parse_rs1(&op_32).unwrap(), rs1);
-            assert_eq!(inst_32.parse_rs2(&op_32).unwrap(), rs2);
-            assert_eq!(inst_32.parse_imm(&op_32, Isa::Rv64).unwrap(), imm);
-        };
-
-        test_32(
+        test_32_in_rv64(
             0b1100_0000_0001_0000_0010_0111_1111_0011,
             OpcodeKind::Zicntr(ZicntrOpcode::RDTIME),
             Some(15),

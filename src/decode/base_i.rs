@@ -348,28 +348,44 @@ mod test_basei {
         use crate::OpcodeKind;
 
         test_32_in_rv64(
-            0b1000_0000_0000_0000_0000_0000_1011_0111,
+            0xfdead737,
             OpcodeKind::BaseI(BaseIOpcode::LUI),
+            Some(14),
+            None,
+            None,
+            Some(0xfdead),
+        );
+        test_32_in_rv64(
+            0x013f9517,
+            OpcodeKind::BaseI(BaseIOpcode::AUIPC),
+            Some(10),
+            None,
+            None,
+            Some(0x13f9),
+        );
+        test_32_in_rv64(
+            0x009bc097,
+            OpcodeKind::BaseI(BaseIOpcode::AUIPC),
             Some(1),
             None,
             None,
-            Some(0x8000_0000),
+            Some(0x9bc),
         );
         test_32_in_rv64(
-            0b0000_0000_0000_0000_0000_0010_1001_0111,
-            OpcodeKind::BaseI(BaseIOpcode::AUIPC),
-            Some(5),
-            None,
-            None,
-            Some(0),
-        );
-        test_32_in_rv64(
-            0b1111_1111_1001_1111_1111_0000_0110_1111,
+            0x9d3ff0ef,
             OpcodeKind::BaseI(BaseIOpcode::JAL),
-            Some(0),
+            Some(1),
             None,
             None,
-            Some(-8),
+            Some(-1582),
+        );
+        test_32_in_rv64(
+            0x02e78263,
+            OpcodeKind::BaseI(BaseIOpcode::BEQ),
+            None,
+            Some(15),
+            Some(14),
+            Some(36),
         );
         test_32_in_rv64(
             0b1111_1110_0010_0000_1000_1110_1010_0011,

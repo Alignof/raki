@@ -123,24 +123,11 @@ mod test_zicfiss {
     #[test]
     #[allow(overflowing_literals)]
     fn zicfiss_32bit_decode_test() {
+        use crate::decode::inst_32::test_32_in_rv64;
         use crate::instruction::zicfiss_extension::ZicfissOpcode;
-        use crate::{Decode, Isa, OpcodeKind};
+        use crate::OpcodeKind;
 
-        let test_32 = |inst_32: u32,
-                       expected_op: OpcodeKind,
-                       expected_rd: Option<usize>,
-                       expected_rs1: Option<usize>,
-                       expected_rs2: Option<usize>,
-                       expected_imm: Option<i32>| {
-            let op_32 = inst_32.parse_opcode(Isa::Rv64).unwrap();
-            assert_eq!(op_32, expected_op);
-            assert_eq!(inst_32.parse_rd(&op_32).unwrap(), expected_rd);
-            assert_eq!(inst_32.parse_rs1(&op_32).unwrap(), expected_rs1);
-            assert_eq!(inst_32.parse_rs2(&op_32).unwrap(), expected_rs2);
-            assert_eq!(inst_32.parse_imm(&op_32, Isa::Rv64).unwrap(), expected_imm);
-        };
-
-        test_32(
+        test_32_in_rv64(
             0b1100_1110_0101_0000_0100_0000_0111_0011,
             OpcodeKind::Zicfiss(ZicfissOpcode::SSPUSH),
             Some(0),
@@ -149,7 +136,7 @@ mod test_zicfiss {
             None,
         );
 
-        test_32(
+        test_32_in_rv64(
             0b1100_1110_0001_0000_0100_0000_0111_0011,
             OpcodeKind::Zicfiss(ZicfissOpcode::SSPUSH),
             Some(0),
@@ -158,7 +145,7 @@ mod test_zicfiss {
             None,
         );
 
-        test_32(
+        test_32_in_rv64(
             0b1100_1101_1100_0000_1100_0000_0111_0011,
             OpcodeKind::Zicfiss(ZicfissOpcode::SSPOPCHK),
             Some(0),
@@ -167,7 +154,7 @@ mod test_zicfiss {
             None,
         );
 
-        test_32(
+        test_32_in_rv64(
             0b1100_1101_1100_0010_1100_0000_0111_0011,
             OpcodeKind::Zicfiss(ZicfissOpcode::SSPOPCHK),
             Some(0),
@@ -176,7 +163,7 @@ mod test_zicfiss {
             None,
         );
 
-        test_32(
+        test_32_in_rv64(
             0b0100_1000_1100_0010_1010_0001_1010_1111,
             OpcodeKind::Zicfiss(ZicfissOpcode::SSAMOSWAP_W),
             Some(3),
@@ -185,7 +172,7 @@ mod test_zicfiss {
             None,
         );
 
-        test_32(
+        test_32_in_rv64(
             0b0100_1000_1100_0111_0011_0001_1010_1111,
             OpcodeKind::Zicfiss(ZicfissOpcode::SSAMOSWAP_D),
             Some(3),
@@ -194,7 +181,7 @@ mod test_zicfiss {
             None,
         );
 
-        test_32(
+        test_32_in_rv64(
             0xcdc0c073,
             OpcodeKind::Zicfiss(ZicfissOpcode::SSPOPCHK),
             Some(0),

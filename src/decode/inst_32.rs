@@ -180,3 +180,115 @@ impl DecodeUtil for u32 {
         inst
     }
 }
+
+#[cfg(test)]
+pub fn test_32(
+    isa: Isa,
+    location: &std::panic::Location,
+    inst_32: u32,
+    op: OpcodeKind,
+    rd: Option<usize>,
+    rs1: Option<usize>,
+    rs2: Option<usize>,
+    imm: Option<i32>,
+) {
+    let op_32 = inst_32.parse_opcode(isa).unwrap_or_else(|e| {
+        panic!(
+            "{e:?}: failed to decode {inst_32:032b} ({}: line {})",
+            location.file(),
+            location.line()
+        );
+    });
+    assert_eq!(
+        op_32,
+        op,
+        "Opecode does not match: {op_32} != {op} ({}: line {})",
+        location.file(),
+        location.line()
+    );
+    assert_eq!(
+        inst_32.parse_rd(&op_32).unwrap_or_else(|e| {
+            panic!(
+                "{e:?}: failed to parse rd in {op}({inst_32:032b}) ({}: line {})",
+                location.file(),
+                location.line()
+            );
+        }),
+        rd,
+        "rd does not match: {:x?} != {rd:x?} ({}: line {})",
+        inst_32.parse_rd(&op_32),
+        location.file(),
+        location.line()
+    );
+    assert_eq!(
+        inst_32.parse_rs1(&op_32).unwrap_or_else(|e| {
+            panic!(
+                "{e:?}: failed to parse rs1 in {op}({inst_32:032b}) ({}: line {})",
+                location.file(),
+                location.line()
+            );
+        }),
+        rs1,
+        "rs1 does not match: {:x?} != {rs1:x?} ({}: line {})",
+        inst_32.parse_rs1(&op_32),
+        location.file(),
+        location.line()
+    );
+    assert_eq!(
+        inst_32.parse_rs2(&op_32).unwrap_or_else(|e| {
+            panic!(
+                "{e:?}: failed to parse rs2 in {op}({inst_32:032b}) ({}: line {})",
+                location.file(),
+                location.line()
+            );
+        }),
+        rs2,
+        "rs2 does not match: {:x?} != {rs2:x?} ({}: line {})",
+        inst_32.parse_rs2(&op_32),
+        location.file(),
+        location.line()
+    );
+    assert_eq!(
+        inst_32.parse_imm(&op_32, isa).unwrap_or_else(|e| {
+            panic!(
+                "{e:?}: failed to parse imm in {op}({inst_32:032b}) ({}: line {})",
+                location.file(),
+                location.line()
+            );
+        }),
+        imm,
+        "imm does not match: {:x?} != {imm:x?} ({}: line {})",
+        inst_32.parse_imm(&op_32, isa),
+        location.file(),
+        location.line()
+    );
+}
+
+#[cfg(test)]
+#[track_caller]
+#[allow(dead_code)]
+pub fn test_32_in_rv32(
+    inst_32: u32,
+    op: OpcodeKind,
+    rd: Option<usize>,
+    rs1: Option<usize>,
+    rs2: Option<usize>,
+    imm: Option<i32>,
+) {
+    let location = std::panic::Location::caller();
+    test_32(Isa::Rv32, location, inst_32, op, rd, rs1, rs2, imm);
+}
+
+#[cfg(test)]
+#[track_caller]
+pub fn test_32_in_rv64(
+    inst_32: u32,
+    op: OpcodeKind,
+    rd: Option<usize>,
+    rs1: Option<usize>,
+    rs2: Option<usize>,
+    imm: Option<i32>,
+) {
+    let location = std::panic::Location::caller();
+    test_32(Isa::Rv64, location, inst_32, op, rd, rs1, rs2, imm);
+}

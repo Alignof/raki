@@ -268,23 +268,11 @@ pub mod bit_16 {
 mod test_c {
     #[test]
     fn c_decode_test() {
+        use crate::decode::inst_16::test_16_in_rv64;
         use crate::instruction::c_extension::COpcode;
-        use crate::{Decode, Isa, OpcodeKind};
-        let test_16 = |inst_16: u16,
-                       op: OpcodeKind,
-                       rd: Option<usize>,
-                       rs1: Option<usize>,
-                       rs2: Option<usize>,
-                       imm: Option<i32>| {
-            let op_16 = inst_16.parse_opcode(Isa::Rv64).unwrap();
-            assert!(matches!(&op_16, op));
-            assert_eq!(inst_16.parse_rd(&op_16).unwrap(), rd);
-            assert_eq!(inst_16.parse_rs1(&op_16).unwrap(), rs1);
-            assert_eq!(inst_16.parse_rs2(&op_16).unwrap(), rs2);
-            assert_eq!(inst_16.parse_imm(&op_16, Isa::Rv64).unwrap(), imm);
-        };
+        use crate::OpcodeKind;
 
-        test_16(
+        test_16_in_rv64(
             0b0000_0000_0000_0001,
             OpcodeKind::C(COpcode::NOP),
             None,
@@ -292,7 +280,7 @@ mod test_c {
             None,
             Some(0),
         );
-        test_16(
+        test_16_in_rv64(
             0b0110_0011_1000_0001,
             OpcodeKind::C(COpcode::LUI),
             Some(7),
@@ -300,15 +288,15 @@ mod test_c {
             None,
             Some(0),
         );
-        test_16(
+        test_16_in_rv64(
             0b1000_0010_1100_0001,
-            OpcodeKind::C(COpcode::SRAI),
+            OpcodeKind::C(COpcode::SRLI),
             Some(13),
             Some(13),
             None,
             Some(16),
         );
-        test_16(
+        test_16_in_rv64(
             0x4521,
             OpcodeKind::C(COpcode::LI),
             Some(10),
@@ -316,7 +304,7 @@ mod test_c {
             None,
             Some(8),
         );
-        test_16(
+        test_16_in_rv64(
             0xb5e5,
             OpcodeKind::C(COpcode::J),
             None,
@@ -324,15 +312,15 @@ mod test_c {
             None,
             Some(-280),
         );
-        test_16(
+        test_16_in_rv64(
             0x6105,
-            OpcodeKind::C(COpcode::ADDI),
+            OpcodeKind::C(COpcode::ADDI16SP),
             Some(2),
             Some(2),
             None,
             Some(32),
         );
-        test_16(
+        test_16_in_rv64(
             0x8082,
             OpcodeKind::C(COpcode::JR),
             None,
@@ -340,7 +328,7 @@ mod test_c {
             Some(0),
             None,
         );
-        test_16(
+        test_16_in_rv64(
             0xe29d,
             OpcodeKind::C(COpcode::BNEZ),
             None,
@@ -348,7 +336,7 @@ mod test_c {
             None,
             Some(38),
         );
-        test_16(
+        test_16_in_rv64(
             0xc05c,
             OpcodeKind::C(COpcode::SW),
             None,
@@ -356,7 +344,7 @@ mod test_c {
             Some(15),
             Some(4),
         );
-        test_16(
+        test_16_in_rv64(
             0x9002,
             OpcodeKind::C(COpcode::EBREAK),
             None,
@@ -364,7 +352,7 @@ mod test_c {
             None,
             None,
         );
-        test_16(
+        test_16_in_rv64(
             0x880a,
             OpcodeKind::C(COpcode::MV),
             Some(16),
@@ -372,7 +360,7 @@ mod test_c {
             Some(2),
             None,
         );
-        test_16(
+        test_16_in_rv64(
             0x8585,
             OpcodeKind::C(COpcode::SRAI),
             Some(11),

@@ -273,7 +273,7 @@ pub mod bit_32 {
     #[allow(clippy::cast_possible_wrap)]
     #[allow(non_snake_case)]
     pub fn parse_imm(inst: u32, opkind: &BaseIOpcode, isa: Isa) -> Option<i32> {
-        let U_type = || (inst.slice(31, 12) << 12) as i32;
+        let U_type = || inst.slice(31, 12) as i32;
         let I_type = || {
             let imm32 = inst.slice(31, 20) as i32;
             inst.to_signed_nbit(imm32, 12)
@@ -343,48 +343,59 @@ mod test_basei {
     #[test]
     #[allow(overflowing_literals)]
     fn basei_decode_test() {
+        use crate::decode::inst_32::test_32_in_rv64;
         use crate::instruction::base_i::BaseIOpcode;
-        use crate::{Decode, Isa, OpcodeKind};
+        use crate::OpcodeKind;
 
-        let test_32 = |inst_32: u32,
-                       op: OpcodeKind,
-                       rd: Option<usize>,
-                       rs1: Option<usize>,
-                       rs2: Option<usize>,
-                       imm: Option<i32>| {
-            let op_32 = inst_32.parse_opcode(Isa::Rv64).unwrap();
-            assert!(matches!(&op_32, op));
-            assert_eq!(inst_32.parse_rd(&op_32).unwrap(), rd);
-            assert_eq!(inst_32.parse_rs1(&op_32).unwrap(), rs1);
-            assert_eq!(inst_32.parse_rs2(&op_32).unwrap(), rs2);
-            assert_eq!(inst_32.parse_imm(&op_32, Isa::Rv64).unwrap(), imm);
-        };
-
-        test_32(
-            0b1000_0000_0000_0000_0000_0000_1011_0111,
+        test_32_in_rv64(
+            0xfdead737,
             OpcodeKind::BaseI(BaseIOpcode::LUI),
+            Some(14),
+            None,
+            None,
+            Some(0xfdead),
+        );
+        test_32_in_rv64(
+            0x1597,
+            OpcodeKind::BaseI(BaseIOpcode::AUIPC),
+            Some(11),
+            None,
+            None,
+            Some(0x1),
+        );
+        test_32_in_rv64(
+            0x013f9517,
+            OpcodeKind::BaseI(BaseIOpcode::AUIPC),
+            Some(10),
+            None,
+            None,
+            Some(0x13f9),
+        );
+        test_32_in_rv64(
+            0x009bc097,
+            OpcodeKind::BaseI(BaseIOpcode::AUIPC),
             Some(1),
             None,
             None,
-            Some(0x8000_0000),
+            Some(0x9bc),
         );
-        test_32(
-            0b0000_0000_0000_0000_0000_0010_1001_0111,
-            OpcodeKind::BaseI(BaseIOpcode::AUIPC),
-            Some(5),
-            None,
-            None,
-            Some(0),
-        );
-        test_32(
-            0b1111_1111_1001_1111_1111_0000_0110_1111,
+        test_32_in_rv64(
+            0x9d3ff0ef,
             OpcodeKind::BaseI(BaseIOpcode::JAL),
-            Some(0),
+            Some(1),
             None,
             None,
-            Some(-8),
+            Some(-1582),
         );
-        test_32(
+        test_32_in_rv64(
+            0x02e78263,
+            OpcodeKind::BaseI(BaseIOpcode::BEQ),
+            None,
+            Some(15),
+            Some(14),
+            Some(36),
+        );
+        test_32_in_rv64(
             0b1111_1110_0010_0000_1000_1110_1010_0011,
             OpcodeKind::BaseI(BaseIOpcode::SB),
             None,
@@ -392,7 +403,7 @@ mod test_basei {
             Some(2),
             Some(-3),
         );
-        test_32(
+        test_32_in_rv64(
             0b1110_1110_1100_0010_1000_0010_1001_0011,
             OpcodeKind::BaseI(BaseIOpcode::ADDI),
             Some(5),
@@ -400,7 +411,7 @@ mod test_basei {
             None,
             Some(-276),
         );
-        test_32(
+        test_32_in_rv64(
             0b0000_0000_0000_0000_0000_0000_0111_0011,
             OpcodeKind::BaseI(BaseIOpcode::ECALL),
             None,
@@ -408,7 +419,7 @@ mod test_basei {
             None,
             None,
         );
-        test_32(
+        test_32_in_rv64(
             0b0000_0000_0000_0101_0100_1100_0110_0011,
             OpcodeKind::BaseI(BaseIOpcode::BLT),
             None,
@@ -416,7 +427,7 @@ mod test_basei {
             Some(0),
             Some(24),
         );
-        test_32(
+        test_32_in_rv64(
             0x0010_0513,
             OpcodeKind::BaseI(BaseIOpcode::ADDI),
             Some(10),
@@ -424,7 +435,7 @@ mod test_basei {
             None,
             Some(1),
         );
-        test_32(
+        test_32_in_rv64(
             0x4170_04b3,
             OpcodeKind::BaseI(BaseIOpcode::SUB),
             Some(9),
@@ -432,7 +443,7 @@ mod test_basei {
             Some(23),
             None,
         );
-        test_32(
+        test_32_in_rv64(
             0x3307_3983,
             OpcodeKind::BaseI(BaseIOpcode::LD),
             Some(19),
@@ -440,7 +451,7 @@ mod test_basei {
             None,
             Some(816),
         );
-        test_32(
+        test_32_in_rv64(
             0x10ec_eb63,
             OpcodeKind::BaseI(BaseIOpcode::BLTU),
             None,
@@ -448,7 +459,7 @@ mod test_basei {
             Some(14),
             Some(278),
         );
-        test_32(
+        test_32_in_rv64(
             0x31e1_60ef,
             OpcodeKind::BaseI(BaseIOpcode::JAL),
             Some(1),
@@ -456,7 +467,7 @@ mod test_basei {
             None,
             Some(90910),
         );
-        test_32(
+        test_32_in_rv64(
             0x0019_4913,
             OpcodeKind::BaseI(BaseIOpcode::XORI),
             Some(18),
@@ -464,7 +475,7 @@ mod test_basei {
             None,
             Some(1),
         );
-        test_32(
+        test_32_in_rv64(
             0x00a9_3933,
             OpcodeKind::BaseI(BaseIOpcode::SLTU),
             Some(18),

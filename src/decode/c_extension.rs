@@ -290,7 +290,7 @@ mod test_c {
         );
         test_16_in_rv64(
             0b1000_0010_1100_0001,
-            OpcodeKind::C(COpcode::SRAI),
+            OpcodeKind::C(COpcode::SRLI),
             Some(13),
             Some(13),
             None,
@@ -314,7 +314,7 @@ mod test_c {
         );
         test_16_in_rv64(
             0x6105,
-            OpcodeKind::C(COpcode::ADDI),
+            OpcodeKind::C(COpcode::ADDI16SP),
             Some(2),
             Some(2),
             None,

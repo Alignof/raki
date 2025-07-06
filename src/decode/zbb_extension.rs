@@ -14,26 +14,25 @@ pub mod bit_32 {
         match op_6_0 {
             0b111011 => match op_14_12 {
                 0b1 => Ok(ZbbOpcode::ROLW),
-                0b101 => Ok(ZbbOpcode::RORW),
                 0b100 => Ok(ZbbOpcode::ZEXTH),
+                0b101 => Ok(ZbbOpcode::RORW),
                 _ => Err(DecodingError::InvalidOpcode),
             },
             0b11011 => match op_14_12 {
                 0b101 => Ok(ZbbOpcode::RORIW),
                 0b1 => match op_31_20 {
+                    0b11000000000 => Ok(ZbbOpcode::CLZW),
                     0b11000000001 => Ok(ZbbOpcode::CTZW),
                     0b11000000010 => Ok(ZbbOpcode::CPOPW),
-                    0b11000000000 => Ok(ZbbOpcode::CLZW),
                     _ => Err(DecodingError::InvalidOpcode),
                 },
                 _ => Err(DecodingError::InvalidOpcode),
             },
             0b10011 => match op_14_12 {
                 0b101 => match op_31_20 {
-                    0b11010011000 => Ok(ZbbOpcode::REV8),
                     0b1010000111 => Ok(ZbbOpcode::ORCB),
-                    _ => Ok(ZbbOpcode::RORI),
                     0b11010111000 => Ok(ZbbOpcode::REV8),
+                    _ => Ok(ZbbOpcode::RORI),
                 },
                 0b1 => match op_31_20 {
                     0b11000000000 => Ok(ZbbOpcode::CLZ),
@@ -49,28 +48,25 @@ pub mod bit_32 {
             },
             0b110011 => match op_14_12 {
                 0b1 => Ok(ZbbOpcode::ROL),
-                0b110 => match op_31_25 {
-                    0b100000 => Ok(ZbbOpcode::ORN),
-                    0b0101 => Ok(ZbbOpcode::MAX),
+                0b100 => match op_31_25 {
+                    0b00101 => Ok(ZbbOpcode::MIN),
+                    0b100000 => Ok(ZbbOpcode::XNOR),
                     _ => Err(DecodingError::InvalidOpcode),
                 },
                 0b101 => match op_31_25 {
-                    0b0101 => Ok(ZbbOpcode::MINU),
+                    0b00101 => Ok(ZbbOpcode::MINU),
                     0b110000 => Ok(ZbbOpcode::ROR),
                     _ => Err(DecodingError::InvalidOpcode),
                 },
-                0b111 => match op_31_25 {
-                    0b100000 => Ok(ZbbOpcode::ANDN),
-                    0b0101 => Ok(ZbbOpcode::MAXU),
+                0b110 => match op_31_25 {
+                    0b00101 => Ok(ZbbOpcode::MAX),
+                    0b100000 => Ok(ZbbOpcode::ORN),
                     _ => Err(DecodingError::InvalidOpcode),
                 },
-                0b100 => match op_24_20 {
-                    0b00 => Ok(ZbbOpcode::ZEXTH),
-                    _ => match op_31_25 {
-                        0b0101 => Ok(ZbbOpcode::MIN),
-                        0b100000 => Ok(ZbbOpcode::XNOR),
-                        _ => Err(DecodingError::InvalidOpcode),
-                    },
+                0b111 => match op_31_25 {
+                    0b00101 => Ok(ZbbOpcode::MAXU),
+                    0b100000 => Ok(ZbbOpcode::ANDN),
+                    _ => Err(DecodingError::InvalidOpcode),
                 },
                 _ => Err(DecodingError::InvalidOpcode),
             },
@@ -98,8 +94,6 @@ pub mod bit_32 {
             ZbbOpcode::SEXTB => Some(rd_11_7),
             ZbbOpcode::SEXTH => Some(rd_11_7),
             ZbbOpcode::ZEXTH => Some(rd_11_7),
-            ZbbOpcode::ZEXTH => Some(rd_11_7),
-            ZbbOpcode::REV8 => Some(rd_11_7),
             ZbbOpcode::REV8 => Some(rd_11_7),
             ZbbOpcode::ORCB => Some(rd_11_7),
             ZbbOpcode::CPOP => Some(rd_11_7),
@@ -131,8 +125,6 @@ pub mod bit_32 {
             ZbbOpcode::SEXTB => Some(rs1_19_15),
             ZbbOpcode::SEXTH => Some(rs1_19_15),
             ZbbOpcode::ZEXTH => Some(rs1_19_15),
-            ZbbOpcode::ZEXTH => Some(rs1_19_15),
-            ZbbOpcode::REV8 => Some(rs1_19_15),
             ZbbOpcode::REV8 => Some(rs1_19_15),
             ZbbOpcode::ORCB => Some(rs1_19_15),
             ZbbOpcode::CPOP => Some(rs1_19_15),
@@ -164,8 +156,6 @@ pub mod bit_32 {
             ZbbOpcode::SEXTB => None,
             ZbbOpcode::SEXTH => None,
             ZbbOpcode::ZEXTH => None,
-            ZbbOpcode::ZEXTH => None,
-            ZbbOpcode::REV8 => None,
             ZbbOpcode::REV8 => None,
             ZbbOpcode::ORCB => None,
             ZbbOpcode::CPOP => None,
@@ -179,9 +169,11 @@ pub mod bit_32 {
 
     /// Parsing Zbb instruction's imm
     pub fn parse_imm(inst: u32, opkind: &ZbbOpcode) -> Option<i32> {
+        let imm_24_20: i32 = inst.slice(24, 20) as i32;
+        let imm_25_20: i32 = inst.slice(25, 20) as i32;
         match opkind {
-            ZbbOpcode::RORIW => None,
-            ZbbOpcode::RORI => None,
+            ZbbOpcode::RORIW => Some(imm_24_20),
+            ZbbOpcode::RORI => Some(imm_25_20),
             ZbbOpcode::ROLW => None,
             ZbbOpcode::RORW => None,
             ZbbOpcode::ANDN => None,
@@ -196,8 +188,6 @@ pub mod bit_32 {
             ZbbOpcode::SEXTB => None,
             ZbbOpcode::SEXTH => None,
             ZbbOpcode::ZEXTH => None,
-            ZbbOpcode::ZEXTH => None,
-            ZbbOpcode::REV8 => None,
             ZbbOpcode::REV8 => None,
             ZbbOpcode::ORCB => None,
             ZbbOpcode::CPOP => None,
@@ -215,227 +205,199 @@ mod test_zbb {
     #[test]
     #[allow(overflowing_literals)]
     fn zbb_32bit_decode_test() {
+        use crate::decode::inst_32::test_32_in_rv64;
         use crate::instruction::zbb_extension::ZbbOpcode;
-        use crate::{Decode, Isa, OpcodeKind};
+        use crate::OpcodeKind;
 
-        let test_32 = |inst_32: u32,
-                       expected_op: OpcodeKind,
-                       expected_rd: Option<usize>,
-                       expected_rs1: Option<usize>,
-                       expected_rs2: Option<usize>,
-                       expected_imm: Option<i32>| {
-            let op_32 = inst_32.parse_opcode(Isa::Rv64).unwrap();
-            assert_eq!(op_32, expected_op);
-            assert_eq!(inst_32.parse_rd(&op_32).unwrap(), expected_rd);
-            assert_eq!(inst_32.parse_rs1(&op_32).unwrap(), expected_rs1);
-            assert_eq!(inst_32.parse_rs2(&op_32).unwrap(), expected_rs2);
-            assert_eq!(inst_32.parse_imm(&op_32, Isa::Rv64).unwrap(), expected_imm);
-        };
-        test_32(
-            0b000001101100010101101010110000,
+        test_32_in_rv64(
+            0b1100001101100001101100010011011,
             OpcodeKind::Zbb(ZbbOpcode::RORIW),
-            Some(0),
-            Some(6),
-            None,
-            Some(10),
-        );
-        test_32(
-            0b000001001110110111100111011000,
-            OpcodeKind::Zbb(ZbbOpcode::RORI),
-            Some(10),
-            Some(14),
-            None,
-            Some(14),
-        );
-        test_32(
-            0b000011101111110101100110110000,
-            OpcodeKind::Zbb(ZbbOpcode::ROLW),
-            Some(15),
-            Some(6),
-            Some(6),
-            None,
-        );
-        test_32(
-            0b000011101100110111000011110000,
-            OpcodeKind::Zbb(ZbbOpcode::RORW),
-            Some(2),
-            Some(12),
-            Some(3),
-            None,
-        );
-        test_32(
-            0b000011001111011111000111100000,
-            OpcodeKind::Zbb(ZbbOpcode::ANDN),
-            Some(12),
-            Some(12),
-            Some(7),
-            None,
-        );
-        test_32(
-            0b000011001100011010010000100000,
-            OpcodeKind::Zbb(ZbbOpcode::ORN),
+            Some(17),
             Some(1),
-            Some(9),
-            Some(0),
+            None,
+            Some(27),
+        );
+        test_32_in_rv64(
+            0b1100001000011111101111100010011,
+            OpcodeKind::Zbb(ZbbOpcode::RORI),
+            Some(30),
+            Some(31),
+            None,
+            Some(16),
+        );
+        test_32_in_rv64(
+            0b1100000000110000001110100111011,
+            OpcodeKind::Zbb(ZbbOpcode::ROLW),
+            Some(26),
+            Some(16),
+            Some(1),
             None,
         );
-        test_32(
-            0b000011001111110010111110100000,
-            OpcodeKind::Zbb(ZbbOpcode::XNOR),
-            Some(15),
-            Some(11),
-            Some(14),
-            None,
-        );
-        test_32(
-            0b000011001111011000111011000101,
-            OpcodeKind::Zbb(ZbbOpcode::MAX),
-            Some(13),
+        test_32_in_rv64(
+            0b1100001000000011101101010111011,
+            OpcodeKind::Zbb(ZbbOpcode::RORW),
+            Some(21),
             Some(3),
-            Some(11),
+            Some(16),
             None,
         );
-        test_32(
-            0b000011001101011101001000000101,
+        test_32_in_rv64(
+            0b1000000010101110111010100110011,
+            OpcodeKind::Zbb(ZbbOpcode::ANDN),
+            Some(10),
+            Some(14),
+            Some(5),
+            None,
+        );
+        test_32_in_rv64(
+            0b1000000001001100110111100110011,
+            OpcodeKind::Zbb(ZbbOpcode::ORN),
+            Some(30),
+            Some(12),
+            Some(2),
+            None,
+        );
+        test_32_in_rv64(
+            0b1000001011001111100111100110011,
+            OpcodeKind::Zbb(ZbbOpcode::XNOR),
+            Some(30),
+            Some(15),
+            Some(22),
+            None,
+        );
+        test_32_in_rv64(
+            0b001011111010100110101110110011,
+            OpcodeKind::Zbb(ZbbOpcode::MAX),
+            Some(23),
+            Some(20),
+            Some(30),
+            None,
+        );
+        test_32_in_rv64(
+            0b001010001111111111001000110011,
             OpcodeKind::Zbb(ZbbOpcode::MAXU),
             Some(4),
-            Some(4),
-            Some(8),
-            None,
-        );
-        test_32(
-            0b000011001100010000100101000101,
-            OpcodeKind::Zbb(ZbbOpcode::MIN),
-            Some(0),
-            Some(2),
-            Some(5),
-            None,
-        );
-        test_32(
-            0b000011001110110101101100000101,
-            OpcodeKind::Zbb(ZbbOpcode::MINU),
-            Some(11),
-            Some(6),
-            Some(12),
-            None,
-        );
-        test_32(
-            0b000011001111000100110111110000,
-            OpcodeKind::Zbb(ZbbOpcode::ROL),
-            Some(12),
+            Some(31),
             Some(3),
-            Some(7),
             None,
         );
-        test_32(
-            0b000011001101010110100010110000,
-            OpcodeKind::Zbb(ZbbOpcode::ROR),
-            Some(5),
-            Some(10),
-            Some(2),
-            None,
-        );
-        test_32(
-            0b000001001110010101100100110000,
-            OpcodeKind::Zbb(ZbbOpcode::SEXTB),
-            Some(9),
-            Some(6),
-            None,
-            None,
-        );
-        test_32(
-            0b000001001100000101100101110000,
-            OpcodeKind::Zbb(ZbbOpcode::SEXTH),
-            Some(0),
-            Some(6),
-            None,
-            None,
-        );
-        test_32(
-            0b000011001100110010100000000100,
-            OpcodeKind::Zbb(ZbbOpcode::ZEXTH),
-            Some(2),
-            Some(10),
-            None,
-            None,
-        );
-        test_32(
-            0b000011101111010011010000000100,
-            OpcodeKind::Zbb(ZbbOpcode::ZEXTH),
-            Some(13),
-            Some(13),
-            None,
-            None,
-        );
-        test_32(
-            0b000010011001101001011010011000,
-            OpcodeKind::Zbb(ZbbOpcode::REV8),
-            Some(2),
-            Some(2),
-            None,
-            None,
-        );
-        test_32(
-            0b000010011111101011111010111000,
-            OpcodeKind::Zbb(ZbbOpcode::REV8),
+        test_32_in_rv64(
+            0b001010011111011100011110110011,
+            OpcodeKind::Zbb(ZbbOpcode::MIN),
             Some(15),
+            Some(27),
             Some(7),
             None,
+        );
+        test_32_in_rv64(
+            0b001011101101100101010100110011,
+            OpcodeKind::Zbb(ZbbOpcode::MINU),
+            Some(10),
+            Some(12),
+            Some(27),
             None,
         );
-        test_32(
-            0b000010011001101001001010000111,
-            OpcodeKind::Zbb(ZbbOpcode::ORCB),
+        test_32_in_rv64(
+            0b1100000001100010001011100110011,
+            OpcodeKind::Zbb(ZbbOpcode::ROL),
+            Some(14),
             Some(2),
-            Some(2),
-            None,
-            None,
-        );
-        test_32(
-            0b000010011110101010111000000010,
-            OpcodeKind::Zbb(ZbbOpcode::CPOP),
-            Some(13),
-            Some(5),
-            None,
+            Some(3),
             None,
         );
-        test_32(
-            0b000011011100101010111000000010,
-            OpcodeKind::Zbb(ZbbOpcode::CPOPW),
-            Some(9),
-            Some(5),
-            None,
-            None,
-        );
-        test_32(
-            0b000010011010001010011000000000,
-            OpcodeKind::Zbb(ZbbOpcode::CLZ),
-            Some(4),
-            Some(4),
-            None,
-            None,
-        );
-        test_32(
-            0b000011011010001100011000000000,
-            OpcodeKind::Zbb(ZbbOpcode::CLZW),
-            Some(4),
+        test_32_in_rv64(
+            0b1100001100011100101010000110011,
+            OpcodeKind::Zbb(ZbbOpcode::ROR),
             Some(8),
+            Some(28),
+            Some(24),
+            None,
+        );
+        test_32_in_rv64(
+            0b1100000010000110001001110010011,
+            OpcodeKind::Zbb(ZbbOpcode::SEXTB),
+            Some(7),
+            Some(6),
             None,
             None,
         );
-        test_32(
-            0b000010011010101100111000000001,
-            OpcodeKind::Zbb(ZbbOpcode::CTZ),
+        test_32_in_rv64(
+            0b1100000010101110001001100010011,
+            OpcodeKind::Zbb(ZbbOpcode::SEXTH),
+            Some(6),
+            Some(14),
+            None,
+            None,
+        );
+        test_32_in_rv64(
+            0b001000000010000100001010111011,
+            OpcodeKind::Zbb(ZbbOpcode::ZEXTH),
             Some(5),
+            Some(16),
+            None,
+            None,
+        );
+        test_32_in_rv64(
+            0b1101011100011010101010010010011,
+            OpcodeKind::Zbb(ZbbOpcode::REV8),
+            Some(9),
+            Some(26),
+            None,
+            None,
+        );
+        test_32_in_rv64(
+            0b101000011111111101110010010011,
+            OpcodeKind::Zbb(ZbbOpcode::ORCB),
+            Some(25),
+            Some(31),
+            None,
+            None,
+        );
+        test_32_in_rv64(
+            0b1100000001010111001000100010011,
+            OpcodeKind::Zbb(ZbbOpcode::CPOP),
+            Some(2),
+            Some(23),
+            None,
+            None,
+        );
+        test_32_in_rv64(
+            0b1100000001000000001110000011011,
+            OpcodeKind::Zbb(ZbbOpcode::CPOPW),
+            Some(24),
+            Some(0),
+            None,
+            None,
+        );
+        test_32_in_rv64(
+            0b1100000000001101001011010010011,
+            OpcodeKind::Zbb(ZbbOpcode::CLZ),
+            Some(13),
+            Some(13),
+            None,
+            None,
+        );
+        test_32_in_rv64(
+            0b1100000000001001001001100011011,
+            OpcodeKind::Zbb(ZbbOpcode::CLZW),
+            Some(6),
             Some(9),
             None,
             None,
         );
-        test_32(
-            0b000011011010101101111000000001,
+        test_32_in_rv64(
+            0b1100000000111101001001110010011,
+            OpcodeKind::Zbb(ZbbOpcode::CTZ),
+            Some(7),
+            Some(29),
+            None,
+            None,
+        );
+        test_32_in_rv64(
+            0b1100000000110101001011100011011,
             OpcodeKind::Zbb(ZbbOpcode::CTZW),
-            Some(5),
-            Some(11),
+            Some(14),
+            Some(21),
             None,
             None,
         );

@@ -11,32 +11,32 @@ pub mod bit_32 {
         let op_24_20: u8 = u8::try_from(inst.slice(24, 20)).unwrap();
         let op_31_25: u8 = u8::try_from(inst.slice(31, 25)).unwrap();
         match op_6_0 {
-            0b111011 => match op_14_12 {
+            0b11_1011 => match op_14_12 {
                 0b1 => Ok(ZbbOpcode::ROLW),
                 0b100 => Ok(ZbbOpcode::ZEXTH),
                 0b101 => Ok(ZbbOpcode::RORW),
                 _ => Err(DecodingError::InvalidOpcode),
             },
-            0b11011 => match op_14_12 {
+            0b1_1011 => match op_14_12 {
                 0b101 => Ok(ZbbOpcode::RORIW),
                 0b1 => match op_31_20 {
-                    0b11000000000 => Ok(ZbbOpcode::CLZW),
-                    0b11000000001 => Ok(ZbbOpcode::CTZW),
-                    0b11000000010 => Ok(ZbbOpcode::CPOPW),
+                    0b110_0000_0000 => Ok(ZbbOpcode::CLZW),
+                    0b110_0000_0001 => Ok(ZbbOpcode::CTZW),
+                    0b110_0000_0010 => Ok(ZbbOpcode::CPOPW),
                     _ => Err(DecodingError::InvalidOpcode),
                 },
                 _ => Err(DecodingError::InvalidOpcode),
             },
-            0b10011 => match op_14_12 {
+            0b1_0011 => match op_14_12 {
                 0b101 => match op_31_20 {
-                    0b1010000111 => Ok(ZbbOpcode::ORCB),
-                    0b11010111000 => Ok(ZbbOpcode::REV8),
+                    0b10_1000_0111 => Ok(ZbbOpcode::ORCB),
+                    0b110_1011_1000 => Ok(ZbbOpcode::REV8),
                     _ => Ok(ZbbOpcode::RORI),
                 },
                 0b1 => match op_31_20 {
-                    0b11000000000 => Ok(ZbbOpcode::CLZ),
-                    0b11000000001 => Ok(ZbbOpcode::CTZ),
-                    0b11000000010 => Ok(ZbbOpcode::CPOP),
+                    0b110_0000_0000 => Ok(ZbbOpcode::CLZ),
+                    0b110_0000_0001 => Ok(ZbbOpcode::CTZ),
+                    0b110_0000_0010 => Ok(ZbbOpcode::CPOP),
                     _ => match op_24_20 {
                         0b100 => Ok(ZbbOpcode::SEXTB),
                         0b101 => Ok(ZbbOpcode::SEXTH),
@@ -45,26 +45,26 @@ pub mod bit_32 {
                 },
                 _ => Err(DecodingError::InvalidOpcode),
             },
-            0b110011 => match op_14_12 {
+            0b11_0011 => match op_14_12 {
                 0b1 => Ok(ZbbOpcode::ROL),
                 0b100 => match op_31_25 {
-                    0b00101 => Ok(ZbbOpcode::MIN),
-                    0b100000 => Ok(ZbbOpcode::XNOR),
+                    0b0_0101 => Ok(ZbbOpcode::MIN),
+                    0b10_0000 => Ok(ZbbOpcode::XNOR),
                     _ => Err(DecodingError::InvalidOpcode),
                 },
                 0b101 => match op_31_25 {
-                    0b00101 => Ok(ZbbOpcode::MINU),
-                    0b110000 => Ok(ZbbOpcode::ROR),
+                    0b0_0101 => Ok(ZbbOpcode::MINU),
+                    0b11_0000 => Ok(ZbbOpcode::ROR),
                     _ => Err(DecodingError::InvalidOpcode),
                 },
                 0b110 => match op_31_25 {
-                    0b00101 => Ok(ZbbOpcode::MAX),
-                    0b100000 => Ok(ZbbOpcode::ORN),
+                    0b0_0101 => Ok(ZbbOpcode::MAX),
+                    0b10_0000 => Ok(ZbbOpcode::ORN),
                     _ => Err(DecodingError::InvalidOpcode),
                 },
                 0b111 => match op_31_25 {
-                    0b00101 => Ok(ZbbOpcode::MAXU),
-                    0b100000 => Ok(ZbbOpcode::ANDN),
+                    0b0_0101 => Ok(ZbbOpcode::MAXU),
+                    0b10_0000 => Ok(ZbbOpcode::ANDN),
                     _ => Err(DecodingError::InvalidOpcode),
                 },
                 _ => Err(DecodingError::InvalidOpcode),
@@ -212,7 +212,7 @@ mod test_zbb {
         use crate::OpcodeKind;
 
         test_32_in_rv64(
-            0b1100001101100001101100010011011,
+            0b110_0001_1011_0000_1101_1000_1001_1011,
             OpcodeKind::Zbb(ZbbOpcode::RORIW),
             Some(17),
             Some(1),
@@ -220,7 +220,7 @@ mod test_zbb {
             Some(27),
         );
         test_32_in_rv64(
-            0b1100001000011111101111100010011,
+            0b110_0001_0000_1111_1101_1111_0001_0011,
             OpcodeKind::Zbb(ZbbOpcode::RORI),
             Some(30),
             Some(31),
@@ -228,7 +228,7 @@ mod test_zbb {
             Some(16),
         );
         test_32_in_rv64(
-            0b1100000000110000001110100111011,
+            0b110_0000_0001_1000_0001_1101_0011_1011,
             OpcodeKind::Zbb(ZbbOpcode::ROLW),
             Some(26),
             Some(16),
@@ -236,7 +236,7 @@ mod test_zbb {
             None,
         );
         test_32_in_rv64(
-            0b1100001000000011101101010111011,
+            0b110_0001_0000_0001_1101_1010_1011_1011,
             OpcodeKind::Zbb(ZbbOpcode::RORW),
             Some(21),
             Some(3),
@@ -244,7 +244,7 @@ mod test_zbb {
             None,
         );
         test_32_in_rv64(
-            0b1000000010101110111010100110011,
+            0b100_0000_0101_0111_0111_0101_0011_0011,
             OpcodeKind::Zbb(ZbbOpcode::ANDN),
             Some(10),
             Some(14),
@@ -252,7 +252,7 @@ mod test_zbb {
             None,
         );
         test_32_in_rv64(
-            0b1000000001001100110111100110011,
+            0b100_0000_0010_0110_0110_1111_0011_0011,
             OpcodeKind::Zbb(ZbbOpcode::ORN),
             Some(30),
             Some(12),
@@ -260,7 +260,7 @@ mod test_zbb {
             None,
         );
         test_32_in_rv64(
-            0b1000001011001111100111100110011,
+            0b100_0001_0110_0111_1100_1111_0011_0011,
             OpcodeKind::Zbb(ZbbOpcode::XNOR),
             Some(30),
             Some(15),
@@ -268,7 +268,7 @@ mod test_zbb {
             None,
         );
         test_32_in_rv64(
-            0b001011111010100110101110110011,
+            0b00_1011_1110_1010_0110_1011_1011_0011,
             OpcodeKind::Zbb(ZbbOpcode::MAX),
             Some(23),
             Some(20),
@@ -276,7 +276,7 @@ mod test_zbb {
             None,
         );
         test_32_in_rv64(
-            0b001010001111111111001000110011,
+            0b00_1010_0011_1111_1111_0010_0011_0011,
             OpcodeKind::Zbb(ZbbOpcode::MAXU),
             Some(4),
             Some(31),
@@ -284,7 +284,7 @@ mod test_zbb {
             None,
         );
         test_32_in_rv64(
-            0b001010011111011100011110110011,
+            0b00_1010_0111_1101_1100_0111_1011_0011,
             OpcodeKind::Zbb(ZbbOpcode::MIN),
             Some(15),
             Some(27),
@@ -292,7 +292,7 @@ mod test_zbb {
             None,
         );
         test_32_in_rv64(
-            0b001011101101100101010100110011,
+            0b00_1011_1011_0110_0101_0101_0011_0011,
             OpcodeKind::Zbb(ZbbOpcode::MINU),
             Some(10),
             Some(12),
@@ -300,7 +300,7 @@ mod test_zbb {
             None,
         );
         test_32_in_rv64(
-            0b1100000001100010001011100110011,
+            0b110_0000_0011_0001_0001_0111_0011_0011,
             OpcodeKind::Zbb(ZbbOpcode::ROL),
             Some(14),
             Some(2),
@@ -308,7 +308,7 @@ mod test_zbb {
             None,
         );
         test_32_in_rv64(
-            0b1100001100011100101010000110011,
+            0b110_0001_1000_1110_0101_0100_0011_0011,
             OpcodeKind::Zbb(ZbbOpcode::ROR),
             Some(8),
             Some(28),
@@ -316,7 +316,7 @@ mod test_zbb {
             None,
         );
         test_32_in_rv64(
-            0b1100000010000110001001110010011,
+            0b110_0000_0100_0011_0001_0011_1001_0011,
             OpcodeKind::Zbb(ZbbOpcode::SEXTB),
             Some(7),
             Some(6),
@@ -324,7 +324,7 @@ mod test_zbb {
             None,
         );
         test_32_in_rv64(
-            0b1100000010101110001001100010011,
+            0b110_0000_0101_0111_0001_0011_0001_0011,
             OpcodeKind::Zbb(ZbbOpcode::SEXTH),
             Some(6),
             Some(14),
@@ -332,7 +332,7 @@ mod test_zbb {
             None,
         );
         test_32_in_rv64(
-            0b001000000010000100001010111011,
+            0b00_1000_0000_1000_0100_0010_1011_1011,
             OpcodeKind::Zbb(ZbbOpcode::ZEXTH),
             Some(5),
             Some(16),
@@ -340,7 +340,7 @@ mod test_zbb {
             None,
         );
         test_32_in_rv64(
-            0b1101011100011010101010010010011,
+            0b110_1011_1000_1101_0101_0100_1001_0011,
             OpcodeKind::Zbb(ZbbOpcode::REV8),
             Some(9),
             Some(26),
@@ -348,7 +348,7 @@ mod test_zbb {
             None,
         );
         test_32_in_rv64(
-            0b101000011111111101110010010011,
+            0b10_1000_0111_1111_1101_1100_1001_0011,
             OpcodeKind::Zbb(ZbbOpcode::ORCB),
             Some(25),
             Some(31),
@@ -356,7 +356,7 @@ mod test_zbb {
             None,
         );
         test_32_in_rv64(
-            0b1100000001010111001000100010011,
+            0b110_0000_0010_1011_1001_0001_0001_0011,
             OpcodeKind::Zbb(ZbbOpcode::CPOP),
             Some(2),
             Some(23),
@@ -364,7 +364,7 @@ mod test_zbb {
             None,
         );
         test_32_in_rv64(
-            0b1100000001000000001110000011011,
+            0b110_0000_0010_0000_0001_1100_0001_1011,
             OpcodeKind::Zbb(ZbbOpcode::CPOPW),
             Some(24),
             Some(0),
@@ -372,7 +372,7 @@ mod test_zbb {
             None,
         );
         test_32_in_rv64(
-            0b1100000000001101001011010010011,
+            0b110_0000_0000_0110_1001_0110_1001_0011,
             OpcodeKind::Zbb(ZbbOpcode::CLZ),
             Some(13),
             Some(13),
@@ -380,7 +380,7 @@ mod test_zbb {
             None,
         );
         test_32_in_rv64(
-            0b1100000000001001001001100011011,
+            0b110_0000_0000_0100_1001_0011_0001_1011,
             OpcodeKind::Zbb(ZbbOpcode::CLZW),
             Some(6),
             Some(9),
@@ -388,7 +388,7 @@ mod test_zbb {
             None,
         );
         test_32_in_rv64(
-            0b1100000000111101001001110010011,
+            0b110_0000_0001_1110_1001_0011_1001_0011,
             OpcodeKind::Zbb(ZbbOpcode::CTZ),
             Some(7),
             Some(29),
@@ -396,7 +396,7 @@ mod test_zbb {
             None,
         );
         test_32_in_rv64(
-            0b1100000000110101001011100011011,
+            0b110_0000_0001_1010_1001_0111_0001_1011,
             OpcodeKind::Zbb(ZbbOpcode::CTZW),
             Some(14),
             Some(21),

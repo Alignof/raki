@@ -20,6 +20,7 @@ use c_extension::COpcode;
 use m_extension::MOpcode;
 use priv_extension::PrivOpcode;
 use zbb_extension::ZbbOpcode;
+use zbs_extension::ZbsOpcode;
 use zicboz_extension::ZicbozOpcode;
 use zicfiss_extension::ZicfissOpcode;
 use zicntr_extension::ZicntrOpcode;
@@ -450,6 +451,8 @@ pub enum OpcodeKind {
     C(COpcode),
     /// Basic bit manipulation
     Zbb(ZbbOpcode),
+    /// Single-bit instructions
+    Zbs(ZbsOpcode),
     /// Instruction-Fetch Fence,
     Zifencei(ZifenceiOpcode),
     /// Cache-Block Zero Instructions

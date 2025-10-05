@@ -7,76 +7,76 @@ use core::fmt::{self, Display, Formatter};
 #[allow(non_camel_case_types, clippy::upper_case_acronyms)]
 #[derive(Debug, PartialEq)]
 pub enum ZbbOpcode {
-    /// TODO: Add a description of the instruction here.
+    /// Rotate Right Word by Immediate
     RORIW,
 
-    /// TODO: Add a description of the instruction here.
+    /// Rotate Right (Immediate)
     RORI,
 
-    /// TODO: Add a description of the instruction here.
+    /// Rotate Left Word (Register)
     ROLW,
 
-    /// TODO: Add a description of the instruction here.
+    /// Rotate Right Word (Register)
     RORW,
 
-    /// TODO: Add a description of the instruction here.
+    /// AND with inverted operand
     ANDN,
 
-    /// TODO: Add a description of the instruction here.
+    /// OR with inverted operand
     ORN,
 
-    /// TODO: Add a description of the instruction here.
+    /// Exclusive NOR
     XNOR,
 
-    /// TODO: Add a description of the instruction here.
+    /// Maximum
     MAX,
 
-    /// TODO: Add a description of the instruction here.
+    /// Unsigned maximum
     MAXU,
 
-    /// TODO: Add a description of the instruction here.
+    /// Minimum
     MIN,
 
-    /// TODO: Add a description of the instruction here.
+    /// Unsigned minimum
     MINU,
 
-    /// TODO: Add a description of the instruction here.
+    /// Rotate Left (Register)
     ROL,
 
-    /// TODO: Add a description of the instruction here.
+    /// Rotate Right
     ROR,
 
-    /// TODO: Add a description of the instruction here.
+    /// Sign-extend byte
     SEXTB,
 
-    /// TODO: Add a description of the instruction here.
+    /// Sign-extend halfword
     SEXTH,
 
-    /// TODO: Add a description of the instruction here.
+    /// Zero-extend halfword
     ZEXTH,
 
-    /// TODO: Add a description of the instruction here.
+    /// Byte-reverse register
     REV8,
 
-    /// TODO: Add a description of the instruction here.
+    /// Bitwise OR-Combine, byte granule
     ORCB,
 
-    /// TODO: Add a description of the instruction here.
+    /// Count set bits
     CPOP,
 
-    /// TODO: Add a description of the instruction here.
+    /// Count set bits in word
     CPOPW,
 
-    /// TODO: Add a description of the instruction here.
+    /// Count leading zero bits
     CLZ,
 
-    /// TODO: Add a description of the instruction here.
+    /// Count leading zero bits in word
     CLZW,
 
-    /// TODO: Add a description of the instruction here.
+    /// Count leading zero bits
     CTZ,
 
-    /// TODO: Add a description of the instruction here.
+    /// Count leading zero bits in word
     CTZW,
 }
 

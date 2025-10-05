@@ -6,6 +6,7 @@ pub mod c_extension;
 pub mod m_extension;
 pub mod priv_extension;
 pub mod zbb_extension;
+pub mod zbs_extension;
 pub mod zicboz_extension;
 pub mod zicfiss_extension;
 pub mod zicntr_extension;

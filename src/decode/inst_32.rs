@@ -1,6 +1,6 @@
 use super::{
-    a_extension, base_i, m_extension, priv_extension, zbb_extension, zicboz_extension,
-    zicfiss_extension, zicntr_extension, zicsr_extension, zifencei_extension,
+    a_extension, base_i, m_extension, priv_extension, zbb_extension, zbs_extension,
+    zicboz_extension, zicfiss_extension, zicntr_extension, zicsr_extension, zifencei_extension,
 };
 use super::{Decode, DecodeUtil, DecodingError};
 use crate::instruction::{InstFormat, Instruction, OpcodeKind};
@@ -43,6 +43,7 @@ impl Decode for u32 {
                 self,
             )?)),
             Ok(Extensions::Zbb) => Ok(OpcodeKind::Zbb(zbb_extension::bit_32::parse_opcode(self)?)),
+            Ok(Extensions::Zbs) => Ok(OpcodeKind::Zbs(zbs_extension::bit_32::parse_opcode(self)?)),
             Ok(Extensions::Zicfiss) => Ok(OpcodeKind::Zicfiss(
                 zicfiss_extension::bit_32::parse_opcode(self)?,
             )),
@@ -66,6 +67,7 @@ impl Decode for u32 {
             OpcodeKind::M(opc) => Ok(m_extension::bit_32::parse_rd(self, opc)),
             OpcodeKind::A(opc) => Ok(a_extension::bit_32::parse_rd(self, opc)),
             OpcodeKind::Zbb(opc) => Ok(zbb_extension::bit_32::parse_rd(self, opc)),
+            OpcodeKind::Zbs(opc) => Ok(zbs_extension::bit_32::parse_rd(self, opc)),
             OpcodeKind::Zifencei(opc) => Ok(zifencei_extension::bit_32::parse_rd(self, opc)),
             OpcodeKind::Zicsr(opc) => Ok(zicsr_extension::bit_32::parse_rd(self, opc)),
             OpcodeKind::Zicfiss(opc) => Ok(zicfiss_extension::bit_32::parse_rd(self, opc)),
@@ -82,6 +84,7 @@ impl Decode for u32 {
             OpcodeKind::M(opc) => Ok(m_extension::bit_32::parse_rs1(self, opc)),
             OpcodeKind::A(opc) => Ok(a_extension::bit_32::parse_rs1(self, opc)),
             OpcodeKind::Zbb(opc) => Ok(zbb_extension::bit_32::parse_rs1(self, opc)),
+            OpcodeKind::Zbs(opc) => Ok(zbs_extension::bit_32::parse_rs1(self, opc)),
             OpcodeKind::Zifencei(opc) => Ok(zifencei_extension::bit_32::parse_rs1(self, opc)),
             OpcodeKind::Zicsr(opc) => Ok(zicsr_extension::bit_32::parse_rs1(self, opc)),
             OpcodeKind::Zicfiss(opc) => Ok(zicfiss_extension::bit_32::parse_rs1(self, opc)),
@@ -98,6 +101,7 @@ impl Decode for u32 {
             OpcodeKind::M(opc) => Ok(m_extension::bit_32::parse_rs2(self, opc)),
             OpcodeKind::A(opc) => Ok(a_extension::bit_32::parse_rs2(self, opc)),
             OpcodeKind::Zbb(opc) => Ok(zbb_extension::bit_32::parse_rs2(self, opc)),
+            OpcodeKind::Zbs(opc) => Ok(zbs_extension::bit_32::parse_rs2(self, opc)),
             OpcodeKind::Zifencei(opc) => Ok(zifencei_extension::bit_32::parse_rs2(self, opc)),
             OpcodeKind::Zicsr(opc) => Ok(zicsr_extension::bit_32::parse_rs2(self, opc)),
             OpcodeKind::Zicfiss(opc) => Ok(zicfiss_extension::bit_32::parse_rs2(self, opc)),
@@ -114,6 +118,7 @@ impl Decode for u32 {
             OpcodeKind::M(opc) => Ok(m_extension::bit_32::parse_imm(self, opc)),
             OpcodeKind::A(opc) => Ok(a_extension::bit_32::parse_imm(self, opc)),
             OpcodeKind::Zbb(opc) => Ok(zbb_extension::bit_32::parse_imm(self, opc)),
+            OpcodeKind::Zbs(opc) => Ok(zbs_extension::bit_32::parse_imm(self, opc)),
             OpcodeKind::Zifencei(opc) => Ok(zifencei_extension::bit_32::parse_imm(self, opc)),
             OpcodeKind::Zicsr(opc) => Ok(zicsr_extension::bit_32::parse_imm(self, opc)),
             OpcodeKind::Zicfiss(opc) => Ok(zicfiss_extension::bit_32::parse_imm(self, opc)),

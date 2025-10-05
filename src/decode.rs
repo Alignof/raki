@@ -9,6 +9,7 @@ mod c_extension;
 mod m_extension;
 mod priv_extension;
 mod zbb_extension;
+mod zbs_extension;
 mod zicboz_extension;
 mod zicfiss_extension;
 mod zicntr_extension;

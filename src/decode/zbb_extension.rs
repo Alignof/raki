@@ -10,7 +10,6 @@ pub mod bit_32 {
         let op_31_20: u16 = u16::try_from(inst.slice(31, 20)).unwrap();
         let op_24_20: u8 = u8::try_from(inst.slice(24, 20)).unwrap();
         let op_31_25: u8 = u8::try_from(inst.slice(31, 25)).unwrap();
-        let op_31_26: u8 = u8::try_from(inst.slice(31, 26)).unwrap();
         match op_6_0 {
             0b111011 => match op_14_12 {
                 0b1 => Ok(ZbbOpcode::ROLW),
@@ -75,64 +74,66 @@ pub mod bit_32 {
     }
 
     /// Parsing Zbb instruction's rd
+    #[allow(clippy::unnecessary_wraps)]
     pub fn parse_rd(inst: u32, opkind: &ZbbOpcode) -> Option<usize> {
         let rd_11_7: usize = inst.slice(11, 7) as usize;
         match opkind {
-            ZbbOpcode::RORIW => Some(rd_11_7),
-            ZbbOpcode::RORI => Some(rd_11_7),
-            ZbbOpcode::ROLW => Some(rd_11_7),
-            ZbbOpcode::RORW => Some(rd_11_7),
-            ZbbOpcode::ANDN => Some(rd_11_7),
-            ZbbOpcode::ORN => Some(rd_11_7),
-            ZbbOpcode::XNOR => Some(rd_11_7),
-            ZbbOpcode::MAX => Some(rd_11_7),
-            ZbbOpcode::MAXU => Some(rd_11_7),
-            ZbbOpcode::MIN => Some(rd_11_7),
-            ZbbOpcode::MINU => Some(rd_11_7),
-            ZbbOpcode::ROL => Some(rd_11_7),
-            ZbbOpcode::ROR => Some(rd_11_7),
-            ZbbOpcode::SEXTB => Some(rd_11_7),
-            ZbbOpcode::SEXTH => Some(rd_11_7),
-            ZbbOpcode::ZEXTH => Some(rd_11_7),
-            ZbbOpcode::REV8 => Some(rd_11_7),
-            ZbbOpcode::ORCB => Some(rd_11_7),
-            ZbbOpcode::CPOP => Some(rd_11_7),
-            ZbbOpcode::CPOPW => Some(rd_11_7),
-            ZbbOpcode::CLZ => Some(rd_11_7),
-            ZbbOpcode::CLZW => Some(rd_11_7),
-            ZbbOpcode::CTZ => Some(rd_11_7),
-            ZbbOpcode::CTZW => Some(rd_11_7),
+            ZbbOpcode::RORIW
+            | ZbbOpcode::RORI
+            | ZbbOpcode::ROLW
+            | ZbbOpcode::RORW
+            | ZbbOpcode::ANDN
+            | ZbbOpcode::ORN
+            | ZbbOpcode::XNOR
+            | ZbbOpcode::MAX
+            | ZbbOpcode::MAXU
+            | ZbbOpcode::MIN
+            | ZbbOpcode::MINU
+            | ZbbOpcode::ROL
+            | ZbbOpcode::ROR
+            | ZbbOpcode::SEXTB
+            | ZbbOpcode::SEXTH
+            | ZbbOpcode::ZEXTH
+            | ZbbOpcode::REV8
+            | ZbbOpcode::ORCB
+            | ZbbOpcode::CPOP
+            | ZbbOpcode::CPOPW
+            | ZbbOpcode::CLZ
+            | ZbbOpcode::CLZW
+            | ZbbOpcode::CTZ
+            | ZbbOpcode::CTZW => Some(rd_11_7),
         }
     }
 
     /// Parsing Zbb instruction's rs1
+    #[allow(clippy::unnecessary_wraps)]
     pub fn parse_rs1(inst: u32, opkind: &ZbbOpcode) -> Option<usize> {
         let rs1_19_15: usize = inst.slice(19, 15) as usize;
         match opkind {
-            ZbbOpcode::RORIW => Some(rs1_19_15),
-            ZbbOpcode::RORI => Some(rs1_19_15),
-            ZbbOpcode::ROLW => Some(rs1_19_15),
-            ZbbOpcode::RORW => Some(rs1_19_15),
-            ZbbOpcode::ANDN => Some(rs1_19_15),
-            ZbbOpcode::ORN => Some(rs1_19_15),
-            ZbbOpcode::XNOR => Some(rs1_19_15),
-            ZbbOpcode::MAX => Some(rs1_19_15),
-            ZbbOpcode::MAXU => Some(rs1_19_15),
-            ZbbOpcode::MIN => Some(rs1_19_15),
-            ZbbOpcode::MINU => Some(rs1_19_15),
-            ZbbOpcode::ROL => Some(rs1_19_15),
-            ZbbOpcode::ROR => Some(rs1_19_15),
-            ZbbOpcode::SEXTB => Some(rs1_19_15),
-            ZbbOpcode::SEXTH => Some(rs1_19_15),
-            ZbbOpcode::ZEXTH => Some(rs1_19_15),
-            ZbbOpcode::REV8 => Some(rs1_19_15),
-            ZbbOpcode::ORCB => Some(rs1_19_15),
-            ZbbOpcode::CPOP => Some(rs1_19_15),
-            ZbbOpcode::CPOPW => Some(rs1_19_15),
-            ZbbOpcode::CLZ => Some(rs1_19_15),
-            ZbbOpcode::CLZW => Some(rs1_19_15),
-            ZbbOpcode::CTZ => Some(rs1_19_15),
-            ZbbOpcode::CTZW => Some(rs1_19_15),
+            ZbbOpcode::RORIW
+            | ZbbOpcode::RORI
+            | ZbbOpcode::ROLW
+            | ZbbOpcode::RORW
+            | ZbbOpcode::ANDN
+            | ZbbOpcode::ORN
+            | ZbbOpcode::XNOR
+            | ZbbOpcode::MAX
+            | ZbbOpcode::MAXU
+            | ZbbOpcode::MIN
+            | ZbbOpcode::MINU
+            | ZbbOpcode::ROL
+            | ZbbOpcode::ROR
+            | ZbbOpcode::SEXTB
+            | ZbbOpcode::SEXTH
+            | ZbbOpcode::ZEXTH
+            | ZbbOpcode::REV8
+            | ZbbOpcode::ORCB
+            | ZbbOpcode::CPOP
+            | ZbbOpcode::CPOPW
+            | ZbbOpcode::CLZ
+            | ZbbOpcode::CLZW
+            | ZbbOpcode::CTZ
+            | ZbbOpcode::CTZW => Some(rs1_19_15),
         }
     }
 
@@ -140,62 +141,63 @@ pub mod bit_32 {
     pub fn parse_rs2(inst: u32, opkind: &ZbbOpcode) -> Option<usize> {
         let rs2_24_20: usize = inst.slice(24, 20) as usize;
         match opkind {
-            ZbbOpcode::RORIW => None,
-            ZbbOpcode::RORI => None,
-            ZbbOpcode::ROLW => Some(rs2_24_20),
-            ZbbOpcode::RORW => Some(rs2_24_20),
-            ZbbOpcode::ANDN => Some(rs2_24_20),
-            ZbbOpcode::ORN => Some(rs2_24_20),
-            ZbbOpcode::XNOR => Some(rs2_24_20),
-            ZbbOpcode::MAX => Some(rs2_24_20),
-            ZbbOpcode::MAXU => Some(rs2_24_20),
-            ZbbOpcode::MIN => Some(rs2_24_20),
-            ZbbOpcode::MINU => Some(rs2_24_20),
-            ZbbOpcode::ROL => Some(rs2_24_20),
-            ZbbOpcode::ROR => Some(rs2_24_20),
-            ZbbOpcode::SEXTB => None,
-            ZbbOpcode::SEXTH => None,
-            ZbbOpcode::ZEXTH => None,
-            ZbbOpcode::REV8 => None,
-            ZbbOpcode::ORCB => None,
-            ZbbOpcode::CPOP => None,
-            ZbbOpcode::CPOPW => None,
-            ZbbOpcode::CLZ => None,
-            ZbbOpcode::CLZW => None,
-            ZbbOpcode::CTZ => None,
-            ZbbOpcode::CTZW => None,
+            ZbbOpcode::ROLW
+            | ZbbOpcode::RORW
+            | ZbbOpcode::ANDN
+            | ZbbOpcode::ORN
+            | ZbbOpcode::XNOR
+            | ZbbOpcode::MAX
+            | ZbbOpcode::MAXU
+            | ZbbOpcode::MIN
+            | ZbbOpcode::MINU
+            | ZbbOpcode::ROL
+            | ZbbOpcode::ROR => Some(rs2_24_20),
+            ZbbOpcode::RORIW
+            | ZbbOpcode::RORI
+            | ZbbOpcode::SEXTB
+            | ZbbOpcode::SEXTH
+            | ZbbOpcode::ZEXTH
+            | ZbbOpcode::REV8
+            | ZbbOpcode::ORCB
+            | ZbbOpcode::CPOP
+            | ZbbOpcode::CPOPW
+            | ZbbOpcode::CLZ
+            | ZbbOpcode::CLZW
+            | ZbbOpcode::CTZ
+            | ZbbOpcode::CTZW => None,
         }
     }
 
     /// Parsing Zbb instruction's imm
+    #[allow(clippy::cast_possible_wrap)]
     pub fn parse_imm(inst: u32, opkind: &ZbbOpcode) -> Option<i32> {
         let imm_24_20: i32 = inst.slice(24, 20) as i32;
         let imm_25_20: i32 = inst.slice(25, 20) as i32;
         match opkind {
             ZbbOpcode::RORIW => Some(imm_24_20),
             ZbbOpcode::RORI => Some(imm_25_20),
-            ZbbOpcode::ROLW => None,
-            ZbbOpcode::RORW => None,
-            ZbbOpcode::ANDN => None,
-            ZbbOpcode::ORN => None,
-            ZbbOpcode::XNOR => None,
-            ZbbOpcode::MAX => None,
-            ZbbOpcode::MAXU => None,
-            ZbbOpcode::MIN => None,
-            ZbbOpcode::MINU => None,
-            ZbbOpcode::ROL => None,
-            ZbbOpcode::ROR => None,
-            ZbbOpcode::SEXTB => None,
-            ZbbOpcode::SEXTH => None,
-            ZbbOpcode::ZEXTH => None,
-            ZbbOpcode::REV8 => None,
-            ZbbOpcode::ORCB => None,
-            ZbbOpcode::CPOP => None,
-            ZbbOpcode::CPOPW => None,
-            ZbbOpcode::CLZ => None,
-            ZbbOpcode::CLZW => None,
-            ZbbOpcode::CTZ => None,
-            ZbbOpcode::CTZW => None,
+            ZbbOpcode::ROLW
+            | ZbbOpcode::RORW
+            | ZbbOpcode::ANDN
+            | ZbbOpcode::ORN
+            | ZbbOpcode::XNOR
+            | ZbbOpcode::MAX
+            | ZbbOpcode::MAXU
+            | ZbbOpcode::MIN
+            | ZbbOpcode::MINU
+            | ZbbOpcode::ROL
+            | ZbbOpcode::ROR
+            | ZbbOpcode::SEXTB
+            | ZbbOpcode::SEXTH
+            | ZbbOpcode::ZEXTH
+            | ZbbOpcode::REV8
+            | ZbbOpcode::ORCB
+            | ZbbOpcode::CPOP
+            | ZbbOpcode::CPOPW
+            | ZbbOpcode::CLZ
+            | ZbbOpcode::CLZW
+            | ZbbOpcode::CTZ
+            | ZbbOpcode::CTZW => None,
         }
     }
 }

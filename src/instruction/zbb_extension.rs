@@ -114,30 +114,30 @@ impl Display for ZbbOpcode {
 impl Opcode for ZbbOpcode {
     fn get_format(&self) -> InstFormat {
         match self {
-            ZbbOpcode::RORIW => InstFormat::RFormat,
-            ZbbOpcode::RORI => InstFormat::RFormat,
-            ZbbOpcode::ROLW => InstFormat::RFormat,
-            ZbbOpcode::RORW => InstFormat::RFormat,
-            ZbbOpcode::ANDN => InstFormat::RFormat,
-            ZbbOpcode::ORN => InstFormat::RFormat,
-            ZbbOpcode::XNOR => InstFormat::RFormat,
-            ZbbOpcode::MAX => InstFormat::RFormat,
-            ZbbOpcode::MAXU => InstFormat::RFormat,
-            ZbbOpcode::MIN => InstFormat::RFormat,
-            ZbbOpcode::MINU => InstFormat::RFormat,
-            ZbbOpcode::ROL => InstFormat::RFormat,
-            ZbbOpcode::ROR => InstFormat::RFormat,
-            ZbbOpcode::SEXTB => InstFormat::RShamtFormat,
-            ZbbOpcode::SEXTH => InstFormat::RShamtFormat,
-            ZbbOpcode::ZEXTH => InstFormat::RShamtFormat,
-            ZbbOpcode::REV8 => InstFormat::RShamtFormat,
-            ZbbOpcode::ORCB => InstFormat::RShamtFormat,
-            ZbbOpcode::CPOP => InstFormat::RShamtFormat,
-            ZbbOpcode::CPOPW => InstFormat::RShamtFormat,
-            ZbbOpcode::CLZ => InstFormat::RShamtFormat,
-            ZbbOpcode::CLZW => InstFormat::RShamtFormat,
-            ZbbOpcode::CTZ => InstFormat::RShamtFormat,
-            ZbbOpcode::CTZW => InstFormat::RShamtFormat,
+            ZbbOpcode::RORIW
+            | ZbbOpcode::RORI
+            | ZbbOpcode::ROLW
+            | ZbbOpcode::RORW
+            | ZbbOpcode::ANDN
+            | ZbbOpcode::ORN
+            | ZbbOpcode::XNOR
+            | ZbbOpcode::MAX
+            | ZbbOpcode::MAXU
+            | ZbbOpcode::MIN
+            | ZbbOpcode::MINU
+            | ZbbOpcode::ROL
+            | ZbbOpcode::ROR => InstFormat::RFormat,
+            ZbbOpcode::SEXTB
+            | ZbbOpcode::SEXTH
+            | ZbbOpcode::ZEXTH
+            | ZbbOpcode::REV8
+            | ZbbOpcode::ORCB
+            | ZbbOpcode::CPOP
+            | ZbbOpcode::CPOPW
+            | ZbbOpcode::CLZ
+            | ZbbOpcode::CLZW
+            | ZbbOpcode::CTZ
+            | ZbbOpcode::CTZW => InstFormat::RShamtFormat,
         }
     }
 }

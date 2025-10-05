@@ -165,19 +165,15 @@ impl DecodeUtil for u32 {
                     _ => Ok(Extensions::BaseI),
                 },
                 0b000_0101 => match funct3 {
-                    0b001 | 0b010 | 0b100 | 0b101 | 0b110 | 0b011 | 0b111 => Ok(Extensions::Zbb),
+                    0b001..=0b111 => Ok(Extensions::Zbb),
                     _ => Ok(Extensions::BaseI),
                 },
-                0b001_0100 => match funct3 {
+                0b001_0100 | 0b011_0100 => match funct3 {
                     0b001 => Ok(Extensions::Zbb),
                     _ => Ok(Extensions::BaseI),
                 },
                 0b010_0000 => match funct3 {
                     0b100 | 0b110 | 0b111 => Ok(Extensions::Zbb),
-                    _ => Ok(Extensions::BaseI),
-                },
-                0b011_0100 => match funct3 {
-                    0b001 => Ok(Extensions::Zbb),
                     _ => Ok(Extensions::BaseI),
                 },
                 0b011_0000 => match funct3 {
@@ -189,8 +185,7 @@ impl DecodeUtil for u32 {
             0b011_1011 => match funct7 {
                 0b000_0000 | 0b010_0000 => Ok(Extensions::BaseI),
                 0b000_0001 => Ok(Extensions::M),
-                0b000_0100 => Ok(Extensions::Zbb),
-                0b011_0000 => Ok(Extensions::Zbb),
+                0b000_0100 | 0b011_0000 => Ok(Extensions::Zbb),
                 _ => Err(DecodingError::UnknownExtension),
             },
             0b111_0011 => match funct3 {

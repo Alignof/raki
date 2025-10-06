@@ -28,7 +28,7 @@ impl Decode for u32 {
     }
 
     fn parse_opcode(self, isa: Isa) -> Result<OpcodeKind, DecodingError> {
-        let extension = self.parse_extension();
+        let extension = self.parse_extension(isa);
 
         match extension {
             Ok(Extensions::BaseI) => {

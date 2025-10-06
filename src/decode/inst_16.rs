@@ -29,7 +29,7 @@ impl Decode for u16 {
     }
 
     fn parse_opcode(self, isa: Isa) -> Result<OpcodeKind, DecodingError> {
-        let extension = self.parse_extension();
+        let extension = self.parse_extension(isa);
 
         match extension {
             Ok(Extensions::C) => Ok(OpcodeKind::C(c_extension::bit_16::parse_opcode(self, isa)?)),
@@ -79,7 +79,7 @@ impl DecodeUtil for u16 {
         (self >> start) & (2_u16.pow(end - start + 1) - 1)
     }
 
-    fn parse_extension(self) -> Result<Extensions, DecodingError> {
+    fn parse_extension(self, _isa: Isa) -> Result<Extensions, DecodingError> {
         match self {
             0b0110_0000_1000_0001 | 0b0110_0010_1000_0001 => Ok(Extensions::Zicfiss),
             _ => Ok(Extensions::C),

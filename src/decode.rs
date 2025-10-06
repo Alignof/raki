@@ -150,7 +150,7 @@ trait DecodeUtil {
     ///
     /// # Errors
     /// It will throws `UnknownExtension` if the extension is unsupported.
-    fn parse_extension(self) -> Result<Extensions, DecodingError>;
+    fn parse_extension(self, isa: Isa) -> Result<Extensions, DecodingError>;
 
     /// Convert i32 to a sign-extended any size number.
     /// # Arguments

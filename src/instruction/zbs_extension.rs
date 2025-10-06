@@ -50,14 +50,12 @@ impl Display for ZbsOpcode {
 impl Opcode for ZbsOpcode {
     fn get_format(&self) -> InstFormat {
         match self {
-            ZbsOpcode::BCLRI => InstFormat::RShamtFormat,
-            ZbsOpcode::BEXTI => InstFormat::RShamtFormat,
-            ZbsOpcode::BINVI => InstFormat::RShamtFormat,
-            ZbsOpcode::BSETI => InstFormat::RShamtFormat,
-            ZbsOpcode::BCLR => InstFormat::RFormat,
-            ZbsOpcode::BEXT => InstFormat::RFormat,
-            ZbsOpcode::BINV => InstFormat::RFormat,
-            ZbsOpcode::BSET => InstFormat::RFormat,
+            ZbsOpcode::BCLRI | ZbsOpcode::BEXTI | ZbsOpcode::BINVI | ZbsOpcode::BSETI => {
+                InstFormat::RShamtFormat
+            }
+            ZbsOpcode::BCLR | ZbsOpcode::BEXT | ZbsOpcode::BINV | ZbsOpcode::BSET => {
+                InstFormat::RFormat
+            }
         }
     }
 }

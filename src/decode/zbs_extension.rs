@@ -35,32 +35,34 @@ pub mod bit_32 {
     }
 
     /// Parsing Zbs instruction's rd
+    #[allow(clippy::unnecessary_wraps)]
     pub fn parse_rd(inst: u32, opkind: &ZbsOpcode) -> Option<usize> {
         let rd_11_7: usize = inst.slice(11, 7) as usize;
         match opkind {
-            ZbsOpcode::BCLRI => Some(rd_11_7),
-            ZbsOpcode::BEXTI => Some(rd_11_7),
-            ZbsOpcode::BINVI => Some(rd_11_7),
-            ZbsOpcode::BSETI => Some(rd_11_7),
-            ZbsOpcode::BCLR => Some(rd_11_7),
-            ZbsOpcode::BEXT => Some(rd_11_7),
-            ZbsOpcode::BINV => Some(rd_11_7),
-            ZbsOpcode::BSET => Some(rd_11_7),
+            ZbsOpcode::BCLRI
+            | ZbsOpcode::BEXTI
+            | ZbsOpcode::BINVI
+            | ZbsOpcode::BSETI
+            | ZbsOpcode::BCLR
+            | ZbsOpcode::BEXT
+            | ZbsOpcode::BINV
+            | ZbsOpcode::BSET => Some(rd_11_7),
         }
     }
 
     /// Parsing Zbs instruction's rs1
+    #[allow(clippy::unnecessary_wraps)]
     pub fn parse_rs1(inst: u32, opkind: &ZbsOpcode) -> Option<usize> {
         let rs1_19_15: usize = inst.slice(19, 15) as usize;
         match opkind {
-            ZbsOpcode::BCLRI => Some(rs1_19_15),
-            ZbsOpcode::BEXTI => Some(rs1_19_15),
-            ZbsOpcode::BINVI => Some(rs1_19_15),
-            ZbsOpcode::BSETI => Some(rs1_19_15),
-            ZbsOpcode::BCLR => Some(rs1_19_15),
-            ZbsOpcode::BEXT => Some(rs1_19_15),
-            ZbsOpcode::BINV => Some(rs1_19_15),
-            ZbsOpcode::BSET => Some(rs1_19_15),
+            ZbsOpcode::BCLRI
+            | ZbsOpcode::BEXTI
+            | ZbsOpcode::BINVI
+            | ZbsOpcode::BSETI
+            | ZbsOpcode::BCLR
+            | ZbsOpcode::BEXT
+            | ZbsOpcode::BINV
+            | ZbsOpcode::BSET => Some(rs1_19_15),
         }
     }
 
@@ -68,29 +70,22 @@ pub mod bit_32 {
     pub fn parse_rs2(inst: u32, opkind: &ZbsOpcode) -> Option<usize> {
         let rs2_24_20: usize = inst.slice(24, 20) as usize;
         match opkind {
-            ZbsOpcode::BCLRI => None,
-            ZbsOpcode::BEXTI => None,
-            ZbsOpcode::BINVI => None,
-            ZbsOpcode::BSETI => None,
-            ZbsOpcode::BCLR => Some(rs2_24_20),
-            ZbsOpcode::BEXT => Some(rs2_24_20),
-            ZbsOpcode::BINV => Some(rs2_24_20),
-            ZbsOpcode::BSET => Some(rs2_24_20),
+            ZbsOpcode::BCLRI | ZbsOpcode::BEXTI | ZbsOpcode::BINVI | ZbsOpcode::BSETI => None,
+            ZbsOpcode::BCLR | ZbsOpcode::BEXT | ZbsOpcode::BINV | ZbsOpcode::BSET => {
+                Some(rs2_24_20)
+            }
         }
     }
 
     /// Parsing Zbs instruction's imm
+    #[allow(clippy::cast_possible_wrap)]
     pub fn parse_imm(inst: u32, opkind: &ZbsOpcode) -> Option<i32> {
         let imm_25_20: i32 = inst.slice(25, 20) as i32;
         match opkind {
-            ZbsOpcode::BCLRI => Some(imm_25_20),
-            ZbsOpcode::BEXTI => Some(imm_25_20),
-            ZbsOpcode::BINVI => Some(imm_25_20),
-            ZbsOpcode::BSETI => Some(imm_25_20),
-            ZbsOpcode::BCLR => None,
-            ZbsOpcode::BEXT => None,
-            ZbsOpcode::BINV => None,
-            ZbsOpcode::BSET => None,
+            ZbsOpcode::BCLRI | ZbsOpcode::BEXTI | ZbsOpcode::BINVI | ZbsOpcode::BSETI => {
+                Some(imm_25_20)
+            }
+            ZbsOpcode::BCLR | ZbsOpcode::BEXT | ZbsOpcode::BINV | ZbsOpcode::BSET => None,
         }
     }
 }

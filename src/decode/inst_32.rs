@@ -156,16 +156,11 @@ impl DecodeUtil for u32 {
             0b001_0011 => match isa {
                 Isa::Rv32 => match funct3 {
                     0b001 => match funct7 {
-                        0b010_0100 => Ok(Extensions::Zbs),
-                        0b001_0100 => Ok(Extensions::Zbs),
-                        0b011_0100 => Ok(Extensions::Zbs),
+                        0b010_0100 | 0b001_0100 | 0b011_0100 => Ok(Extensions::Zbs),
                         0b000_0000 => Ok(Extensions::BaseI),
                         _ => match funct12 {
-                            0b0110_0000_0000 => Ok(Extensions::Zbb),
-                            0b0110_0000_0001 => Ok(Extensions::Zbb),
-                            0b0110_0000_0010 => Ok(Extensions::Zbb),
-                            0b0110_0000_0100 => Ok(Extensions::Zbb),
-                            0b0110_0000_0101 => Ok(Extensions::Zbb),
+                            0b0110_0000_0000 | 0b0110_0000_0001 | 0b0110_0000_0010
+                            | 0b0110_0000_0100 | 0b0110_0000_0101 => Ok(Extensions::Zbb),
                             _ => Err(DecodingError::UnknownExtension),
                         },
                     },
@@ -174,8 +169,7 @@ impl DecodeUtil for u32 {
                         0b011_0000 => Ok(Extensions::Zbb),
                         0b000_0000 | 0b010_0000 => Ok(Extensions::BaseI),
                         _ => match funct12 {
-                            0b0010_1000_0111 => Ok(Extensions::Zbb),
-                            0b0110_1001_1000 => Ok(Extensions::Zbb),
+                            0b0010_1000_0111 | 0b0110_1001_1000 => Ok(Extensions::Zbb),
                             _ => Err(DecodingError::UnknownExtension),
                         },
                     },
@@ -183,17 +177,12 @@ impl DecodeUtil for u32 {
                 },
                 Isa::Rv64 => match funct3 {
                     0b001 => match funct6 {
-                        0b01_0010 => Ok(Extensions::Zbs),
-                        0b01_1010 => Ok(Extensions::Zbs),
-                        0b00_1010 => Ok(Extensions::Zbs),
+                        0b01_0010 | 0b01_1010 | 0b00_1010 => Ok(Extensions::Zbs),
                         _ => match funct7 {
                             0b000_0000 => Ok(Extensions::BaseI),
                             _ => match funct12 {
-                                0b0110_0000_0000 => Ok(Extensions::Zbb),
-                                0b0110_0000_0001 => Ok(Extensions::Zbb),
-                                0b0110_0000_0010 => Ok(Extensions::Zbb),
-                                0b0110_0000_0100 => Ok(Extensions::Zbb),
-                                0b0110_0000_0101 => Ok(Extensions::Zbb),
+                                0b0110_0000_0000 | 0b0110_0000_0001 | 0b0110_0000_0010
+                                | 0b0110_0000_0100 | 0b0110_0000_0101 => Ok(Extensions::Zbb),
                                 _ => Err(DecodingError::UnknownExtension),
                             },
                         },
@@ -202,8 +191,7 @@ impl DecodeUtil for u32 {
                         0b01_0010 => Ok(Extensions::Zbs),
                         0b01_1000 => Ok(Extensions::Zbb),
                         _ => match funct12 {
-                            0b0010_1000_0111 => Ok(Extensions::Zbb),
-                            0b0110_1011_1000 => Ok(Extensions::Zbb),
+                            0b0010_1000_0111 | 0b0110_1011_1000 => Ok(Extensions::Zbb),
                             _ => Err(DecodingError::UnknownExtension),
                         },
                     },
@@ -230,11 +218,7 @@ impl DecodeUtil for u32 {
                     0b001..=0b111 => Ok(Extensions::Zbb),
                     _ => Ok(Extensions::BaseI),
                 },
-                0b001_0100 => match funct3 {
-                    0b001 => Ok(Extensions::Zbs),
-                    _ => Ok(Extensions::BaseI),
-                },
-                0b011_0100 => match funct3 {
+                0b001_0100 | 0b011_0100 => match funct3 {
                     0b001 => Ok(Extensions::Zbs),
                     _ => Ok(Extensions::BaseI),
                 },

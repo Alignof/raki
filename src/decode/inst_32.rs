@@ -136,11 +136,15 @@ impl DecodeUtil for u32 {
         (self >> start) & (2_u32.pow(end - start + 1) - 1)
     }
 
-    fn parse_extension(self) -> Result<Extensions, DecodingError> {
+    /// TODO: ELIMINATE THIS FUNCTION
+    #[allow(clippy::too_many_lines)]
+    fn parse_extension(self, isa: Isa) -> Result<Extensions, DecodingError> {
         let opmap: u8 = u8::try_from(self.slice(6, 0)).unwrap();
         let funct3: u8 = u8::try_from(self.slice(14, 12)).unwrap();
         let funct5: u8 = u8::try_from(self.slice(31, 27)).unwrap();
+        let funct6: u8 = u8::try_from(self.slice(31, 26)).unwrap();
         let funct7: u8 = u8::try_from(self.slice(31, 25)).unwrap();
+        let funct12: u16 = u16::try_from(self.slice(31, 20)).unwrap();
         let csr: u16 = u16::try_from(self.slice(31, 20)).unwrap();
 
         match opmap {
@@ -149,9 +153,62 @@ impl DecodeUtil for u32 {
                 0b010 => Ok(Extensions::Zicboz),
                 _ => Err(DecodingError::UnknownExtension),
             },
-            0b001_0011 => match funct3 {
-                0b001 | 0b101 => Ok(Extensions::Zbb),
-                _ => Ok(Extensions::BaseI),
+            0b001_0011 => match isa {
+                Isa::Rv32 => match funct3 {
+                    0b001 => match funct7 {
+                        0b010_0100 => Ok(Extensions::Zbs),
+                        0b001_0100 => Ok(Extensions::Zbs),
+                        0b011_0100 => Ok(Extensions::Zbs),
+                        0b000_0000 => Ok(Extensions::BaseI),
+                        _ => match funct12 {
+                            0b0110_0000_0000 => Ok(Extensions::Zbb),
+                            0b0110_0000_0001 => Ok(Extensions::Zbb),
+                            0b0110_0000_0010 => Ok(Extensions::Zbb),
+                            0b0110_0000_0100 => Ok(Extensions::Zbb),
+                            0b0110_0000_0101 => Ok(Extensions::Zbb),
+                            _ => Err(DecodingError::UnknownExtension),
+                        },
+                    },
+                    0b101 => match funct7 {
+                        0b010_0100 => Ok(Extensions::Zbs),
+                        0b011_0000 => Ok(Extensions::Zbb),
+                        0b000_0000 | 0b010_0000 => Ok(Extensions::BaseI),
+                        _ => match funct12 {
+                            0b0010_1000_0111 => Ok(Extensions::Zbb),
+                            0b0110_1001_1000 => Ok(Extensions::Zbb),
+                            _ => Err(DecodingError::UnknownExtension),
+                        },
+                    },
+                    _ => Ok(Extensions::BaseI),
+                },
+                Isa::Rv64 => match funct3 {
+                    0b001 => match funct6 {
+                        0b01_0010 => Ok(Extensions::Zbs),
+                        0b01_1010 => Ok(Extensions::Zbs),
+                        0b00_1010 => Ok(Extensions::Zbs),
+                        _ => match funct7 {
+                            0b000_0000 => Ok(Extensions::BaseI),
+                            _ => match funct12 {
+                                0b0110_0000_0000 => Ok(Extensions::Zbb),
+                                0b0110_0000_0001 => Ok(Extensions::Zbb),
+                                0b0110_0000_0010 => Ok(Extensions::Zbb),
+                                0b0110_0000_0100 => Ok(Extensions::Zbb),
+                                0b0110_0000_0101 => Ok(Extensions::Zbb),
+                                _ => Err(DecodingError::UnknownExtension),
+                            },
+                        },
+                    },
+                    0b101 => match funct6 {
+                        0b01_0010 => Ok(Extensions::Zbs),
+                        0b01_1000 => Ok(Extensions::Zbb),
+                        _ => match funct12 {
+                            0b0010_1000_0111 => Ok(Extensions::Zbb),
+                            0b0110_1011_1000 => Ok(Extensions::Zbb),
+                            _ => Err(DecodingError::UnknownExtension),
+                        },
+                    },
+                    _ => Ok(Extensions::BaseI),
+                },
             },
             0b001_1011 => match funct3 {
                 0b001 | 0b101 => Ok(Extensions::Zbb),
@@ -173,11 +230,21 @@ impl DecodeUtil for u32 {
                     0b001..=0b111 => Ok(Extensions::Zbb),
                     _ => Ok(Extensions::BaseI),
                 },
-                0b001_0100 | 0b011_0100 => match funct3 {
-                    0b001 => Ok(Extensions::Zbb),
+                0b001_0100 => match funct3 {
+                    0b001 => Ok(Extensions::Zbs),
+                    _ => Ok(Extensions::BaseI),
+                },
+                0b011_0100 => match funct3 {
+                    0b001 => Ok(Extensions::Zbs),
                     _ => Ok(Extensions::BaseI),
                 },
                 0b010_0000 => match funct3 {
+                    0b111 | 0b110 | 0b100 => Ok(Extensions::Zbb),
+                    0b001 | 0b101 => Ok(Extensions::Zbs),
+                    _ => Ok(Extensions::BaseI),
+                },
+                0b010_0100 => match funct3 {
+                    0b001 | 0b101 => Ok(Extensions::Zbs),
                     0b100 | 0b110 | 0b111 => Ok(Extensions::Zbb),
                     _ => Ok(Extensions::BaseI),
                 },

@@ -5,7 +5,7 @@ use core::fmt::{self, Display, Formatter};
 
 /// Insturctions in Zicntr Extension.
 #[allow(non_camel_case_types, clippy::upper_case_acronyms)]
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum ZicfissOpcode {
     /// Shadow stack push.
     SSPUSH,

@@ -7,7 +7,7 @@ use core::fmt::{self, Display, Formatter};
 
 /// Insturctions in Zicboz Extension.
 #[allow(non_camel_case_types, clippy::upper_case_acronyms)]
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum ZicbozOpcode {
     CBO_ZERO,
 }
